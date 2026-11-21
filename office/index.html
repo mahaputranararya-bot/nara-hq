@@ -1,0 +1,1114 @@
+<title>Nara HQ</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Pixelify+Sans:wght@500;700&family=VT323&display=swap">
+<style>
+/* Layout: the page IS the office. One grid whose gaps are the walls; each room has its own floor,
+   a wall band with a name plaque, pixel staff at their desks, and a nameplate strip below. */
+:root {
+  --bg: #f2ecf6;
+  --ink: #2a2238;
+  --ink-soft: #5e5471;
+  --line: #ddd1e7;
+  --panel: #ffffff;
+  --panel-2: #f8f3fb;
+  --wall: #3a3050;
+  --wall-face: #574a72;
+  --wall-trim: #6f6090;
+  --wall-drop: rgba(42, 30, 64, .22);
+  --accent: #c93473;
+  --accent-soft: #fbe2ed;
+  --accent-ink: #ffffff;
+  --plaque: #f1d58e;
+  --plaque-ink: #3a2a12;
+  --board-bg: #1c1628;
+  --board-ink: #ffb648;
+  --board-dim: #a07a42;
+  --board-line: #332a45;
+  --sky-a: #6fc0ff;
+  --sky-b: #d3f0ff;
+  --sun: #ffe07a;
+  --star: transparent;
+  --sign-glow: transparent;
+  --shade: rgba(16, 8, 38, 0);
+  --glow: rgba(255, 206, 130, 0);
+  --door: #a8754a;
+
+  --ok: #23824a;
+  --act: #2c68c9;
+  --warn: #a96400;
+  --hot: #c4323c;
+  --muted: #776d88;
+  --idea: #7448c0;
+
+  --wood-a: #d8a46d;
+  --wood-b: #c48e57;
+  --graph-bg: #fbf8ec;
+  --graph-line: #d4e2f1;
+  --graph-major: #abc6e4;
+  --graph-plot: #c93473;
+  --lab-a: #e9edf0;
+  --lab-b: #d4dce2;
+  --teal-a: #55b5aa;
+  --teal-b: #4aa69b;
+  --blue-a: #8aaee3;
+  --blue-b: #7c9fd8;
+  --green-a: #a3d07f;
+  --green-b: #93c26f;
+  --red-a: #c5515f;
+  --red-b: #a9404d;
+  --gold: #e6c36a;
+  --grey-a: #d2cbd8;
+  --grey-b: #bdb4c6;
+
+  --f-display: "Pixelify Sans", "Courier New", ui-monospace, monospace;
+  --f-body: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --f-board: "VT323", "Courier New", ui-monospace, monospace;
+  --px: 4px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #14101e; --ink: #efe8f6; --ink-soft: #b4aac6; --line: #352c48;
+    --panel: #1e1830; --panel-2: #241d38;
+    --wall: #0b0814; --wall-face: #251d36; --wall-trim: #352a4c; --wall-drop: rgba(0,0,0,.4);
+    --accent: #ff78aa; --accent-soft: #3b1f33; --accent-ink: #1a0d16;
+    --plaque: #d9bd74; --plaque-ink: #2a1d08;
+    --sky-a: #0b1238; --sky-b: #23306b; --sun: #f3efd6; --star: #ffffff; --sign-glow: rgba(255,120,170,.65);
+    --shade: rgba(14, 6, 34, .42); --glow: rgba(255, 196, 120, .30); --door: #6e4c31;
+    --ok: #5fd08a; --act: #7fb0ff; --warn: #ffbe55; --hot: #ff6f78; --muted: #a59bb8; --idea: #b99aff;
+    --graph-bg: #e9e4d2; --graph-plot: #d23a7a;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #14101e; --ink: #efe8f6; --ink-soft: #b4aac6; --line: #352c48;
+  --panel: #1e1830; --panel-2: #241d38;
+  --wall: #0b0814; --wall-face: #251d36; --wall-trim: #352a4c; --wall-drop: rgba(0,0,0,.4);
+  --accent: #ff78aa; --accent-soft: #3b1f33; --accent-ink: #1a0d16;
+  --plaque: #d9bd74; --plaque-ink: #2a1d08;
+  --sky-a: #0b1238; --sky-b: #23306b; --sun: #f3efd6; --star: #ffffff; --sign-glow: rgba(255,120,170,.65);
+  --shade: rgba(14, 6, 34, .42); --glow: rgba(255, 196, 120, .30); --door: #6e4c31;
+  --ok: #5fd08a; --act: #7fb0ff; --warn: #ffbe55; --hot: #ff6f78; --muted: #a59bb8; --idea: #b99aff;
+  --graph-bg: #e9e4d2; --graph-plot: #d23a7a;
+  color-scheme: dark;
+}
+@media (max-width: 619px) { :root { --px: 3px; } }
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-size: 15px;
+  line-height: 1.45;
+}
+.wrap {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding-block: 20px 40px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid;
+  gap: 18px;
+}
+canvas.spr { display: block; image-rendering: pixelated; image-rendering: crisp-edges; }
+
+/* ---------- header ---------- */
+.top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 20px; }
+.brand { display: flex; align-items: center; gap: 12px; --u: 4px; }
+.brand h1 { margin: 0; font-family: var(--f-display); font-weight: 700; font-size: 30px; line-height: 1; letter-spacing: .02em; }
+.brand p { margin: 4px 0 0; color: var(--ink-soft); font-size: 13px; }
+.tools { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.today { font-family: var(--f-display); font-size: 14px; color: var(--ink-soft); }
+.btn {
+  font: 600 13px/1 var(--f-display);
+  letter-spacing: .04em;
+  color: var(--ink);
+  background: var(--panel);
+  border: 2px solid var(--wall);
+  box-shadow: 0 3px 0 var(--wall);
+  padding: 8px 12px 7px;
+  cursor: pointer;
+}
+.btn:hover { background: var(--panel-2); }
+.btn:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--wall); }
+.btn:focus-visible, .room:focus-visible, .aze:focus-visible, .close:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+/* ---------- floor plan ---------- */
+.plan {
+  display: grid;
+  gap: 10px;
+  padding: 10px;
+  background: var(--wall);
+  box-shadow: 0 8px 0 var(--wall-drop);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-areas:
+    "lobby lobby expo expo"
+    "lobby lobby fs gi"
+    "games school opp archive";
+}
+@media (max-width: 979px) {
+  .plan { grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas: "lobby lobby" "expo expo" "fs gi" "games school" "opp archive"; }
+}
+@media (max-width: 619px) {
+  .plan { grid-template-columns: minmax(0, 1fr); gap: 8px; padding: 8px;
+    grid-template-areas: "lobby" "expo" "fs" "gi" "games" "school" "opp" "archive"; }
+}
+
+.room {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+  background: var(--panel);
+  --u: var(--px);
+}
+a.room { cursor: pointer; }
+.wallband {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  min-height: 40px;
+  padding: 6px 10px;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 22px, var(--wall-trim) 22px 24px),
+    var(--wall-face);
+  border-bottom: 4px solid var(--wall-trim);
+}
+.plaque {
+  font: 700 13px/1 var(--f-display);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--plaque-ink);
+  background: var(--plaque);
+  padding: 5px 8px 4px;
+  box-shadow: 0 2px 0 rgba(0,0,0,.35);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+.star { color: var(--hot); }
+.band-right { display: flex; align-items: center; gap: 8px; flex: none; }
+.led {
+  display: inline-flex; align-items: center; gap: 6px;
+  font: 500 12px/1 var(--f-display);
+  color: #f3eefa;
+  background: rgba(0,0,0,.28);
+  padding: 4px 7px;
+  white-space: nowrap;
+}
+.led i { width: 8px; height: 8px; background: currentColor; display: block; }
+.led.ok i { background: #4fd47e; box-shadow: 0 0 6px #4fd47e; }
+.led.warn i { background: #ffb43d; box-shadow: 0 0 6px #ffb43d; }
+.led.hot i { background: #ff5964; box-shadow: 0 0 6px #ff5964; }
+.led.muted i { background: #9a90ab; }
+.sdg {
+  width: 24px; height: 24px; border-radius: 50%;
+  -webkit-mask: radial-gradient(circle, transparent 36%, #000 39%);
+  mask: radial-gradient(circle, transparent 36%, #000 39%);
+}
+.play {
+  width: 26px; height: 18px; background: #e8323f; position: relative; border-radius: 4px;
+}
+.play::after { content: ""; position: absolute; left: 10px; top: 4px; border-left: 8px solid #fff; border-top: 5px solid transparent; border-bottom: 5px solid transparent; }
+
+.scene {
+  position: relative;
+  flex: 1 0 auto;
+  min-height: calc(var(--u) * 30);
+  overflow: hidden;
+}
+.slot { position: absolute; display: block; }
+.station { position: absolute; bottom: calc(var(--u) * 3); width: calc(var(--u) * 34); height: calc(var(--u) * 22); z-index: 2; }
+.station .slot { bottom: 0; }
+.station .char { left: var(--u); z-index: 1; animation: bob 1.8s steps(1, end) infinite; }
+.station .desk { left: 0; z-index: 2; }
+.station .prop { bottom: calc(var(--u) * 6); z-index: 3; }
+.station .glow {
+  position: absolute; left: -40%; right: -40%; bottom: -30%; top: -60%;
+  background: radial-gradient(closest-side, var(--glow), transparent);
+  pointer-events: none;
+}
+.floorprop { bottom: calc(var(--u) * 3); z-index: 1; }
+@keyframes bob { 0% { transform: translateY(0); } 50% { transform: translateY(calc(var(--u) * -1)); } }
+
+.door { position: absolute; bottom: -10px; left: 50%; width: 44px; height: 10px; margin-left: -22px; background: var(--door); z-index: 3; }
+
+/* floors */
+.floor-wood { background:
+  linear-gradient(var(--shade), var(--shade)),
+  repeating-linear-gradient(90deg, transparent 0 88px, rgba(0,0,0,.08) 88px 90px),
+  repeating-linear-gradient(0deg, var(--wood-a) 0 16px, var(--wood-b) 16px 18px); }
+.floor-graph { background-color: var(--graph-bg); background-image:
+  linear-gradient(var(--shade), var(--shade)),
+  linear-gradient(var(--graph-major) 1px, transparent 1px),
+  linear-gradient(90deg, var(--graph-major) 1px, transparent 1px),
+  linear-gradient(var(--graph-line) 1px, transparent 1px),
+  linear-gradient(90deg, var(--graph-line) 1px, transparent 1px);
+  background-size: auto, 60px 60px, 60px 60px, 12px 12px, 12px 12px; }
+.floor-lab { background:
+  linear-gradient(var(--shade), var(--shade)),
+  conic-gradient(var(--lab-a) 25%, var(--lab-b) 0 50%, var(--lab-a) 0 75%, var(--lab-b) 0) 0 0 / 28px 28px; }
+.floor-teal { background:
+  linear-gradient(var(--shade), var(--shade)),
+  conic-gradient(var(--teal-a) 25%, var(--teal-b) 0 50%, var(--teal-a) 0 75%, var(--teal-b) 0) 0 0 / 16px 16px; }
+.floor-blue { background:
+  linear-gradient(var(--shade), var(--shade)),
+  radial-gradient(var(--blue-b) 2px, transparent 2.5px) 0 0 / 12px 12px,
+  var(--blue-a); }
+.floor-green { background:
+  linear-gradient(var(--shade), var(--shade)),
+  radial-gradient(var(--green-b) 2px, transparent 2.5px) 0 0 / 10px 10px,
+  var(--green-a); }
+.floor-red { background:
+  linear-gradient(var(--shade), var(--shade)),
+  linear-gradient(90deg, transparent 0 10%, var(--gold) 10% calc(10% + 3px), var(--red-a) 0 calc(90% - 3px), var(--gold) 0 90%, transparent 90%),
+  var(--red-b); }
+.floor-grey { background:
+  linear-gradient(var(--shade), var(--shade)),
+  radial-gradient(var(--grey-b) 1px, transparent 1.5px) 0 0 / 9px 9px,
+  radial-gradient(var(--grey-b) 1px, transparent 1.5px) 4px 5px / 13px 13px,
+  var(--grey-a); }
+.plot { position: absolute; right: 8px; top: 8px; width: 96px; height: 70px; z-index: 0; }
+.plot path, .plot line { fill: none; stroke-width: 2; }
+.plot line { stroke: var(--graph-major); }
+.plot path { stroke: var(--graph-plot); }
+.plot text { fill: var(--graph-plot); font: 700 11px var(--f-display); }
+.zz { position: absolute; font: 700 12px var(--f-display); color: var(--ink-soft); z-index: 2; animation: zz 2.4s steps(3, end) infinite; }
+@keyframes zz { 0% { transform: translate(0, 0); opacity: .3; } 100% { transform: translate(6px, -12px); opacity: 1; } }
+
+/* nameplate strip */
+.info { padding: 10px 12px 12px; border-top: 4px solid var(--wall-trim); display: grid; gap: 6px; background: var(--panel); }
+.info .who { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.info .who b { font-family: var(--f-display); font-weight: 700; font-size: 15px; }
+.info .open { font: 500 12px var(--f-display); color: var(--accent); white-space: nowrap; }
+a.room:hover .open { text-decoration: underline; }
+.plist-mini { list-style: none; margin: 0; padding: 0; display: grid; gap: 5px; }
+.plist-mini li { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-size: 13.5px; min-width: 0; }
+.plist-mini .pn { min-width: 0; }
+
+.pill {
+  display: inline-flex; align-items: center; gap: 5px; flex: none;
+  font: 500 12px/1.1 var(--f-display);
+  letter-spacing: .02em;
+  white-space: nowrap;
+  color: var(--c, var(--muted));
+}
+.pill::before { content: ""; width: 7px; height: 7px; background: currentColor; flex: none; }
+.k-live { --c: var(--ok); }
+.k-near { --c: var(--ok); }
+.k-active { --c: var(--act); }
+.k-soon { --c: var(--warn); }
+.k-idea { --c: var(--idea); }
+.k-idea::before { background: transparent; box-shadow: inset 0 0 0 2px currentColor; }
+.k-paused, .k-done { --c: var(--muted); }
+
+/* ---------- lobby ---------- */
+.lobby .wallband.tall {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 12px 14px;
+  padding: 12px;
+}
+.sign { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.sign strong {
+  font: 700 28px/1 var(--f-display);
+  color: var(--accent);
+  letter-spacing: .06em;
+  text-shadow: 0 0 10px var(--sign-glow), 0 2px 0 rgba(0,0,0,.35);
+}
+.sign span { font: 500 13px var(--f-display); color: #e9e2f3; letter-spacing: .05em; }
+.window {
+  width: 112px; height: 84px;
+  border: 5px solid var(--wall-trim);
+  background:
+    radial-gradient(circle at 72% 32%, var(--sun) 0 11px, transparent 12px),
+    radial-gradient(1.5px 1.5px at 20% 25%, var(--star) 99%, transparent),
+    radial-gradient(1.5px 1.5px at 45% 60%, var(--star) 99%, transparent),
+    radial-gradient(1.5px 1.5px at 85% 75%, var(--star) 99%, transparent),
+    radial-gradient(1.5px 1.5px at 30% 82%, var(--star) 99%, transparent),
+    linear-gradient(var(--sky-a), var(--sky-b));
+  position: relative;
+  flex: none;
+}
+.window::before, .window::after { content: ""; position: absolute; background: var(--wall-trim); }
+.window::before { left: 50%; top: 0; bottom: 0; width: 4px; margin-left: -2px; }
+.window::after { top: 50%; left: 0; right: 0; height: 4px; margin-top: -2px; }
+
+.board {
+  grid-column: 1 / -1;
+  background: var(--board-bg);
+  color: var(--board-ink);
+  font-family: var(--f-board);
+  border: 4px solid #0c0913;
+  box-shadow: inset 0 0 0 2px var(--board-line);
+  padding: 8px 10px 10px;
+}
+.board h2 { margin: 0 0 4px; font: 400 20px/1 var(--f-board); letter-spacing: .12em; color: var(--board-dim); display: flex; justify-content: space-between; gap: 8px; }
+.board ol { list-style: none; margin: 0; padding: 0; }
+.board li {
+  display: grid;
+  grid-template-columns: 74px 92px minmax(0, 1fr);
+  gap: 2px 10px;
+  align-items: baseline;
+  font-size: 21px; line-height: 1.15;
+  padding: 4px 0;
+  border-top: 1px dashed var(--board-line);
+  font-variant-numeric: tabular-nums;
+}
+.board .d { font-size: 24px; }
+.board .d.hot { color: #ff6a6a; }
+.board .dt { color: var(--board-dim); }
+.board .w { min-width: 0; }
+.board .w small { color: var(--board-dim); font-size: 17px; }
+@media (max-width: 619px) {
+  .board li { grid-template-columns: 64px minmax(0, 1fr); }
+  .board .dt { grid-column: 2; grid-row: 2; font-size: 17px; }
+  .board .w { grid-column: 2; grid-row: 1; }
+  .board .d { grid-row: 1 / span 2; }
+  .window { width: 72px; height: 60px; }
+  .sign strong { font-size: 24px; }
+  .lobby .scene { min-height: calc(var(--u) * 24 + 104px); }
+  .plot { right: auto; left: 44%; width: 60px; height: 44px; }
+}
+.lobby .scene { min-height: calc(var(--u) * 46); overflow: visible; }
+@media (min-width: 620px) { .lobby { --u: 5px; } }
+.lobby .station { left: 5%; }
+.bubble {
+  position: absolute;
+  left: calc(var(--u) * -1);
+  bottom: calc(var(--u) * 23);
+  width: min(270px, 74vw);
+  background: var(--panel);
+  color: var(--ink);
+  border: 3px solid var(--wall);
+  box-shadow: 4px 4px 0 var(--wall-drop);
+  padding: 8px 11px 9px;
+  font-size: 14px;
+  line-height: 1.35;
+  z-index: 5;
+}
+.bubble::after {
+  content: ""; position: absolute; left: 22px; bottom: -12px;
+  border-left: 9px solid transparent; border-right: 9px solid transparent; border-top: 10px solid var(--wall);
+}
+.bubble b { font-family: var(--f-display); color: var(--accent); font-weight: 700; }
+.bubble .hint { display: block; margin-top: 4px; font: 500 11px var(--f-display); color: var(--ink-soft); }
+.bubble p { margin: 0; transition: opacity .2s; }
+.aze {
+  position: absolute; left: 0; bottom: 0;
+  width: calc(var(--u) * 16); height: calc(var(--u) * 21);
+  background: none; border: 0; padding: 0; cursor: pointer; z-index: 4;
+}
+.lobby .info .btn { justify-self: start; }
+
+/* ---------- legend + footer ---------- */
+.legend { display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; color: var(--ink-soft); font-size: 13px; }
+.legend .pill { font-size: 12px; }
+.foot { color: var(--ink-soft); font-size: 13px; max-width: 70ch; margin: 0; }
+
+/* ---------- room panel ---------- */
+.scrim { position: fixed; inset: 0; background: rgba(20, 12, 34, .45); z-index: 20; }
+.panel {
+  position: fixed; z-index: 21;
+  top: 0; right: 0; bottom: 0;
+  width: min(440px, 100%);
+  background: var(--panel);
+  border-left: 6px solid var(--wall);
+  overflow-y: auto;
+  padding: calc(env(safe-area-inset-top, 0px) + 18px) max(18px, env(safe-area-inset-right, 0px)) calc(env(safe-area-inset-bottom, 0px) + 24px) 18px;
+  display: grid; align-content: start; gap: 18px;
+}
+@media (max-width: 619px) {
+  .panel { top: auto; left: 0; width: 100%; max-height: 86%; border-left: 0; border-top: 6px solid var(--wall);
+    padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+}
+.p-head { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 14px; align-items: start; }
+.portrait { --u: 5px; width: calc(var(--u) * 14); height: calc(var(--u) * 13); overflow: hidden; background: var(--accent-soft); border: 3px solid var(--wall); position: relative; }
+.portrait .slot { left: 0; top: 0; }
+.eyebrow { margin: 0; font: 500 12px var(--f-display); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+.p-head h2 { margin: 2px 0 4px; font: 700 22px/1.1 var(--f-display); text-wrap: balance; }
+.p-head p.la { margin: 0; color: var(--ink-soft); font-size: 14px; }
+.close { font: 700 20px/1 var(--f-display); width: 36px; height: 36px; background: var(--panel-2); color: var(--ink); border: 2px solid var(--wall); cursor: pointer; }
+.panel h3 { margin: 0 0 8px; font: 700 13px var(--f-display); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); }
+.plist { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.plist > li { background: var(--panel-2); border: 2px solid var(--line); padding: 10px 12px; display: grid; gap: 6px; }
+.prow { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
+.prow strong { font-size: 15px; line-height: 1.3; min-width: 0; }
+.ai { margin: 0; font-size: 13px; color: var(--ink-soft); }
+.ai b { color: var(--ink); }
+.notes { margin: 0; padding-left: 18px; font-size: 14px; display: grid; gap: 2px; }
+.dates { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.dates li { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 10px; font-size: 14px; font-variant-numeric: tabular-nums; }
+.dates .when { font-family: var(--f-display); color: var(--accent); }
+.askbox { display: flex; gap: 8px; align-items: stretch; }
+.askbox code { flex: 1; min-width: 0; font: 15px/1.4 var(--f-body); background: var(--accent-soft); color: var(--ink); padding: 9px 11px; border: 2px dashed var(--accent); user-select: all; }
+.note { margin: 0; font-size: 14px; color: var(--ink-soft); }
+
+@media (prefers-reduced-motion: reduce) {
+  .station .char, .zz { animation: none; }
+  .bubble p { transition: none; }
+}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <span class="slot-inline" data-spr="logo"></span>
+      <div>
+        <h1>Nara HQ</h1>
+        <p>Virtual office · board snapshot from <span id="snap"></span></p>
+      </div>
+    </div>
+    <div class="tools">
+      <span class="today" id="today"></span>
+      <button class="btn" id="lights" type="button">Lights: Auto</button>
+    </div>
+  </header>
+
+  <main class="plan" id="plan" aria-label="Office floor plan"></main>
+
+  <div class="legend" aria-label="Status key">
+    <span>Status key:</span>
+    <span class="pill k-live">Live</span>
+    <span class="pill k-active">In progress</span>
+    <span class="pill k-near">Nearly done</span>
+    <span class="pill k-soon">This week</span>
+    <span class="pill k-idea">Idea</span>
+    <span class="pill k-paused">Paused or done</span>
+  </div>
+  <p class="foot">This page shows a copy of the office board (<code>board.md</code>). Aze updates it whenever the board changes. Tap a room to see that CEO's projects, and tell Aze in chat when you want something done.</p>
+</div>
+
+<div class="scrim" id="scrim" hidden></div>
+<aside class="panel" id="panel" hidden role="dialog" aria-labelledby="p-title"></aside>
+
+<script>
+/* ================= OFFICE DATA (copied from board.md, keep in sync) ================= */
+const OFFICE = {
+  snapshot: "2026-11-21",
+  deadlines: [
+    { date: "2026-11-26", what: "Raffles Institution service activity", short: "Raffles", room: "opp", type: "Event" },
+    { date: "2026-11-27", what: "Science Expo written report due", short: "Report", room: "expo", type: "Due" },
+    { date: "2026-12-01", end: "2026-12-06", what: "Science Discovery Expo (public 3–5 Dec)", short: "Expo", room: "expo", type: "Event" },
+    { date: "2026-12-02", what: "Expo poster and demo links due", short: "Poster", room: "expo", type: "Due" }
+  ],
+  rooms: [
+    { id: "lobby", name: "Front Desk", ceo: "Azalea (Aze)", char: "azalea",
+      looksAfter: "Nara's personal assistant. Listens, passes work to the right CEO, and keeps the board up to date.",
+      projects: [
+        { name: "Visual-interactive virtual office", short: "Virtual office", status: "First version", kind: "active",
+          notes: ["This page, built by Aze.", "Shows a copy of the board; Aze updates it when the board changes."] }
+      ],
+      ask: "Aze, what's on the board?" },
+    { id: "expo", name: "Science Expo Lab", star: true, ceo: "Science Expo CEO", char: "science", floor: "lab",
+      floorProps: [["car", "left:calc(6% + var(--u) * 38)"], ["easel", "right:26%"], ["plant", "right:5%"]],
+      looksAfter: "Science Discovery Expo 2026, Nara's biggest project.",
+      projects: [
+        { name: "Quarter-car suspension simulation over a speed bump (polisi tidur)", short: "Quarter-car simulation", status: "In progress", kind: "active",
+          ai: "Allowed for the demo, must be declared",
+          notes: ["Team of 4, supervisor Ms. Eka", "Proposal in progress, report not started", "Demo built, to be improved", "Extra physical experiment planned"] }
+      ],
+      askNote: "Nara works on this one in a Claude Cowork Project, so this room only keeps its dates." },
+    { id: "fs", name: "Function Studio", ceo: "Function Studio CEO", char: "studio", floor: "graph", desk: "phone", decor: "play",
+      floorProps: [["camera", "right:10%"]], plot: true,
+      looksAfter: "The Function Studio math project.",
+      projects: [
+        { name: "Function Studio: a math Shorts channel and a story game", short: "Shorts + story game", status: "In progress", kind: "active",
+          ai: "Full", notes: ["Group: Nara, Kayyira and Uno", "Deadline and rubric not on the board yet"] }
+      ],
+      ask: "Aze, ask the Function Studio CEO to plan our next math Short." },
+    { id: "gi", name: "Passion Project", ceo: "GI Passion Project CEO", char: "gi", floor: "green", desk: "globe", decor: "sdg",
+      floorProps: [["plant", "right:8%"]],
+      looksAfter: "The Global Inquiry Passion Project.",
+      projects: [
+        { name: "Global Inquiry Passion Project: a civic / SDG product for the pameran", short: "SDG product", status: "In progress", kind: "active",
+          ai: "Full", notes: ["Pameran date and rubric not on the board yet"] }
+      ],
+      ask: "Aze, ask the GI Passion Project CEO to brainstorm product ideas for the pameran." },
+    { id: "games", name: "Game Room", ceo: "Games CEO", char: "games", floor: "teal", desk: "controller",
+      floorProps: [["arcade", "right:7%"]],
+      looksAfter: "Nara's own games and app ideas.",
+      projects: [
+        { name: "Archipelago life sim (Indonesian-inspired, Harvest Moon-like, browser game)", short: "Archipelago life sim", status: "Released", kind: "live", notes: ["Being improved"] },
+        { name: "Basket Random-style game, 1v1 online across devices", short: "1v1 online game", status: "Idea", kind: "idea" }
+      ],
+      ask: "Aze, ask the Games CEO what to improve next in the archipelago game." },
+    { id: "school", name: "School Office", ceo: "School CEO", char: "school", floor: "blue", desk: "books",
+      floorProps: [["shelf", "right:6%"]],
+      looksAfter: "Other school assignments, and the study tool app.",
+      projects: [
+        { name: "History summative: Pearl Harbor (with Mike)", short: "Pearl Harbor summative", status: "Nearly done", kind: "near",
+          ai: "Support (Nara and Mike write it)" },
+        { name: "Study tool app / study buddy AI", short: "Study buddy app", status: "Idea", kind: "idea", ai: "Nara's own project" }
+      ],
+      ask: "Aze, ask the School CEO to check my Pearl Harbor draft against the rubric." },
+    { id: "opp", name: "Opportunities", ceo: "Opportunities CEO", char: "opps", floor: "red", desk: "trophy",
+      floorProps: [["plant", "right:6%"]],
+      looksAfter: "Competitions, olympiads, programs, scholarships and school orgs.",
+      projects: [
+        { name: "Raffles Institution service activity", short: "Raffles service", status: "Thu 26 Nov", kind: "soon", notes: ["Accepted as a participant"] },
+        { name: "OSN Geography, selection phase 2", short: "OSN Geography", status: "Preparing", kind: "active" },
+        { name: "Study-abroad scholarship (long-term)", short: "Scholarship", status: "Ongoing", kind: "active" },
+        { name: "Kemala Trading Organization (KTO)", short: "KTO", status: "Inactive", kind: "paused" }
+      ],
+      ask: "Aze, ask the Opportunities CEO to make an OSN Geography study plan." },
+    { id: "archive", name: "Archive", ceo: null, floor: "grey",
+      floorProps: [["cabinet", "left:8%"], ["cabinet", "left:calc(8% + var(--u) * 15)"], ["cat", "right:10%"]],
+      looksAfter: "Finished projects.",
+      projects: [
+        { name: "English comparative paragraph (democratic vs authoritarian leader)", short: "English paragraph", status: "Done", kind: "done" },
+        { name: "Hult Future Leaders Challenge (team Sahibul KTB)", short: "Hult challenge", status: "Over", kind: "done", notes: ["Did not advance to the next phase"] }
+      ] }
+  ]
+};
+
+/* ================= PIXEL SPRITES ================= */
+const OUTLINE = "#231a30";
+const PERSON = [
+  "...HHHHHH...",
+  "..HHHHHHHH..",
+  ".HHHHHHHHHH.",
+  ".HHKKKKKKHH.",
+  ".HKKKKKKKKH.",
+  ".HKKKKKKKKH.",
+  ".HKeKKKKeKH.",
+  "..KbKKKKbK..",
+  "..KKKmmKKK..",
+  "...KKKKKK...",
+  "..TTTTTTTT..",
+  ".TTTTTTTTTT.",
+  "KTTTTTTTTTTK",
+  "KTTTTTTTTTTK",
+  ".TTTTTTTTTT.",
+  "..PPPPPPPP..",
+  "..PPP..PPP..",
+  "..zz....zz.."
+];
+function person(over, pal) {
+  const rows = PERSON.slice();
+  for (const k in over) rows[k] = over[k];
+  return { rows, pal: Object.assign({ e: "#231a30", m: "#9c4458", z: "#3a2f45", b: pal.K }, pal) };
+}
+const SPRITES = {
+  azalea: { rows: [
+      "...HHHHH.FF.",
+      "..HHHHHHFyF.",
+      ".HHhhHHHHFF.",
+      ".HhHHHHHHHH.",
+      ".HHKKKKKKHH.",
+      ".HKKKKKKKKH.",
+      ".HKeKKKKeKH.",
+      ".HKEKKKKEKH.",
+      ".HbKKKKKKbH.",
+      ".HHKKmmKKHH.",
+      ".HHHKKKKHHH.",
+      ".HHDDGGDDHH.",
+      "KHDDDDDDDDHK",
+      "K.DDDDDDDD.K",
+      "..DDDDDDDD..",
+      ".DDDDDDDDDD.",
+      "..KK....KK..",
+      "..zz....zz.."
+    ], pal: { H: "#7a2c61", h: "#a64c86", F: "#ff8cbc", y: "#ffd35c", K: "#f4cba8", e: "#2a1f3d", E: "#6b56a6",
+              b: "#f49ab4", m: "#c0476a", D: "#e5508b", G: "#4f9a5f", z: "#7a2c61" } },
+  games: person({ 0: "...CCCCCC...", 1: "..CCCCCCCC..", 2: ".HCCCCCCCCCC" },
+    { H: "#2a2030", C: "#3c82ee", K: "#c68a5f", T: "#f08a3c", P: "#33405f" }),
+  school: person({ 5: ".HgggKKgggH.", 6: ".HgeggggegH." },
+    { H: "#3b2a1e", g: "#2d2a40", K: "#ebbd93", T: "#3f6cc4", P: "#2b3550" }),
+  studio: person({ 0: ".BBBBBB.....", 1: "BBBBBBBBBH..", 2: ".HHHHHHHHHH." },
+    { B: "#d94352", H: "#1f1a26", K: "#a96f48", T: "#f2c14e", P: "#2f3a5c" }),
+  gi: person({ 0: "..H.HH.HH...", 1: ".HHHHHHHHHH.", 2: "HHHHHHHHHHHH", 3: "HHHKKKKKKHHH", 11: ".TTyTTTTTTT." },
+    { H: "#5b3a22", K: "#d69f75", T: "#3f9a5a", y: "#ffd35c", P: "#36435e" }),
+  science: person({ 2: ".HGGHHHHGGH.", 10: "..TTTiiTTT..", 11: ".TTTTiiTTTT.", 12: "KTTTTiiTTTTK" },
+    { H: "#262030", G: "#5ccfe6", K: "#8c5a3a", T: "#f3f3f8", i: "#6b86f0", P: "#2f3550" }),
+  opps: person({ 2: ".HHHHHhHHHH.", 10: "..TTwRRwTT..", 11: ".TTTTRRTTTT.", 12: "KTTTTRRTTTTK", 13: "KTTTTTRTTTTK" },
+    { H: "#15111c", h: "#3a3048", K: "#e1ab82", T: "#2c3767", w: "#ffffff", R: "#d6404a", P: "#232a4d" }),
+
+  desk: { rows: [
+      "..............mmmmmmmm",
+      "..............mSSSSSSm",
+      "..............mSsSsSSm",
+      "..............mSSSSSSm",
+      "..............mmmmmmmm",
+      ".................mm",
+      "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
+      "dddddddddddddddddddddddddddddddd",
+      "dd............................dd",
+      "dd............................dd",
+      "dd............................dd",
+      "DD............................DD"
+    ], pal: { m: "#3a3448", S: "#8fd3ff", s: "#3d8fd1", W: "#b07c4f", d: "#8a5c38", D: "#6d4529" } },
+  counter: { rows: [
+      "......................mmmmmmm",
+      "......................mSSSSSm",
+      "......................mSsSSSm",
+      "......................mSSSSSm",
+      "......................mmmmmmm",
+      ".........................m",
+      "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
+      "pppppppppppppppppppppppppppppppp",
+      "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
+      "qqqqqqqqqqqqqqFFFqqqqqqqqqqqqqqq",
+      "qqqqqqqqqqqqqqFyFqqqqqqqqqqqqqqq",
+      "qqqqqqqqqqqqqqFFFqqqqqqqqqqqqqqq",
+      "qqqqqqqqqqqqqqqLqqqqqqqqqqqqqqqq",
+      "QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ"
+    ], pal: { m: "#3a3448", S: "#ffd0e3", s: "#e5508b", P: "#f27aab", p: "#d95a8d", q: "#6e3a6a", Q: "#552b52",
+              F: "#ff9cc6", y: "#ffd35c", L: "#4f9a5f" } },
+  plant: { rows: [
+      "...pp...pp..",
+      "..pPpLLpPpp.",
+      ".LLppLLLppL.",
+      "LLLLlLpLLLL.",
+      ".LpPpLLLlL..",
+      "LLppLlLLppLL",
+      ".LLLLLLLLLL.",
+      "..lLLlLLLl..",
+      "...tttttt...",
+      "...tTTTTt...",
+      "....tttt....",
+      "....tttt...."
+    ], pal: { p: "#ef5f98", P: "#ffa3c7", L: "#4f9a5f", l: "#357548", t: "#c26a43", T: "#a45534" } },
+  logo: { rows: [
+      "..p.p..",
+      ".pPpPp.",
+      "pPpypPp",
+      ".pPpPp.",
+      "..pLp..",
+      "...L...",
+      "..LLL.."
+    ], pal: { p: "#e5508b", P: "#ff9cc6", y: "#ffd35c", L: "#4f9a5f" } },
+  controller: { rows: [
+      ".kkkkkkkk.",
+      "kkwkkkkrkk",
+      "kwwwkkrkbk",
+      "kkwkkkkgkk",
+      "kkkk..kkkk",
+      ".kk....kk."
+    ], pal: { k: "#3a3550", w: "#e8e4f0", r: "#e5484d", b: "#3e8ef7", g: "#46b36b" } },
+  books: { rows: [
+      "bbbbbbbbb.",
+      "bwwwwwwwb.",
+      "bbbbbbbbb.",
+      ".rrrrrrrrr",
+      ".rwwwwwwwr",
+      ".rrrrrrrrr",
+      "ggggggggg.",
+      "gwwwwwwwg.",
+      "ggggggggg."
+    ], pal: { b: "#3f6cc4", r: "#d6404a", g: "#3f9a5a", w: "#f4efe6" } },
+  phone: { rows: [
+      "kkkkkk",
+      "kwwwwk",
+      "kwrwwk",
+      "kwrrwk",
+      "kwrwwk",
+      "kwwwwk",
+      "kwwwwk",
+      "kkkkkk"
+    ], pal: { k: "#2a2638", w: "#ffffff", r: "#e8323f" } },
+  camera: { rows: [
+      "..kkk.....",
+      "kkkkkkkrk.",
+      "kkwwkkkkkk",
+      "kwbbwkkkk.",
+      "kkwwkkkk..",
+      "kkkkkkkk..",
+      "....k.....",
+      "....k.....",
+      "...kkk....",
+      "..k.k.k...",
+      ".k..k..k..",
+      ".k..k..k..",
+      "k...k...k."
+    ], pal: { k: "#2f2b3d", w: "#9aa3b5", b: "#5fb8ff", r: "#ff4454" } },
+  globe: { rows: [
+      "...bbb...",
+      ".bbgbbb..",
+      "bbgggbbb.",
+      "bgggbbgb.",
+      "bbgbbggb.",
+      ".bbbbgb..",
+      "..bbbb...",
+      "....k....",
+      "...kkk...",
+      "..kkkkk.."
+    ], pal: { b: "#3e8ef7", g: "#5cc46e", k: "#6b4f3a" } },
+  car: { rows: [
+      "..rrrrrrrr..",
+      "..rwwrrrrr..",
+      "..rrrrrrrr..",
+      "...s....d...",
+      "....s..ddd..",
+      "...s...ddd..",
+      "....s...d...",
+      "...s....d...",
+      "..kkkkkkkk..",
+      "..kkkkkkkk..",
+      ".....s......",
+      "......s.....",
+      ".....s......",
+      "....yyyy....",
+      "gggyyyyyyggg"
+    ], pal: { r: "#e5484d", w: "#cfe9ff", s: "#b8bfcc", d: "#4a4560", k: "#2a2638", y: "#f2c14e", g: "#8a8697" } },
+  trophy: { rows: [
+      "yyyyyyyyyy",
+      "yyYyyyyyyy",
+      "y.yYyyyy.y",
+      "y.yyyyyy.y",
+      ".yyyyyyyy.",
+      "..yyyyyy..",
+      "....yy....",
+      "....yy....",
+      "..kkkkkk..",
+      "..kkkkkk.."
+    ], pal: { y: "#f2c14e", Y: "#fff1b8", k: "#6b4f3a" } },
+  easel: { rows: [
+      "..pppppppppp..",
+      "..pwwwwwwwwp..",
+      "..pwrrrrrrwp..",
+      "..pwwwwwwwwp..",
+      "..pwbbwwggwp..",
+      "..pwbbwwggwp..",
+      "..pwwwwwwwwp..",
+      "..pwkkkkkkwp..",
+      "..pwwwwwwwwp..",
+      "..pwkkkwkkwp..",
+      "..pwwwwwwwwp..",
+      ".nnnnnnnnnnnn.",
+      "...n......n...",
+      "...n......n...",
+      "..n........n..",
+      "..n........n..",
+      ".n..........n.",
+      ".n..........n."
+    ], pal: { p: "#c9c4d4", w: "#ffffff", r: "#e5484d", b: "#3e8ef7", g: "#46b36b", k: "#9a95a8", n: "#8a5c38" } },
+  shelf: { rows: [
+      "ssssssssssssssss",
+      "srrbbggyyrrbbwws",
+      "srrbbggyyrrbbwws",
+      "srrbbggyyrrbbwws",
+      "ssssssssssssssss",
+      "sggyybbrrwwggyys",
+      "sggyybbrrwwggyys",
+      "sggyybbrrwwggyys",
+      "ssssssssssssssss",
+      "sbbwwrrggyybbrrs",
+      "sbbwwrrggyybbrrs",
+      "sbbwwrrggyybbrrs",
+      "ssssssssssssssss",
+      "s..............s"
+    ], pal: { s: "#8a5c38", r: "#d6404a", b: "#3f6cc4", g: "#3f9a5a", y: "#f2c14e", w: "#efe7d8" } },
+  arcade: { rows: [
+      ".aaaaaaaaaa.",
+      "aaaaaaaaaaaa",
+      "aYYYYYYYYYYa",
+      "aaaaaaaaaaaa",
+      "akkkkkkkkkka",
+      "akSSSSSSSSka",
+      "akSgSSSSrSka",
+      "akSSSSSSSSka",
+      "akSSSbSSSSka",
+      "akkkkkkkkkka",
+      "aaaaaaaaaaaa",
+      "aDDDDDDDDDDa",
+      "aDrDDDbDgDDa",
+      "aaaaaaaaaaaa",
+      "aaaaaaaaaaaa",
+      "aaaaAAAAaaaa",
+      "aaaaAAAAaaaa",
+      "aaaaaaaaaaaa",
+      "aaaaaaaaaaaa"
+    ], pal: { a: "#7a3fc2", A: "#5a2e96", Y: "#ffd35c", k: "#1b1626", S: "#2a2d52", g: "#5fe08a", r: "#ff5a6a", b: "#5fb8ff", D: "#3a2f55" } },
+  cabinet: { rows: [
+      "cccccccccccc",
+      "cCCCCCCCCCCc",
+      "cCCCkkkkCCCc",
+      "cCCCCCCCCCCc",
+      "cccccccccccc",
+      "cCCCCCCCCCCc",
+      "cCCCkkkkCCCc",
+      "cCCCCCCCCCCc",
+      "cccccccccccc",
+      "cCCCCCCCCCCc",
+      "cCCCkkkkCCCc",
+      "cCCCCCCCCCCc",
+      "cccccccccccc"
+    ], pal: { c: "#7f8799", C: "#a3abbd", k: "#4b5163" } },
+  cat: { rows: [
+      "........k.k.",
+      "........kkkk",
+      "..kkkkkkkzkz",
+      ".kkkkkkkkkkk",
+      "kkkkkkkkkkk.",
+      "tkkkkkkkkkk.",
+      ".tt.kk..kk.."
+    ], pal: { k: "#e8954a", z: "#5a3420", t: "#c9773a" } },
+  sofa: { rows: [
+      "..ssssssssssssssssss..",
+      ".sSSSSSSSSSSSSSSSSSSs.",
+      ".sSSSSSSSSSSSSSSSSSSs.",
+      "ssssssssssssssssssssss",
+      "sSSSSSSSSSSSSSSSSSSSSs",
+      "ssssssssssssssssssssss",
+      "kk..................kk"
+    ], pal: { s: "#6d4a86", S: "#9067ab", k: "#3a2f45" } }
+};
+
+function makeSprite(name) {
+  const spr = SPRITES[name];
+  if (!spr) return null;
+  const rows = spr.rows;
+  const w = Math.max(...rows.map(r => r.length)), h = rows.length;
+  const W = w + 2, H = h + 2;
+  const c = document.createElement("canvas");
+  c.width = W; c.height = H;
+  const ctx = c.getContext("2d");
+  const solid = Array.from({ length: H }, () => new Array(W).fill(false));
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    const ch = rows[y][x] || ".";
+    const col = spr.pal[ch];
+    if (ch === "." || !col) continue;
+    ctx.fillStyle = col;
+    ctx.fillRect(x + 1, y + 1, 1, 1);
+    solid[y + 1][x + 1] = true;
+  }
+  ctx.fillStyle = OUTLINE;
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    if (solid[y][x]) continue;
+    const n = (yy, xx) => yy >= 0 && yy < H && xx >= 0 && xx < W && solid[yy][xx];
+    if (n(y - 1, x) || n(y + 1, x) || n(y, x - 1) || n(y, x + 1)) ctx.fillRect(x, y, 1, 1);
+  }
+  c.className = "spr";
+  c.setAttribute("aria-hidden", "true");
+  c.style.width = `calc(var(--u) * ${W})`;
+  c.style.height = `calc(var(--u) * ${H})`;
+  return c;
+}
+function fillSprites(root) {
+  root.querySelectorAll("[data-spr]").forEach(slot => {
+    if (slot.firstChild) return;
+    const c = makeSprite(slot.dataset.spr);
+    if (c) slot.appendChild(c);
+  });
+}
+
+/* ================= DATES ================= */
+const TZ = "Asia/Jakarta";
+const isoToday = new Intl.DateTimeFormat("en-CA", { timeZone: TZ, year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
+const hourNow = Number(new Intl.DateTimeFormat("en-GB", { timeZone: TZ, hour: "2-digit", hourCycle: "h23" }).format(new Date()));
+const toUTC = iso => { const [y, m, d] = iso.split("-").map(Number); return Date.UTC(y, m - 1, d); };
+const daysUntil = iso => Math.round((toUTC(iso) - toUTC(isoToday)) / 86400000);
+const fmtDay = (iso, opts) => new Intl.DateTimeFormat("en-GB", Object.assign({ timeZone: "UTC" }, opts)).format(new Date(toUTC(iso)));
+const shortDate = iso => fmtDay(iso, { weekday: "short", day: "numeric", month: "short" });
+
+function deadlineState(dl) {
+  const d = daysUntil(dl.date);
+  const dEnd = dl.end ? daysUntil(dl.end) : d;
+  if (dEnd < 0) return { past: true, d };
+  if (d <= 0 && dEnd >= 0 && dl.end) return { d: 0, label: "ON NOW", rel: "happening now" };
+  if (d === 0) return { d, label: "TODAY", rel: "today" };
+  if (d === 1) return { d, label: "D-1", rel: "tomorrow" };
+  return { d, label: "D-" + d, rel: `in ${d} days` };
+}
+const upcoming = OFFICE.deadlines
+  .map(dl => Object.assign({}, dl, deadlineState(dl)))
+  .filter(dl => !dl.past)
+  .sort((a, b) => a.date.localeCompare(b.date));
+
+function roomLed(room) {
+  if (room.id === "archive") return { cls: "muted", text: "Archive" };
+  const mine = upcoming.filter(dl => dl.room === room.id);
+  if (mine.length) {
+    const n = mine[0];
+    const cls = n.d <= 2 ? "hot" : n.d <= 7 ? "warn" : "ok";
+    const when = n.label === "ON NOW" ? "on now" : n.d === 0 ? "today" : n.d === 1 ? "tomorrow" : `in ${n.d} days`;
+    return { cls, text: `${n.short} ${when}` };
+  }
+  const busy = room.projects.some(p => ["active", "live", "near", "soon"].includes(p.kind));
+  return busy ? { cls: "ok", text: "Working" } : { cls: "muted", text: "Quiet" };
+}
+
+/* ================= RENDER ================= */
+const esc = s => String(s).replace(/[&<>"]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]));
+const SDG = ["#E5243B","#DDA63A","#4C9F38","#C5192D","#FF3A21","#26BDE2","#FCC30B","#A21942","#FD6925","#DD1367","#FD9D24","#BF8B2E","#3F7E44","#0A97D9","#56C02B","#00689D","#19486A"];
+const sdgBg = "conic-gradient(" + SDG.map((c, i) => `${c} ${(i * 360 / 17).toFixed(2)}deg ${((i + 1) * 360 / 17).toFixed(2)}deg`).join(",") + ")";
+
+function miniList(room) {
+  return `<ul class="plist-mini">${room.projects.map(p =>
+    `<li><span class="pn">${esc(p.short)}</span><span class="pill k-${p.kind}">${esc(p.status)}</span></li>`).join("")}</ul>`;
+}
+function station(room, left) {
+  return `<div class="station" style="left:${left}">
+      <div class="glow"></div>
+      <span class="slot char" data-spr="${room.char}" style="animation-delay:-${(room.id.length % 5) * 0.37}s"></span>
+      <span class="slot desk" data-spr="desk"></span>
+      ${room.desk ? `<span class="slot prop" data-spr="${room.desk}" style="left:calc(var(--u) * 22)"></span>` : ""}
+    </div>`;
+}
+function roomHTML(room) {
+  const led = roomLed(room);
+  const decor = room.decor === "sdg" ? `<span class="sdg" style="background:${sdgBg}" title="The 17 SDGs"></span>`
+              : room.decor === "play" ? `<span class="play" title="Shorts channel"></span>` : "";
+  const props = (room.floorProps || []).map(([s, pos]) => `<span class="slot floorprop" data-spr="${s}" style="${pos}"></span>`).join("");
+  const plot = room.plot ? `<svg class="plot" viewBox="0 0 96 70" aria-hidden="true">
+      <line x1="48" y1="4" x2="48" y2="66"/><line x1="4" y1="60" x2="92" y2="60"/>
+      <path d="M12 8 Q48 112 84 8"/><text x="58" y="20">f(x)</text></svg>` : "";
+  const extra = room.id === "archive" ? `<span class="zz" style="right:calc(10% + var(--u) * 3); bottom:calc(var(--u) * 12)">z</span>` : "";
+  return `<a class="room" href="#${room.id}" style="grid-area:${room.id}" aria-label="Open ${esc(room.name)}">
+    <div class="wallband">
+      <span class="plaque">${room.star ? '<span class="star">★</span> ' : ""}${esc(room.name)}</span>
+      <span class="band-right">${decor}<span class="led ${led.cls}"><i></i>${esc(led.text)}</span></span>
+    </div>
+    <div class="scene floor-${room.floor}">${plot}${props}${room.char ? station(room, "6%") : ""}${extra}</div>
+    <div class="info">
+      <div class="who"><b>${esc(room.ceo || "Finished work")}</b><span class="open">Open room →</span></div>
+      ${miniList(room)}
+    </div>
+    <span class="door"></span>
+  </a>`;
+}
+function lobbyHTML(room) {
+  const rows = upcoming.slice(0, 5).map(dl => `<li>
+      <span class="d${dl.d <= 2 ? " hot" : ""}">${dl.label}</span>
+      <span class="dt">${fmtDay(dl.date, { weekday: "short", day: "2-digit", month: "short" }).toUpperCase().replace(",", "")}</span>
+      <span class="w">${esc(dl.what)} <small>· ${esc(roomName(dl.room))}</small></span></li>`).join("");
+  return `<section class="room lobby" style="grid-area:lobby" aria-label="Front desk">
+    <div class="wallband tall">
+      <div class="sign"><strong>NARA HQ</strong><span>FRONT DESK · AZALEA</span></div>
+      <div class="window" aria-hidden="true"></div>
+      <div class="board" role="region" aria-label="Upcoming dates">
+        <h2><span>NEXT UP</span><span>WIB</span></h2>
+        <ol>${rows || '<li><span class="d">--</span><span class="dt"></span><span class="w">Nothing on the calendar</span></li>'}</ol>
+      </div>
+    </div>
+    <div class="scene floor-wood">
+      <span class="slot floorprop" data-spr="sofa" style="right:16%"></span>
+      <span class="slot floorprop" data-spr="plant" style="right:4%"></span>
+      <div class="station" style="left:5%">
+        <div class="glow"></div>
+        <div class="bubble" id="bubble"><p id="line"></p><span class="hint">Tap Aze for more</span></div>
+        <span class="slot char" data-spr="azalea"></span>
+        <span class="slot desk" data-spr="counter"></span>
+        <button class="aze" id="aze" type="button" aria-label="Talk to Aze"></button>
+      </div>
+    </div>
+    <div class="info">
+      <div class="who"><b>Azalea (Aze) · personal assistant</b></div>
+      ${miniList(room)}
+      <a class="btn" href="#lobby">About Aze</a>
+    </div>
+  </section>`;
+}
+const roomName = id => (OFFICE.rooms.find(r => r.id === id) || {}).name || id;
+
+const plan = document.getElementById("plan");
+plan.innerHTML = OFFICE.rooms.map(r => r.id === "lobby" ? lobbyHTML(r) : roomHTML(r)).join("");
+fillSprites(document);
+
+document.getElementById("snap").textContent = fmtDay(OFFICE.snapshot, { day: "numeric", month: "long", year: "numeric" });
+document.getElementById("today").textContent = "Today: " + shortDate(isoToday) + " · WIB";
+
+/* ================= AZE'S LINES ================= */
+const greet = hourNow < 11 ? "Good morning" : hourNow < 15 ? "Good afternoon" : hourNow < 19 ? "Good evening" : "Good night";
+const lines = [`<b>${greet}, Nara!</b> Aze here at the front desk. Welcome to your office.`];
+if (upcoming[0]) lines.push(`<b>Next up:</b> ${esc(upcoming[0].what)}, ${upcoming[0].rel} (${shortDate(upcoming[0].date)}).`);
+const rep = upcoming.find(d => d.short === "Report");
+if (rep) lines.push(`The <b>Science Expo report</b> is due ${rep.rel}. You're writing it in Cowork. Semangat!`);
+lines.push(`<b>New rooms:</b> Function Studio and the Passion Project now have their own CEOs.`);
+lines.push(`Tap any room to see what that CEO is working on.`);
+lines.push(`Want something done? Tell me in chat and I'll pass it to the right CEO.`);
+let li = 0;
+const lineEl = document.getElementById("line");
+function showLine(i) { lineEl.innerHTML = lines[i]; }
+showLine(0);
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+function nextLine() {
+  li = (li + 1) % lines.length;
+  if (reduce) return showLine(li);
+  lineEl.style.opacity = 0;
+  setTimeout(() => { showLine(li); lineEl.style.opacity = 1; }, 180);
+}
+let timer = reduce ? null : setInterval(nextLine, 7000);
+document.getElementById("aze").addEventListener("click", () => {
+  nextLine();
+  if (timer) { clearInterval(timer); timer = setInterval(nextLine, 7000); }
+});
+
+/* ================= ROOM PANEL ================= */
+const panel = document.getElementById("panel");
+const scrim = document.getElementById("scrim");
+let lastFocus = null;
+function panelHTML(room) {
+  const dates = OFFICE.deadlines.filter(d => d.room === room.id);
+  const datesHTML = dates.length ? `<section><h3>Dates</h3><ul class="dates">${dates.map(d => {
+      const st = deadlineState(d);
+      const range = d.end ? `${fmtDay(d.date, { day: "numeric", month: "short" })} – ${fmtDay(d.end, { day: "numeric", month: "short" })}` : shortDate(d.date);
+      return `<li><span class="when">${range}</span><span>${esc(d.what)}${st.past ? " (passed)" : ` · ${st.rel}`}</span></li>`;
+    }).join("")}</ul></section>` : "";
+  const ask = room.ask ? `<section><h3>Give this room work</h3>
+      <p class="note">Tell Aze in chat, for example:</p>
+      <div class="askbox"><code id="ask-text">${esc(room.ask)}</code><button class="btn" id="copy" type="button">Copy</button></div></section>`
+    : room.askNote ? `<section><h3>Where the work happens</h3><p class="note">${esc(room.askNote)}</p></section>` : "";
+  return `<div class="p-head">
+      <div class="portrait">${room.char ? `<span class="slot" data-spr="${room.char}"></span>` : `<span class="slot" data-spr="cat" style="top:calc(var(--u) * 4)"></span>`}</div>
+      <div><p class="eyebrow">${esc(room.name)}</p><h2 id="p-title">${esc(room.ceo || "Archive")}</h2><p class="la">${esc(room.looksAfter)}</p></div>
+      <button class="close" id="close" type="button" aria-label="Close room">×</button>
+    </div>
+    <section><h3>Projects</h3><ul class="plist">${room.projects.map(p => `<li>
+        <div class="prow"><strong>${esc(p.name)}</strong><span class="pill k-${p.kind}">${esc(p.status)}</span></div>
+        ${p.ai ? `<p class="ai">AI use: <b>${esc(p.ai)}</b></p>` : ""}
+        ${p.notes ? `<ul class="notes">${p.notes.map(n => `<li>${esc(n)}</li>`).join("")}</ul>` : ""}
+      </li>`).join("")}</ul></section>
+    ${datesHTML}${ask}`;
+}
+function openRoom(id) {
+  const room = OFFICE.rooms.find(r => r.id === id);
+  if (!room) return closeRoom(false);
+  if (panel.hidden) lastFocus = document.activeElement;
+  panel.innerHTML = panelHTML(room);
+  fillSprites(panel);
+  panel.hidden = false; scrim.hidden = false;
+  document.getElementById("close").addEventListener("click", () => closeRoom(true));
+  const copy = document.getElementById("copy");
+  if (copy) copy.addEventListener("click", () => {
+    const text = document.getElementById("ask-text");
+    const done = () => { copy.textContent = "Copied"; setTimeout(() => copy.textContent = "Copy", 1500); };
+    const fallback = () => { const r = document.createRange(); r.selectNodeContents(text); const s = getSelection(); s.removeAllRanges(); s.addRange(r); copy.textContent = "Selected"; };
+    try { navigator.clipboard.writeText(text.textContent).then(done, fallback); } catch (e) { fallback(); }
+  });
+  document.getElementById("close").focus();
+}
+function closeRoom(clearHash) {
+  panel.hidden = true; scrim.hidden = true;
+  if (clearHash && location.hash) location.hash = "";
+  if (lastFocus && lastFocus.focus) lastFocus.focus();
+}
+function route() { const id = location.hash.slice(1); id ? openRoom(id) : closeRoom(false); }
+addEventListener("hashchange", route);
+scrim.addEventListener("click", () => closeRoom(true));
+addEventListener("keydown", e => { if (e.key === "Escape" && !panel.hidden) closeRoom(true); });
+route();
+
+/* ================= LIGHTS ================= */
+const lightsBtn = document.getElementById("lights");
+const MODES = ["auto", "light", "dark"], LABEL = { auto: "Lights: Auto", light: "Lights: Day", dark: "Lights: Night" };
+let mode = "auto";
+try { mode = localStorage.getItem("nara-hq-lights") || "auto"; } catch (e) {}
+function applyMode() {
+  if (mode === "auto") document.documentElement.removeAttribute("data-theme");
+  else document.documentElement.setAttribute("data-theme", mode);
+  lightsBtn.textContent = LABEL[mode] || LABEL.auto;
+}
+if (mode !== "auto") applyMode();
+lightsBtn.addEventListener("click", () => {
+  mode = MODES[(MODES.indexOf(mode) + 1) % MODES.length];
+  applyMode();
+  try { localStorage.setItem("nara-hq-lights", mode); } catch (e) {}
+});
+</script>

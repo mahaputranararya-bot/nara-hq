@@ -8,7 +8,7 @@ research and give feedback only, Nara writes the submitted work. Unknown → tre
 ## Azalea (office itself)
 | Project | Status |
 |---|---|
-| Visual-interactive virtual office (browser view of the office: rooms per CEO, projects, deadlines) | Idea — waiting for Nara to say when to start |
+| Visual-interactive virtual office (pixel-art view of the office: rooms per CEO, projects, deadlines) — `office/index.html`, live at https://claude.ai/artifact/7cbTRB9FMgQaFrThBTFb9c | First version live (21 Nov) |
 
 ## Games CEO
 | Project | Status |
