@@ -5,6 +5,11 @@ Kept up to date by Azalea. Last updated: 21 Nov 2026.
 **AI use** column (school projects): **Full** = teacher allows AI to do the work; **Support** = AI helps plan,
 research and give feedback only, Nara writes the submitted work. Unknown → treat as Support and ask Nara.
 
+## Azalea (office itself)
+| Project | Status |
+|---|---|
+| Visual-interactive virtual office (browser view of the office: rooms per CEO, projects, deadlines) | Idea — waiting for Nara to say when to start |
+
 ## Games CEO
 | Project | Status |
 |---|---|
