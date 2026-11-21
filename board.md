@@ -14,15 +14,23 @@ research and give feedback only, Nara writes the submitted work. Unknown → tre
 ## School CEO
 | Project | Status | AI use |
 |---|---|---|
-| Function Studio math project (math Shorts channel + story game, with Kayyira and Uno) | In progress | Full |
-| Global Inquiry Passion Project (civic/SDG product for the pameran) | In progress | Full |
 | Study tool app / study buddy AI for Nara | Idea | — (own project) |
 | History summative: Pearl Harbor (with Mike) | Nearly done, writing with Mike | Support |
+
+## Function Studio CEO
+| Project | Status | AI use |
+|---|---|---|
+| Function Studio math project (math Shorts channel + story game, with Kayyira and Uno) | In progress | Full |
+
+## GI Passion Project CEO
+| Project | Status | AI use |
+|---|---|---|
+| Global Inquiry Passion Project (civic/SDG product for the pameran) | In progress | Full |
 
 ## Science Expo CEO  ⭐ biggest project
 | Project | Status | AI use |
 |---|---|---|
-| Science Discovery Expo 2026: quarter-car suspension simulation (team of 4, supervisor Ms. Eka) Proposal in progress, report not started (due **27 Nov**), demo to improve, extra physical experiment planned. Poster + demo links due 2 Dec, Expo 1–6 Dec. Worked on in chat with Azalea | Allowed for demo; must be declared — see `projects/science-expo/status.md` |
+| Science Discovery Expo 2026: quarter-car suspension simulation (team of 4, supervisor Ms. Eka) Proposal in progress, report not started (due **27 Nov**), demo to improve, extra physical experiment planned. Poster + demo links due 2 Dec, Expo 1–6 Dec. Nara works on this in a Claude Cowork Project, not here | Allowed for demo; must be declared — see `projects/science-expo/status.md` |
 
 ## Opportunities CEO
 | Project | Status |
