@@ -166,6 +166,7 @@ register('runner', {
         R.timeLeft = Math.max(0, R.game.duration - ctx.t);
         const sec = Math.ceil(R.timeLeft);
         if (sec <= 5 && sec !== R.lastTick && R.timeLeft > 0) { R.lastTick = sec; play('tick'); }
+        if (R.game.duration >= 25 && !R.saidFinal && R.timeLeft <= 10) { R.saidFinal = true; popup(t('comment.final'), W / 2, 110, { color: '#ff73c6', size: 44, life: 1.6, vy: -20 }); }
         if (R.timeLeft <= 0) beginFinish('time');
       }
       if (R.finishReq) beginFinish('done');

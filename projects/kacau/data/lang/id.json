@@ -136,7 +136,12 @@
       "BANGKIT LAGI!",
       "DARI NOL JADI JAGOAN!"
     ],
-    "photo": "BEDA TIPIS!"
+    "photo": "BEDA TIPIS!",
+    "final": [
+      "10 DETIK LAGI!",
+      "AYO CEPAT!",
+      "WAKTU HAMPIR HABIS!"
+    ]
   },
   "mg": {
     "sumo": {
@@ -390,6 +395,13 @@
       "a": "Kayuh",
       "hint": "PALING LAMBAT MENANG! (tapi jangan jatuh)",
       "tooFast": "KECEPATAN!"
+    },
+    "kendi": {
+      "name": "Pukul Kendi",
+      "desc": "Matamu ditutup dan kamu jalan ke kiri-kanan (kadang berbalik sendiri!). Teman-temanmu bisa lihat kendinya. Tekan A pas di bawahnya untuk MEMECAHKAN kendi. Meleset = pusing!",
+      "a": "Pukul",
+      "smash": "PRAK!",
+      "perfect": "SEMPURNA!"
     }
   },
   "party": {

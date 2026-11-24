@@ -136,7 +136,12 @@
       "WHAT A COMEBACK!",
       "FROM ZERO TO HERO!"
     ],
-    "photo": "PHOTO FINISH!"
+    "photo": "PHOTO FINISH!",
+    "final": [
+      "10 SECONDS LEFT!",
+      "LAST 10 SECONDS!",
+      "HURRY UP!"
+    ]
   },
   "mg": {
     "sumo": {
@@ -390,6 +395,13 @@
       "a": "Pedal",
       "hint": "SLOWEST WINS! (but don't fall over)",
       "tooFast": "TOO FAST!"
+    },
+    "kendi": {
+      "name": "Pukul Kendi",
+      "desc": "You're blindfolded and wander left and right (sometimes you turn round by yourself!). Your friends can see the pot. Press A when you're right under it to SMASH it. Miss = dizzy!",
+      "a": "Swing",
+      "smash": "SMASH!",
+      "perfect": "PERFECT!"
     }
   },
   "party": {

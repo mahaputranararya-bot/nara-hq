@@ -40,6 +40,7 @@ import fishing from './fishing.js';
 import parachute from './parachute.js';
 import bridge from './bridge.js';
 import sepeda from './sepeda.js';
+import kendi from './kendi.js';
 
-export const MINIGAMES = [sumo, quickdraw, noodle, sack, kerupuk, potato, colorsnap, tug, sweeper, hoops, pancake, plane, drums, tiles, stack, panjat, balloon, coconut, holdit, curling, kelereng, bakiak, paku, jumprope, lava, log, volley, football, chicken, bigger, patung, layangan, gasing, egg, chairs, simon, fishing, parachute, bridge, sepeda];
+export const MINIGAMES = [sumo, quickdraw, noodle, sack, kerupuk, potato, colorsnap, tug, sweeper, hoops, pancake, plane, drums, tiles, stack, panjat, balloon, coconut, holdit, curling, kelereng, bakiak, paku, jumprope, lava, log, volley, football, chicken, bigger, patung, layangan, gasing, egg, chairs, simon, fishing, parachute, bridge, sepeda, kendi];
 export const getGame = (id) => MINIGAMES.find((m) => m.id === id);

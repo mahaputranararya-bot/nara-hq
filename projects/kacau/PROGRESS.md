@@ -113,13 +113,32 @@ Read this first in a new session. Also read `docs/BRIEF.md` (spec), `docs/DECISI
 - **Secret-traitor round tried on paper and skipped**, see DECISIONS 24.
 - Tests: smoke plays both boards, all 40 games at 2/4/8, the DURIAN code, a line-up of the new characters.
 
+### M10 (more fun with real friends) — DONE
+- **Close-finish juice:** `isClose()` in runner.js (game hook `close(st, ctx)`, else `st.pts`/`st.score` top two within
+  1 (or 10%), or a tie for 1st in non-team games). Close = PHOTO FINISH banner, 1.8 s slow-mo at 0.2x, shake, flash,
+  double confetti. Normal finish = short 0.7 s slow-mo at 0.5x (brief: slow-mo is for *close* finishes). `close` hooks in
+  sack + kendi. New commentator line at 10 s left in games of 25 s+ (`comment.final`, EN+ID).
+- **Bot balance:** Glass Bridge bots pause like humans on known tiles and wait for others to test unknown ones
+  (8 bots now ~19-23 s, 4 bots ~29-34 s; was 9-15 s). Wobbly Football with 6+ players: wider goals (205-605), only
+  1 chaser per team, ball rolls further: 8 bots ~3 goals a match (was ~2).
+- **Performance:** `tests/perf.js [rate] [game|all] [secs]` runs each game with 8 bots on the real rAF loop with CDP
+  CPU throttling and reports fps. Findings: JS update+draw is only ~1-2 ms; the cost is pixels (raster) and the replay
+  canvas copy. Fixes: replay captured at 20 fps / 384x216 (`REPLAY_FPS`), and **auto quality** in app.js (`perf`,
+  `view.quality`): if frames stay under ~52 fps for 3 s the canvas renders at 80% then 60% resolution.
+  Results at 4x throttle, 8 bots: full quality average 57.4 fps (worst potato 42, layangan 49, kerupuk 50);
+  with auto quality average 59.6 fps, 38/40 games at 60 (potato 49, noodle 53). Headless Chromium has no GPU, so a
+  real laptop should do better. `tests/balance.js <game> <n> <runs>` prints bot-match stats.
+- **New mini-game (41):** `kendi` Pukul Kendi (local, 1 button): blindfolded walker, press under the pot. In the 17 August pack (12).
+- **README:** "First party night" guide (setup for 4-8, best modes in order).
+
 ## In progress
 - Nothing half-done.
 
 ## Known bugs / rough edges
-- Wobbly Football with 8 bots is still lower scoring (~2-3 goals).
-- Glass Bridge with only bots can end in ~12-18 s (they learn from each other fast).
-- New M9 games are tuned with bots only; need real-player playtesting (esp. Kursi Musik, Gasing, Sepeda Lambat).
+- Wobbly Football with 8 bots scores ~3 a match (fine, but 4p scores more).
+- Hot Potato and Tangled Noodles dip to ~50 fps at 4x CPU throttle even with auto quality.
+- Auto quality, once lowered, stays lowered for the session (by design: avoids flicker).
+- New M9 games are tuned with bots only; need real-player playtesting (esp. Kursi Musik, Gasing, Sepeda Lambat, Pukul Kendi).
 - Same-tick finishes in Balap Karung can tie (broken by overshoot distance).
 - Gamepad support is untested on real hardware (headless tests can't plug in a pad).
 - LAN mode tested only on localhost (headless); real phones over school Wi-Fi untested.

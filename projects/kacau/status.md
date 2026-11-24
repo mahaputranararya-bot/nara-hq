@@ -42,8 +42,14 @@ Owner: Games CEO. Full brief: `docs/BRIEF.md`. Detailed engineering log: `PROGRE
   Smarter bots in Wobbly Football and Balloon Pump. The secret-traitor idea was tried and skipped (everyone can see
   the shared keyboard, so nothing stays secret); it can come back with phones in LAN mode.
 
+- **Milestone 10 done:** close finishes now get a big PHOTO FINISH moment (long slow motion, flash, double confetti),
+  plus a "10 SECONDS LEFT!" call. Glass Bridge bots no longer finish in 9 s; 8-player football scores more.
+  Speed check on a pretend slow laptop (CPU 4x slower, 8 players): ~60 fps in 38 of 41 games thanks to a new
+  auto-quality trick; worst game ~49 fps. New game: Pukul Kendi (smash the pot). README has a "First party night" guide.
+
 ## Next
-- Playtest the 9 new games with real people and tune them.
+- Playtest the new games (M9 + Pukul Kendi) with real people and tune them.
+- Check fps on Nara's real laptop (8 players, Hot Potato is the heaviest).
 - LAN v2: phones show your colour/character; secret-traitor round with private roles on phones.
 - Try LAN mode with real phones on the dorm/school Wi-Fi (only tested on one machine so far).
 

@@ -30,19 +30,46 @@ Most games use only button A. Steering games use A = left, B = right. Gamepads h
 If someone's key doesn't light up on the join screen while everyone holds their keys, that laptop keyboard
 can't handle the combo ("ghosting"); give that player a gamepad.
 
-## Mini-games (31)
+## Mini-games (41)
 Belly Bump Sumo, Wait For It..., Tangled Noodles, Hot Potato Bomb, Colour Snap, Spin Sweeper, Floppy Hoops,
 Pancake Panic, Paper Plane, Drum Battle, Crumble Tiles, Tower Stack, Balloon Pump, Coconut Rain, Jump Rope,
 Rising Lava, Spinning Log, Giant Volleyball (teams), Wobbly Football (teams), Chicken Chase (everyone vs the chicken),
 More or Less?, Statue!, Hold It! and Ice Curling (last two unlock with coins).
 **17 August pack:** Balap Karung, Makan Kerupuk, Tarik Tambang (teams), Panjat Pinang (teams), Marble Spoon Race
 (kelereng), Bakiak Team Walk (teams), Nail in the Bottle.
+Newer games (M9-M10): Layangan, Gasing, Egg Catch, Kursi Musik, Copy Me (secret), Mancing, Parachute Panic,
+Glass Bridge, Sepeda Lambat and Pukul Kendi (smash the pot, 17 August pack).
 Modifiers, coins + Unlocks shop, and Export/Import save are in the menu. Details: `PROGRESS.md`.
 
 ## Party Mode in 20 seconds
 On your turn press **A** to hit the dice (press **B** first to use an item). Blue space +3 coins, red -3,
 `?` = random event, `!` = item, `$` = lucky (big bonus if you're last). Walk past the star with 20 coins to buy it.
 After everyone moves, everybody plays a mini-game for coins. Most stars after the last turn wins.
+
+## First party night (4-8 friends)
+**Setup (5 minutes)**
+1. Laptop on a table, screen tilted up, everyone sitting or standing in a half-circle. Plug it in (charger on =
+   smoother game). Turn the volume up or plug in a speaker: the sounds are half the fun.
+2. Open `dist/index.html` in Chrome or Edge and press **F11** for full screen.
+3. **4 players:** one keyboard. P1 `Q W` and P2 `C V` sit on the left, P3 `N M` in the middle, P4 arrow keys on the right.
+   **5-6 players:** add P5 `O P` and P6 `G H` (it gets crowded: that's part of the joke).
+   **7-8 players:** plug in gamepads, or run `npm run lan` and let friends use their phones (see LAN mode).
+4. On the join screen everyone presses their key, then **all hold your keys at the same time**. If a key doesn't light
+   up, that combo "ghosts" on this keyboard: swap that player to a gamepad/phone.
+5. Missing a friend? Press `+` to add a bot so teams are even.
+
+**Best order for the first night**
+1. **Quick Play, first to 5** (set in Settings if you want it shorter) as a warm-up: everyone learns the
+   "read the card, press your key" rhythm in about 10 minutes.
+2. **17 August Pack**: Balap Karung, Makan Kerupuk, Pukul Kendi... everyone already knows the real games, and the
+   crowd screams the loudest here.
+3. **Party Mode, 10 turns** once everyone knows the buttons (about 30-40 minutes). Stars, stealing and comebacks:
+   this is the "one more round" mode.
+4. Tournament or Daily Chaos as the final boss.
+
+**Tips:** ESC pauses at any time. Turn on Big name tags (Settings) if people sit far away. Colour-blind friend?
+Turn on the colour-blind palette; every player also has their own shape. If the game feels slow on an old laptop it
+lowers its resolution by itself after a few seconds.
 
 ## Rebuild
 ```

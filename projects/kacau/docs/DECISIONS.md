@@ -70,3 +70,11 @@ Short notes on choices made without Nara (he asked for autonomous work). Newest 
     cheap. Board choice is a setting (default Random) instead of an extra menu step before every party.
 26. **Secret character by code** (type DURIAN on the title) instead of coins, so there is a "did you know?" secret to
     share with friends. It is cosmetic only, like every unlock.
+27. **Slow motion only shouts on close finishes.** Every round used to get the same 1.1 s slow-mo, so it meant nothing.
+    Now a close finish (photo finish, 1-point game, tie) gets a long slow-mo + PHOTO FINISH banner; normal finishes
+    get a short one. Rarer = funnier when it happens.
+28. **Auto quality instead of a graphics setting.** Measured with CPU throttling: game logic is cheap, pixels are
+    expensive. Rendering at 80%/60% resolution when frames are slow keeps 60 fps and nobody has to find a menu.
+    Gameplay is identical at every quality.
+29. **Pukul Kendi** added to the 17 August pack: a real lomba everyone knows, and the "blindfolded but the crowd can
+    see" joke works on one shared screen (friends shout "LEFT! NOW!").
