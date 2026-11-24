@@ -9,6 +9,7 @@
   "flashes": true,
   "bigText": false,
   "partyTurns": 8,
+  "partyBoard": "random",
   "mods": "random",
   "colorblind": false,
   "speed": 1

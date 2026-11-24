@@ -59,7 +59,9 @@
     "cb": "Warna ramah buta warna: {v}",
     "bigText": "Label nama besar: {v}",
     "speed": "Kecepatan game: {v}%",
-    "hint": "Panah = pindah   ENTER / klik = ubah   ESC = kembali"
+    "hint": "Panah = pindah   ENTER / klik = ubah   ESC = kembali",
+    "partyBoard": "Papan pesta: {v}",
+    "boardRandom": "Acak"
   },
   "runner": {
     "ready": "SIAP?",
@@ -352,7 +354,8 @@
     "items": {
       "double": "Dadu Ganda",
       "rocket": "Roket Bintang",
-      "swap": "Sepatu Tukar"
+      "swap": "Sepatu Tukar",
+      "magnet": "Magnet Koin"
     },
     "events": {
       "rain": "HUJAN KOIN! Semua +5",
@@ -364,8 +367,19 @@
       "clown": "TET TOT! {name} menjatuhkan setengah koinnya!",
       "gift": "Item gratis!",
       "teleport": "WUSSS! Pindah ke tempat acak!",
-      "charity": "Hari amal! {name} memberi 2 koin ke semua"
-    }
+      "charity": "Hari amal! {name} memberi 2 koin ke semua",
+      "magnet": "MAGNET! {name} menarik {n} koin dari {victim}!",
+      "sale": "DISKON BINTANG! Bintang setengah harga giliran ini!",
+      "blackout": "MATI LAMPU! Dalam gelap, {name} memungut koin yang jatuh!"
+    },
+    "wheel": {
+      "big": "BIANGLALA: jackpot! +{n} koin",
+      "bad": "BIANGLALA: pusing... -{n} koin",
+      "item": "BIANGLALA: dapat {item}!",
+      "star": "BIANGLALA: turun dekat bintang!",
+      "all": "BIANGLALA: naik gratis! Semua +3"
+    },
+    "saleOn": "DISKON BINTANG: setengah harga giliran ini!"
   },
   "shop": {
     "title": "BUKA KUNCI",

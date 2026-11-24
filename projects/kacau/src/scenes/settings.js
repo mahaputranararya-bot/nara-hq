@@ -3,7 +3,8 @@ import { W, H } from '../engine/canvas.js';
 import { text, bgDots, A11Y } from '../engine/draw.js';
 import { applyPalette } from '../engine/state.js';
 import { makeMenu } from '../engine/ui.js';
-import { t, setLang, lang, LANG_LIST } from '../engine/i18n.js';
+import { BOARDS } from './party.js';
+import { t, tl, setLang, lang, LANG_LIST } from '../engine/i18n.js';
 import * as input from '../engine/input.js';
 import { state, save, exportSave, importSave } from '../engine/state.js';
 import { popup } from '../engine/fx.js';
@@ -42,6 +43,7 @@ register('settings', {
       { label: () => t('settings.sfx', { v: onOff(S().sfx) }), ...lr(() => { S().sfx = !S().sfx; }) },
       { label: () => t('settings.target', { v: S().target }), ...lr((d) => { S().target = cycle(TARGETS, S().target, d); }) },
       { label: () => t('settings.partyTurns', { v: S().partyTurns }), ...lr((d) => { S().partyTurns = cycle(TURNS, S().partyTurns, d); }) },
+      { label: () => t('settings.partyBoard', { v: (S().partyBoard || 'random') === 'random' ? t('settings.boardRandom') : tl(BOARDS.find((b) => b.id === S().partyBoard).name) }), ...lr((d) => { S().partyBoard = cycle(['random', ...BOARDS.map((b) => b.id)], S().partyBoard || 'random', d); }) },
       { label: () => t('settings.bots', { v: t('settings.' + ['easy', 'normal', 'hard'][Math.max(0, SKILLS.indexOf(S().botSkill))]) }), ...lr((d) => { S().botSkill = cycle(SKILLS, S().botSkill, d); }) },
       { label: () => t('settings.mods', { v: t('settings.mod' + { off: 'Off', random: 'Random', chaos: 'Chaos' }[S().mods || 'random']) }), ...lr((d) => { S().mods = cycle(['off', 'random', 'chaos'], S().mods, d); }) },
       { label: () => t('settings.shake', { v: onOff(S().shake) }), ...lr(() => { S().shake = !S().shake; }) },

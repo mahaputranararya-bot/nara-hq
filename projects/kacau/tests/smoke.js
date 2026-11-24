@@ -121,7 +121,7 @@ const only = process.argv[2]; // optional: single mini-game id
 
   if (!only || only === 'party') {
     // Party Mode with 1 keyboard human + 3 bots, 3 turns, to the podium
-    await page.evaluate(() => { window.KACAU.setPlayers(['kb0', 'bot', 'bot', 'bot']); window.KACAU.party(3); });
+    await page.evaluate(() => { window.KACAU.setPlayers(['kb0', 'bot', 'bot', 'bot']); window.KACAU.party(3, 'kacau-island'); });
     let t = 0, shots = 0, lastScene = '';
     while ((await scene()) !== 'podium' && t < 1500) {
       // the human (P1, keys Q/W) uses an item if they have one, then hits the dice
@@ -133,6 +133,15 @@ const only = process.argv[2]; // optional: single mini-game id
     }
     if ((await scene()) !== 'podium') fail('Party Mode never reached podium (scene ' + (await scene()) + ')');
     else { await step(90); await shot('09-party-podium'); console.log('ok party mode reached podium'); }
+    // second board (Night Market), bots only
+    await page.evaluate(() => { window.KACAU.setPlayers(['bot', 'bot', 'bot', 'bot', 'bot']); window.KACAU.party(3, 'pasar-malam'); });
+    t = 0; shots = 0;
+    while ((await scene()) !== 'podium' && t < 1500) {
+      await step(20); t++;
+      if ((await scene()) === 'party' && shots < 2 && t % 11 === 0) { shots++; await shot('10-pasar-' + shots); }
+    }
+    if ((await scene()) !== 'podium') fail('Night Market party never reached podium (scene ' + (await scene()) + ')');
+    else console.log('ok night market board reached podium');
   }
 
   const inPage = await page.evaluate(() => window.KACAU.errors);

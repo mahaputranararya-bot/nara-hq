@@ -59,7 +59,9 @@
     "cb": "Colour-blind colours: {v}",
     "bigText": "Big name tags: {v}",
     "speed": "Game speed: {v}%",
-    "hint": "Arrows = move   ENTER / click = change   ESC = back"
+    "hint": "Arrows = move   ENTER / click = change   ESC = back",
+    "partyBoard": "Party board: {v}",
+    "boardRandom": "Random"
   },
   "runner": {
     "ready": "READY?",
@@ -352,7 +354,8 @@
     "items": {
       "double": "Double Dice",
       "rocket": "Star Rocket",
-      "swap": "Swap Shoes"
+      "swap": "Swap Shoes",
+      "magnet": "Coin Magnet"
     },
     "events": {
       "rain": "COIN RAIN! Everyone +5",
@@ -364,8 +367,19 @@
       "clown": "HONK HONK! {name} drops half their coins!",
       "gift": "Free item!",
       "teleport": "WHOOSH! Teleported somewhere random!",
-      "charity": "Charity day! {name} gives 2 coins to everyone"
-    }
+      "charity": "Charity day! {name} gives 2 coins to everyone",
+      "magnet": "MAGNET! {name} pulls {n} coins from {victim}!",
+      "sale": "STAR SALE! Stars cost half this turn!",
+      "blackout": "BLACKOUT! In the dark, {name} picks up everyone's dropped coins!"
+    },
+    "wheel": {
+      "big": "FERRIS WHEEL: jackpot! +{n} coins",
+      "bad": "FERRIS WHEEL: dizzy... -{n} coins",
+      "item": "FERRIS WHEEL: won a {item}!",
+      "star": "FERRIS WHEEL: dropped off near the star!",
+      "all": "FERRIS WHEEL: free rides! Everyone +3"
+    },
+    "saleOn": "STAR SALE: half price this turn!"
   },
   "shop": {
     "title": "UNLOCKS",

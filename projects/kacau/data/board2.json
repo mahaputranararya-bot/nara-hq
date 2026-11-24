@@ -1,0 +1,21 @@
+{
+  "id": "pasar-malam",
+  "theme": "night",
+  "name": { "en": "Night Market", "id": "Pasar Malam" },
+  "note": "Second board. Same codes as board.json plus W = Ferris wheel (spin for a random prize). Wider rectangle-ish loop, 34 spaces.",
+  "pattern": "BBEBRWBIBBRBEBLBWBRBIBEBBRBWLBEBIR",
+  "shape": { "rx": 550, "ry": 220, "p": 0.25, "even": true },
+  "startCoins": 12,
+  "starCost": 20,
+  "items": ["double", "rocket", "swap", "magnet"],
+  "events": [
+    { "id": "rain", "weight": 2 },
+    { "id": "chicken", "weight": 3 },
+    { "id": "thief", "weight": 1 },
+    { "id": "clown", "weight": 2 },
+    { "id": "gift", "weight": 2 },
+    { "id": "teleport", "weight": 1 },
+    { "id": "sale", "weight": 2 },
+    { "id": "blackout", "weight": 2 }
+  ]
+}

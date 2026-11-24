@@ -44,7 +44,7 @@ window.KACAU = {
   },
   playGame(id, done, mods) { const g = getGame(id); go('runner', { game: g, mods, onDone: (order) => { window.KACAU.lastOrder = order; go('title'); if (done) done(order); } }); },
   quick(target) { startQuick({ target }); },
-  party(turns) { startParty(turns); },
+  party(turns, board) { startParty(turns, board); },
   daily() { startDaily(); },
   agustus() { startMode('agustus'); },
   setLang(code) { state.settings.lang = code; applySettings(); },

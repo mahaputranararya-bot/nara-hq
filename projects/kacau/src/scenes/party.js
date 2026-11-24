@@ -10,22 +10,33 @@ import { play } from '../engine/audio.js';
 import { burst, confetti, popup, announce, shake, resetFx, drawParticles, drawPopups, updateFx } from '../engine/fx.js';
 import { TAU, rng, clamp, easeOutBack } from '../engine/util.js';
 import { makeMenu } from '../engine/ui.js';
-import BOARD from '../../data/board.json';
+import BOARD1 from '../../data/board.json';
+import BOARD2 from '../../data/board2.json';
+export const BOARDS = [BOARD1, BOARD2];
+let BOARD = BOARD1;
 import { playable, pickMods } from '../modes/session.js';
 import { earn } from '../engine/state.js';
 
-const SPACE_COL = { B: '#3d9bff', R: '#ff4d5e', E: '#a974ff', I: '#34d27f', L: '#ffd43b' };
+const SPACE_COL = { B: '#3d9bff', R: '#ff4d5e', E: '#a974ff', I: '#34d27f', L: '#ffd43b', W: '#ff8c1a' };
 const HOP_T = 0.22;
 let S = null, pauseMenu = null, paused = false, time = 0;
 
 function buildSpaces() {
   const pat = BOARD.pattern, n = pat.length, out = [];
+  const sh = BOARD.shape || { rx: 520, ry: 215, p: 0.55 };
+  const curve = (a) => { const c = Math.cos(a), s = Math.sin(a); return [640 + sh.rx * Math.sign(c) * Math.pow(Math.abs(c), sh.p), 330 + sh.ry * Math.sign(s) * Math.pow(Math.abs(s), sh.p)]; };
+  let ts = [];
+  if (sh.even) {
+    // spread spaces evenly by path length (flat-sided shapes bunch up otherwise)
+    const M = 2000, pts = [], len = [0];
+    for (let k = 0; k <= M; k++) pts.push(curve(-Math.PI / 2 + (k / M) * TAU));
+    for (let k = 1; k <= M; k++) len.push(len[k - 1] + Math.hypot(pts[k][0] - pts[k - 1][0], pts[k][1] - pts[k - 1][1]));
+    let k = 0;
+    for (let i = 0; i < n; i++) { const want = (i / n) * len[M]; while (len[k + 1] < want) k++; ts.push(-Math.PI / 2 + (k / M) * TAU); }
+  } else ts = pat.split('').map((x, i) => -Math.PI / 2 + (i / n) * TAU);
   for (let i = 0; i < n; i++) {
-    const a = -Math.PI / 2 + (i / n) * TAU;
-    const c = Math.cos(a), s = Math.sin(a);
-    const x = 640 + 520 * Math.sign(c) * Math.pow(Math.abs(c), 0.55) + Math.sin(i * 1.3) * 10;
-    const y = 330 + 215 * Math.sign(s) * Math.pow(Math.abs(s), 0.55) + Math.cos(i * 1.7) * 8;
-    out.push({ x, y, type: pat[i] });
+    const [x, y] = curve(ts[i]);
+    out.push({ x: x + Math.sin(i * 1.3) * 10, y: y + Math.cos(i * 1.7) * 8, type: pat[i] });
   }
   return out;
 }
@@ -49,10 +60,12 @@ function phase(p, extra = 0) { S.phase = p; S.phaseT = -extra; }
 function finalTurns() { return S.turn > S.turns - (S.turns >= 6 ? 3 : 1); }
 const itemName = (id) => t('party.items.' + id);
 
-export function startParty(turns) {
+export function startParty(turns, boardId) {
+  const want = boardId || state.settings.partyBoard || 'random';
+  BOARD = BOARDS.find((b) => b.id === want) || (want === 'random' ? rng.pick(BOARDS) : BOARD1);
   const n = state.players.length;
   S = state.session = {
-    mode: 'party', turns, turn: 1, cur: 0, phase: 'intro', phaseT: 0, msg: '', msgT: 0, spaces: buildSpaces(), starAt: 0, bag: [],
+    mode: 'party', boardId: BOARD.id, turns, turn: 1, cur: 0, phase: 'intro', phaseT: 0, msg: '', msgT: 0, spaces: buildSpaces(), starAt: 0, bag: [],
     tokens: state.players.map(() => ({ pos: 0, coins: BOARD.startCoins, stars: 0, item: null, mgWins: 0, earned: 0, reds: 0 })),
     dice: 1, diceSpin: 0, double: false, steps: 0, hopT: 0, usedItem: false, lastTurnsShown: false, bonus: [], bonusK: 0,
   };
@@ -74,6 +87,7 @@ function useItem(i) {
   popup(itemName(it) + '!', x, y - 70, { color: '#34d27f', size: 30 });
   if (it === 'double') S.double = true;
   else if (it === 'rocket') { tk.pos = (S.starAt - 1 + S.spaces.length) % S.spaces.length; play('whoosh'); burst(x, y, ['#ffd43b', '#fff'], 20, { speed: 300 }); }
+  else if (it === 'magnet') { let v = -1; S.tokens.forEach((tk2, j) => { if (j !== i && (v < 0 || tk2.coins > tok(v).coins)) v = j; }); const n2 = Math.min(8, tok(v).coins); addCoins(v, -n2); addCoins(i, n2, x, y - 60); setMsg(t('party.events.magnet', { name: pName(i), victim: pName(v), n: n2 })); play('coin'); }
   else if (it === 'swap') { const others = S.tokens.map((x2, j) => j).filter((j) => j !== i); const j = rng.pick(others); const p0 = tk.pos; tk.pos = tok(j).pos; tok(j).pos = p0; setMsg(t('party.events.swap', { name: pName(i), victim: pName(j) })); }
 }
 function hitDice() {
@@ -83,13 +97,15 @@ function hitDice() {
   play('bonk'); shake(5); const [x, y] = pos(S.cur); burst(x, y - 90, ['#fff', '#ffd43b'], 16, { speed: 300 });
   phase('move');
 }
+function starCost() { return S.saleTurn === S.turn ? Math.floor(BOARD.starCost / 2) : BOARD.starCost; }
 function passStar(i) {
   const tk = tok(i), [x, y] = pos(i);
-  if (tk.coins >= BOARD.starCost) {
-    tk.coins -= BOARD.starCost; tk.stars++;
+  const cost = starCost();
+  if (tk.coins >= cost) {
+    tk.coins -= cost; tk.stars++;
     announce(t('party.starGet'), '#ffd43b', 1.6); play('win'); confetti(x, y - 40, 80);
     S.starAt = pickStar(S.starAt);
-  } else { popup(t('party.needCoins', { cost: BOARD.starCost }), x, y - 80, { color: '#fff', size: 22 }); play('buzz'); }
+  } else { popup(t('party.needCoins', { cost }), x, y - 80, { color: '#fff', size: 22 }); play('buzz'); }
 }
 function land(i) {
   const tk = tok(i), sp = S.spaces[tk.pos], [x, y] = pos(i), mult = finalTurns() ? 2 : 1;
@@ -105,6 +121,15 @@ function land(i) {
       break;
     }
     case 'E': runEvent(i); break;
+    case 'W': {
+      const r = rng.int(0, 4); play('drumroll');
+      if (r === 0) { addCoins(i, 10 * mult, x, y - 60); setMsg(t('party.wheel.big', { n: 10 * mult })); }
+      else if (r === 1) { addCoins(i, -5 * mult, x, y - 60); setMsg(t('party.wheel.bad', { n: 5 * mult })); }
+      else if (r === 2) { tk.item = rng.pick(BOARD.items); setMsg(t('party.wheel.item', { item: itemName(tk.item) })); }
+      else if (r === 3) { tk.pos = (S.starAt - 2 + S.spaces.length) % S.spaces.length; setMsg(t('party.wheel.star')); play('whoosh'); }
+      else { S.tokens.forEach((x2, j) => addCoins(j, 3)); setMsg(t('party.wheel.all')); }
+      S.msgT = Math.max(S.msgT, 2.2); break;
+    }
   }
 }
 function runEvent(i) {
@@ -131,6 +156,8 @@ function runEvent(i) {
     case 'clown': { const n2 = Math.floor(tk.coins / 2); addCoins(i, -n2, x, y - 60); setMsg(t('party.events.clown', { name })); play('honk'); break; }
     case 'gift': tk.item = rng.pick(BOARD.items); setMsg(t('party.events.gift') + ' ' + itemName(tk.item)); play('join'); break;
     case 'teleport': tk.pos = rng.int(0, S.spaces.length - 1); setMsg(t('party.events.teleport')); play('whoosh'); break;
+    case 'sale': S.saleTurn = S.turn; setMsg(t('party.events.sale')); play('ding'); break;
+    case 'blackout': { let n2 = 0; S.tokens.forEach((x2, j) => { if (j !== i) { const d = Math.min(3, tok(j).coins); n2 += d; addCoins(j, -d); } }); addCoins(i, n2, x, y - 60); setMsg(t('party.events.blackout', { name })); play('gasp'); break; }
     case 'charity': S.tokens.forEach((x2, j) => { if (j !== i && tk.coins >= 2) { tk.coins -= 2; tok(j).coins += 2; } }); setMsg(t('party.events.charity', { name })); play('coin'); break;
   }
   S.msgT = Math.max(S.msgT, 2.2);
@@ -178,12 +205,12 @@ function finishParty() {
   const ranked = state.players.map((p, i) => i).sort((a, b) => key(b) - key(a));
   state.players.forEach((p, i) => { p.score = tok(i).stars; });
   state.stats.gamesPlayed++; save();
-  go('podium', { order: ranked, label: (i) => `★${tok(i).stars}  ${tok(i).coins}c`, title: (i) => t('party.winner', { name: pName(i) + ' ' + CHARS[state.players[i].char].name }), again: () => startParty(S.turns), next: 'party' });
+  go('podium', { order: ranked, label: (i) => `★${tok(i).stars}  ${tok(i).coins}c`, title: (i) => t('party.winner', { name: pName(i) + ' ' + CHARS[state.players[i].char].name }), again: () => startParty(S.turns, S.boardId), next: 'party' });
 }
 
 register('party', {
   enter(args) {
-    S = state.session; paused = false;
+    S = state.session; paused = false; BOARD = BOARDS.find((b) => b.id === S.boardId) || BOARD1;
     if (args.fresh) { resetFx(); phase('intro'); }
     pauseMenu = makeMenu([
       { label: () => t('runner.resume'), action: () => { paused = false; } },
@@ -245,7 +272,30 @@ register('party', {
   draw(g) { drawBoard(g); if (paused) { g.fillStyle = 'rgba(20,12,40,0.75)'; g.fillRect(0, 0, W, H); text(g, t('runner.paused'), W / 2, 220, { size: 80, color: '#ffd43b', strokeW: 12 }); pauseMenu.draw(g); } },
 });
 
+function drawNight(g) {
+  g.fillStyle = '#1b1440'; g.fillRect(0, 0, W, H);
+  for (let k = 0; k < 40; k++) { const sx = (k * 197) % W, sy = (k * 89) % 300; g.globalAlpha = 0.4 + 0.4 * Math.sin(time * 2 + k); g.fillStyle = '#fff'; g.fillRect(sx, sy, 3, 3); } g.globalAlpha = 1;
+  g.beginPath(); S.spaces.forEach((sp) => g.lineTo(640 + (sp.x - 640) * 1.08, 330 + (sp.y - 330) * 1.18)); g.closePath();
+  g.fillStyle = '#4a3b2a'; g.fill(); g.lineWidth = 8; g.strokeStyle = '#2c2218'; g.stroke();
+  // string lights
+  for (let k = 0; k < 24; k++) { const x = 120 + k * 45, y = 175 + Math.sin(k * 0.6) * 8; g.beginPath(); g.arc(x, y, 6, 0, TAU); g.fillStyle = ['#ffd43b', '#ff4d5e', '#34d27f', '#3d9bff'][(k + Math.floor(time * 3)) % 4]; g.fill(); }
+  // Ferris wheel
+  g.save(); g.translate(640, 290); g.strokeStyle = '#e8e0ff'; g.lineWidth = 4;
+  g.beginPath(); g.moveTo(-50, 110); g.lineTo(0, 0); g.lineTo(50, 110); g.stroke();
+  g.beginPath(); g.arc(0, 0, 85, 0, TAU); g.stroke();
+  for (let k = 0; k < 8; k++) { const a = time * 0.5 + k * TAU / 8; g.beginPath(); g.moveTo(0, 0); g.lineTo(Math.cos(a) * 85, Math.sin(a) * 85); g.stroke(); g.fillStyle = ['#ff4d5e', '#ffd43b', '#34d27f', '#3d9bff'][k % 4]; g.fillRect(Math.cos(a) * 85 - 10, Math.sin(a) * 85, 20, 16); }
+  g.restore();
+  // stalls
+  [[250, 300], [1030, 300], [250, 420], [1030, 420]].forEach(([x, y], k) => { g.fillStyle = '#7a4b2a'; g.fillRect(x - 55, y, 110, 50); for (let s = 0; s < 5; s++) { g.fillStyle = s % 2 ? '#fff' : ['#ff4d5e', '#3d9bff', '#34d27f', '#ff8c1a'][k]; g.fillRect(x - 60 + s * 24, y - 22, 24, 22); } });
+  text(g, tl(BOARD.name).toUpperCase(), 640, 420, { size: 34, color: '#fff', strokeW: 7 });
+  text(g, t('party.turn', { k: Math.min(S.turn, S.turns), n: S.turns }), 640, 460, { size: 24, color: '#ffd43b', strokeW: 5 });
+  if (S.saleTurn === S.turn) text(g, t('party.saleOn'), 640, 495, { size: 20, color: '#ff8c1a', strokeW: 5 });
+}
 function drawBoard(g) {
+  if (BOARD.theme === 'night') drawNight(g); else drawIsland(g);
+  drawPath(g);
+}
+function drawIsland(g) {
   // sea + island
   g.fillStyle = '#1e88c7'; g.fillRect(0, 0, W, H);
   g.strokeStyle = 'rgba(255,255,255,0.15)'; g.lineWidth = 3;
@@ -259,13 +309,15 @@ function drawBoard(g) {
   for (let k = 0; k < 3; k++) { const yy = 220 - ((time * 30 + k * 30) % 90); g.beginPath(); g.arc(640 + Math.sin(time + k) * 10, yy, 12 + k * 2, 0, TAU); g.fillStyle = 'rgba(255,255,255,0.5)'; g.fill(); }
   text(g, tl(BOARD.name).toUpperCase(), 640, 400, { size: 34, color: '#fff', strokeW: 7 });
   text(g, t('party.turn', { k: Math.min(S.turn, S.turns), n: S.turns }), 640, 440, { size: 24, color: '#ffd43b', strokeW: 5 });
+}
+function drawPath(g) {
   // path
   g.strokeStyle = 'rgba(120,80,40,0.55)'; g.lineWidth = 10; g.setLineDash([4, 14]); g.lineCap = 'round';
   g.beginPath(); S.spaces.forEach((sp) => g.lineTo(sp.x, sp.y)); g.closePath(); g.stroke(); g.setLineDash([]);
   S.spaces.forEach((sp, i) => {
     g.beginPath(); g.ellipse(sp.x, sp.y + 5, 22, 15, 0, 0, TAU); g.fillStyle = 'rgba(0,0,0,0.25)'; g.fill();
     g.beginPath(); g.ellipse(sp.x, sp.y, 22, 15, 0, 0, TAU); g.fillStyle = SPACE_COL[sp.type]; g.fill(); g.lineWidth = 3; g.strokeStyle = INK; g.stroke();
-    const icon = { B: '+', R: '-', E: '?', I: '!', L: '$' }[sp.type];
+    const icon = { B: '+', R: '-', E: '?', I: '!', L: '$', W: '@' }[sp.type];
     text(g, icon, sp.x, sp.y + 1, { size: 18, color: '#fff', strokeW: 4 });
     if (i === 0) text(g, t('mgui.start'), sp.x, sp.y - 28, { size: 14, color: '#fff', strokeW: 4 });
   });
@@ -273,7 +325,7 @@ function drawBoard(g) {
   const st = S.spaces[S.starAt];
   g.save(); g.translate(st.x, st.y - 46 + Math.sin(time * 3) * 6); g.rotate(Math.sin(time * 2) * 0.2);
   symbol(g, 'star', 0, 0, 22, '#ffd43b'); g.restore();
-  text(g, BOARD.starCost + 'c', st.x, st.y - 80 + Math.sin(time * 3) * 6, { size: 15, color: '#fff', strokeW: 4 });
+  text(g, starCost() + 'c', st.x, st.y - 80 + Math.sin(time * 3) * 6, { size: 15, color: '#fff', strokeW: 4 });
   // tokens (current player last, on top)
   const order = S.tokens.map((x, i) => i).sort((a, b) => (a === S.cur) - (b === S.cur));
   for (const i of order) {
