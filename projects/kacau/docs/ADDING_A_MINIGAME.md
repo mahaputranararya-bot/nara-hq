@@ -3,7 +3,9 @@
 1. Create `src/minigames/<id>.js` exporting one object (template below).
 2. Add it to the list in `src/minigames/index.js`.
 3. Add its text to `data/lang/en.json` (and `id.json`) under `"mg": { "<id>": { "name", "desc", "a", "b" } }`.
-4. `npm run build`, then `node tests/smoke.js <id>` to auto-play it with bots (2, 4 and 8 players).
+4. In-game words (popups, hints) go in the same `mg.<id>` block and are read with `ctx.t_('mg.<id>.key')`;
+   shared words (TEAM, OOPS!...) are under `mgui`. `node tests/lang.js` checks nothing is missing in `id.json`.
+5. `npm run build`, then `node tests/smoke.js <id>` to auto-play it with bots (2, 4 and 8 players).
 
 ## The interface
 

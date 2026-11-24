@@ -45,3 +45,12 @@ Short notes on choices made without Nara (he asked for autonomous work). Newest 
 18. **Coins are one shared wallet per laptop**, not per player: players are anonymous key slots, so per-player
     wallets would be confusing. Unlocks are cosmetic/extra content only (never pay-to-win).
 19. **Modifiers default to "Sometimes" (30% of rounds)** so the base games are learned first, then chaos.
+20. **Secret-traitor co-op round postponed.** On one shared screen everyone sees everything, so a *secret* traitor
+    can't be told who they are without the others seeing. Built **Chicken Chase** (everyone vs the chicken-hat
+    holder) for the "everyone vs one" slot instead. A traitor round could work later in LAN mode (private screens).
+21. **17 Agustus pack = its own menu entry** (Quick Play using only `category: 'local'` games), so a class can play
+    a full "lomba 17-an" session. 7 games: Balap Karung, Makan Kerupuk, Tarik Tambang, Panjat Pinang,
+    Kelereng Sendok, Bakiak, Paku Masuk Botol.
+22. **Language toggle on the title screen** (EN | ID button, or `L`) as well as in Settings: a crowd shouldn't
+    have to dig in menus to switch language. All in-game words go through `ctx.t_()`; `tests/lang.js` fails the
+    build test if any English key is missing in Bahasa Indonesia.

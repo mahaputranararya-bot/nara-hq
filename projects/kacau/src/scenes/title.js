@@ -1,14 +1,18 @@
 // Title screen + main menu.
 import { register, go, app } from '../engine/app.js';
-import { W, H } from '../engine/canvas.js';
-import { text, drawChar, bgStripes, INK } from '../engine/draw.js';
+import { W, H, mouse } from '../engine/canvas.js';
+import { text, drawChar, bgStripes, INK, panel } from '../engine/draw.js';
 import { makeMenu } from '../engine/ui.js';
-import { t } from '../engine/i18n.js';
+import { t, lang } from '../engine/i18n.js';
+import { applySettings } from './settings.js';
+import { save } from '../engine/state.js';
+import { play } from '../engine/audio.js';
 import * as input from '../engine/input.js';
 import { COLORS, CHARS, state } from '../engine/state.js';
 import { TAU } from '../engine/util.js';
 
 let menu, time = 0;
+const LB = { x: 16, y: 12, w: 150, h: 40 };
 const LETTERS = ['K', 'A', 'C', 'A', 'U', '!'];
 
 export function drawLogo(g, x, y, size, tm) {
@@ -39,12 +43,23 @@ register('title', {
       { label: () => t('menu.settings'), action: () => go('settings') },
     ], { y: 282, w: 400, h: 48, gap: 10, cols: 2, size: 24 });
   },
-  update(dt) { time += dt; menu.update(dt); },
+  update(dt) {
+    time += dt;
+    // quick EN/ID language toggle: L key or click the flag button (top-left)
+    const hit = mouse.clicked && mouse.x >= LB.x && mouse.x <= LB.x + LB.w && mouse.y >= LB.y && mouse.y <= LB.y + LB.h;
+    if (input.keyPressed('KeyL') || hit) { state.settings.lang = lang() === 'en' ? 'id' : 'en'; applySettings(); save(); play('pop'); if (hit) mouse.clicked = false; }
+    menu.update(dt);
+  },
   draw(g) {
     bgStripes(g, '#2a1b5e', '#33226f', time, 70);
     drawLogo(g, W / 2, 150, 130, time);
     text(g, t('title.tagline'), W / 2, 260, { size: 26, color: '#ffd43b' });
     menu.draw(g);
+    panel(g, LB.x, LB.y, LB.w, LB.h, { fill: '#f4f1ff', r: 12, depth: 4 });
+    text(g, 'EN', LB.x + 36, LB.y + 21, { size: 20, color: lang() === 'en' ? '#e63946' : '#aaa', stroke: false });
+    text(g, '|', LB.x + 64, LB.y + 21, { size: 20, color: '#aaa', stroke: false });
+    text(g, 'ID', LB.x + 90, LB.y + 21, { size: 20, color: lang() === 'id' ? '#e63946' : '#aaa', stroke: false });
+    text(g, '(L)', LB.x + 128, LB.y + 21, { size: 14, color: '#6b6390', stroke: false });
     text(g, t('menu.coins', { n: state.stats.coins || 0 }), W - 20, 24, { size: 20, align: 'right', color: '#ffd43b', strokeW: 5 });
     // parade of characters
     for (let i = 0; i < 10; i++) {

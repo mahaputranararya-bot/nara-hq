@@ -8,7 +8,8 @@ bots to fill empty seats. Fully offline: all art is drawn in code and all sound 
 
 1. Main menu: **Quick Play** (random mini-games, first to 10 points), **Party Mode** (board game: roll dice,
    collect coins, buy stars, a mini-game every turn), **Tournament** (1v1 knockout bracket), **Daily Chaos**
-   (today's 5 games with crazy modifiers) or **Free Pick** (practise any game). Coins unlock secrets in **Unlocks**.
+   (today's 5 games with crazy modifiers), **17 August Pack** (only the Indonesian Independence Day games)
+   or **Free Pick** (practise any game). **EN | ID** button top-left (or press `L`) switches English / Bahasa Indonesia. Coins unlock secrets in **Unlocks**.
 2. Join screen: each player presses their key. Press your **first key** to change character,
    your **second key** to change colour, **hold both** to leave. `+` / `-` adds/removes bots.
 3. **SPACE / ENTER** starts. Before each mini-game a card shows the rules and *your* keys.
@@ -29,10 +30,13 @@ Most games use only button A. Steering games use A = left, B = right. Gamepads h
 If someone's key doesn't light up on the join screen while everyone holds their keys, that laptop keyboard
 can't handle the combo ("ghosting"); give that player a gamepad.
 
-## Mini-games (20)
-Belly Bump Sumo, Wait For It..., Tangled Noodles, Balap Karung, Makan Kerupuk, Hot Potato Bomb, Colour Snap,
-Tarik Tambang (teams), Spin Sweeper, Floppy Hoops, Pancake Panic, Paper Plane, Drum Battle, Crumble Tiles,
-Tower Stack, Panjat Pinang, Balloon Pump, Coconut Rain, Hold It! and Ice Curling (last two unlock with coins).
+## Mini-games (31)
+Belly Bump Sumo, Wait For It..., Tangled Noodles, Hot Potato Bomb, Colour Snap, Spin Sweeper, Floppy Hoops,
+Pancake Panic, Paper Plane, Drum Battle, Crumble Tiles, Tower Stack, Balloon Pump, Coconut Rain, Jump Rope,
+Rising Lava, Spinning Log, Giant Volleyball (teams), Wobbly Football (teams), Chicken Chase (everyone vs the chicken),
+More or Less?, Statue!, Hold It! and Ice Curling (last two unlock with coins).
+**17 August pack:** Balap Karung, Makan Kerupuk, Tarik Tambang (teams), Panjat Pinang (teams), Marble Spoon Race
+(kelereng), Bakiak Team Walk (teams), Nail in the Bottle.
 Modifiers, coins + Unlocks shop, and Export/Import save are in the menu. Details: `PROGRESS.md`.
 
 ## Party Mode in 20 seconds
@@ -47,7 +51,7 @@ npm run build      # writes dist/index.html
 npm test           # build + Playwright smoke test (plays every mini-game with bots, checks console errors)
 node tests/smoke.js sumo   # auto-play one mini-game
 ```
-Screenshots from tests go to `tests/screenshots/` (git-ignored).
+Screenshots from tests go to `tests/screenshots/`. `npm test` also checks that every English text has a Bahasa Indonesia version (`tests/lang.js`).
 
 ## LAN mode
 Not built yet (milestone M8, optional). The single-file version will always work without it.

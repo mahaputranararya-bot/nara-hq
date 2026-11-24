@@ -66,6 +66,17 @@ Read this first in a new session. Also read `docs/BRIEF.md` (spec), `docs/DECISI
 - Music: `src/engine/music.js` sequencer, menu + game loops, Music volume setting.
 - Fixed: place labels on results (t() returns random element for arrays; use tArr()).
 
+### M6 — DONE
+- 31 mini-games. New (11): `kelereng` Marble Spoon Race, `bakiak` Bakiak Team Walk (teams), `paku` Nail in the Bottle,
+  `jumprope` Jump Rope, `lava` Rising Lava, `log` Spinning Log, `volley` Giant Volleyball (teams, rally speeds up),
+  `football` Wobbly Football (teams, sumo-style dash), `chicken` Chicken Chase (everyone vs the hat holder),
+  `bigger` More or Less? (reaction, 10 rounds), `patung` Statue! (dance / freeze).
+- 17 Agustus pack: 7 `local` games + "17 AUGUST PACK" menu entry (`startMode('agustus')` = Quick Play with `pool: 'local'`).
+  Podium "play again" now repeats the same mode (was always plain Quick Play).
+- Bahasa Indonesia: every in-game word moved to lang files (`ctx.t_`, shared words in `mgui`), START/ROUND/CHAMPION too.
+  EN | ID toggle on the title (click or `L`). `tests/lang.js` (in `npm test`) checks key parity + every game's texts.
+- Tutorial card: long descriptions shrink to fit, boxes tightened for 8 players.
+
 ## In progress
 - Nothing half-done.
 

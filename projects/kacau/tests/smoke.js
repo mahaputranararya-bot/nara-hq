@@ -133,7 +133,9 @@ const only = process.argv[2]; // optional: single mini-game id
   if (errors.length) { console.log('ERRORS:\n' + [...new Set(errors)].join('\n')); fails += errors.length; }
   if (!only) {
     // Bahasa Indonesia pass: title, a tutorial card and a mini-game in ID, then back to EN
-    await page.evaluate(() => { window.KACAU.setLang('id'); window.KACAU.go('title'); }); await step(10); await shot('20-id-title');
+    await page.evaluate(() => { window.KACAU.setLang('en'); window.KACAU.go('title'); }); await step(5); await page.keyboard.press('l'); await step(5);
+    if ((await page.evaluate(() => window.KACAU.state.settings.lang)) !== 'id') fail('L on title did not switch to Bahasa Indonesia');
+    await shot('20-id-title');
     await page.evaluate(() => { window.KACAU.setPlayers(['kb0', 'bot', 'bot']); window.KACAU.playGame('bakiak'); }); await step(30); await shot('21-id-card');
     await step(400); await shot('22-id-play');
     await page.evaluate(() => { window.KACAU.setLang('en'); window.KACAU.go('title'); }); await step(5);
