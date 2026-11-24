@@ -16,7 +16,15 @@ export default {
     if (st.ps.every((p) => p.popped || p.banked)) ctx.finish();
   },
   rank: (st) => rankByScore(st.ps.map((p) => (p.popped ? 0 : p.size))),
-  ai(st, i, ctx) { const p = st.ps[i]; if (p.popped || p.banked) return {}; p.lim = p.lim ?? ctx.rng.range(35, 55 + ctx.skill * 25); p.tog = !p.tog; if (p.size >= p.lim) return { b: p.tog }; return { a: p.tog && ctx.rng() < 0.3 }; },
+  ai(st, i, ctx) {
+    // bots pump in nervous little bursts with pauses (rounds used to end in ~5 s), and look at the others before tying off
+    const p = st.ps[i]; if (p.popped || p.banked) return {};
+    p.lim = p.lim ?? ctx.rng.range(35, 55 + ctx.skill * 25); p.tog = !p.tog;
+    p.rest = (p.rest ?? ctx.rng.range(0.5, 1.5)) - ctx.dt; if (p.rest > 0) return {};
+    if (p.size >= p.lim) { const best = Math.max(0, ...st.ps.filter((q) => q.banked).map((q) => q.size)); if (best > p.size && p.size < 80 && ctx.rng() < 0.5 * ctx.skill) p.lim = best + 4; else return { b: p.tog }; }
+    if (ctx.rng() < 0.03 + Math.max(0, p.size - 30) * 0.002) p.rest = ctx.rng.range(0.4, 1.1);
+    return { a: p.tog && ctx.rng() < 0.16 };
+  },
   draw(g, st, ctx) {
     g.fillStyle = '#fff2cc'; g.fillRect(0, 0, 1280, 720);
     st.ps.forEach((p, i) => {

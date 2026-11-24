@@ -125,6 +125,10 @@ function hat(g, kind, top, r, o) {
     case 'flower': for (let i = 0; i < 5; i++) { const a = i * TAU / 5 + (o.t || 0); g.beginPath(); g.arc(r * 0.35 + Math.cos(a) * r * 0.18, -r * 0.05 + Math.sin(a) * r * 0.18, r * 0.13, 0, TAU); fs('#ff9ecf'); } g.beginPath(); g.arc(r * 0.35, -r * 0.05, r * 0.1, 0, TAU); fs('#ffd23f'); break;
     case 'helmet': g.beginPath(); g.arc(0, r * 0.2, r * 0.66, Math.PI, 0); g.closePath(); fs('#c9d3e0'); g.beginPath(); g.rect(-r * 0.08, -r * 0.6, r * 0.16, r * 0.3); fs('#ff5a5a'); break;
     case 'headband': g.beginPath(); g.rect(-r * 0.8, r * 0.12, r * 1.6, r * 0.2); fs('#fff'); g.beginPath(); g.arc(0, r * 0.22, r * 0.1, 0, TAU); g.fillStyle = '#e63946'; g.fill(); break;
+    case 'caping': g.beginPath(); g.moveTo(-r * 1.0, r * 0.18); g.lineTo(0, -r * 0.55); g.lineTo(r * 1.0, r * 0.18); g.closePath(); fs('#e0b85c'); g.beginPath(); g.moveTo(-r * 0.5, -r * 0.05); g.lineTo(r * 0.5, -r * 0.05); g.stroke(); break;
+    case 'blangkon': g.beginPath(); g.arc(0, r * 0.15, r * 0.6, Math.PI, 0); g.closePath(); fs('#6b3e1f'); g.beginPath(); g.moveTo(-r * 0.5, -r * 0.05); g.lineTo(r * 0.5, -r * 0.25); g.lineWidth = Math.max(1.5, r * 0.05); g.strokeStyle = '#e0b85c'; g.stroke(); g.strokeStyle = INK; g.beginPath(); g.ellipse(-r * 0.62, r * 0.05, r * 0.14, r * 0.2, 0, 0, TAU); fs('#6b3e1f'); break;
+    case 'halo': g.beginPath(); g.ellipse(0, -r * 0.35 + Math.sin((o.t || 0) * 3) * r * 0.05, r * 0.45, r * 0.12, 0, 0, TAU); g.lineWidth = Math.max(3, r * 0.12); g.strokeStyle = '#ffd23f'; g.stroke(); break;
+    case 'mohawk': for (let k = -2; k <= 2; k++) { g.beginPath(); g.moveTo(k * r * 0.16 - r * 0.1, r * 0.15); g.lineTo(k * r * 0.2, -r * (0.55 - Math.abs(k) * 0.08)); g.lineTo(k * r * 0.16 + r * 0.1, r * 0.15); g.closePath(); fs('#6fbf3a'); } break;
     default: break;
   }
   g.restore();

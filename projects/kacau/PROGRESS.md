@@ -95,12 +95,31 @@ Read this first in a new session. Also read `docs/BRIEF.md` (spec), `docs/DECISI
 - Join screen shows the address to open when LAN is on. `tests/lan.js` (in `npm test`): starts the server on a
   random localhost port, a controller joins, plays a round, leaves.
 
+### M9 (more content) — DONE
+- **Second Party board:** `data/board2.json` Night Market / Pasar Malam (34 spaces, night theme with Ferris wheel + stalls).
+  New space `W` Ferris wheel (jackpot / dizzy / item / drop near star / everyone +3), new item Coin Magnet (steal up to 8 from
+  the richest), events Star Sale (stars half price this turn) and Blackout. Boards: `BOARDS` in party.js; `shape.even`
+  spreads spaces by path length. Setting "Party board" Random / Kacau Island / Night Market (`partyBoard`).
+- **40 mini-games.** New (9): `layangan` kites (hold to climb, stay in the wind band), `gasing` spinning tops (wind up A/B,
+  then steer + bump), `egg` Egg Catch (lanes, rotten eggs), `chairs` Kursi Musik (elimination), `simon` Copy Me (secret, 40c),
+  `fishing` Mancing (bite vs nibble), `parachute` Parachute Panic (3 jumps, push-your-luck), `bridge` Glass Bridge
+  (shared knowledge of broken tiles), `sepeda` Sepeda Lambat (slowest wins). layangan/gasing/chairs/sepeda are `local`
+  (17 August pack now 11 games).
+- **Characters:** 24 (new: Pak Sate caping, Si Wayang blangkon, Es Teh halo 60c, Durian mohawk). New hats in draw.js:
+  caping, blangkon, halo, mohawk. **Secret:** type D-U-R-I-A-N on the title screen to unlock Durian (`secret: 'code'`).
+- **Bot balance:** Wobbly Football bots walk round the ball instead of pushing it backwards, extra teammates hang back;
+  goals a bit wider and ball rolls further (4p bots ~4-5 goals a match, was 0-2). Balloon Pump bots pump in nervous
+  bursts and react to banked balloons (bot rounds ~8-14 s, was ~5 s).
+- **Secret-traitor round tried on paper and skipped**, see DECISIONS 24.
+- Tests: smoke plays both boards, all 40 games at 2/4/8, the DURIAN code, a line-up of the new characters.
+
 ## In progress
 - Nothing half-done.
 
 ## Known bugs / rough edges
-- Wobbly Football between bots is low-scoring (0-2 goals a match); humans score more.
-- Balloon Pump rounds with only bots are very short (~5 s).
+- Wobbly Football with 8 bots is still lower scoring (~2-3 goals).
+- Glass Bridge with only bots can end in ~12-18 s (they learn from each other fast).
+- New M9 games are tuned with bots only; need real-player playtesting (esp. Kursi Musik, Gasing, Sepeda Lambat).
 - Same-tick finishes in Balap Karung can tie (broken by overshoot distance).
 - Gamepad support is untested on real hardware (headless tests can't plug in a pad).
 - LAN mode tested only on localhost (headless); real phones over school Wi-Fi untested.
@@ -109,4 +128,5 @@ Read this first in a new session. Also read `docs/BRIEF.md` (spec), `docs/DECISI
 - LAN v2 ideas: show each phone its player colour/character, secret-traitor round with private info on phones.
 - Secret-traitor round only makes sense with private screens (LAN), see DECISIONS 20.
 - Ideas queue for mini-games: 2v2 hoops, egg toss, ragdoll race, shrinking platform, kites (layangan), gasing (spinning top).
-- Party Mode polish: board camera zoom on the current player, more boards in data/, mini-game choice by votes.
+- Party Mode polish: board camera zoom on the current player, a 3rd board, mini-game choice by votes.
+- Ideas left: 2v2 hoops, ragdoll race, egg toss pairs.

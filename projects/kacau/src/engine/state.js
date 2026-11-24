@@ -48,7 +48,8 @@ export function freeColor(start = 0, skip = null) {
 // ---- coins + unlocks (shared by everyone on this laptop) ----
 import UNLOCKS from '../../data/unlocks.json';
 export function owned(key) { return (state.stats.unlocked || []).includes(key); }
-export const charLocked = (i) => !!(CHARS[i].price && !owned('char:' + CHARS[i].id));
+export const charLocked = (i) => !!((CHARS[i].price || CHARS[i].secret) && !owned('char:' + CHARS[i].id));
+export function unlockFree(key) { if (owned(key)) return false; (state.stats.unlocked = state.stats.unlocked || []).push(key); save(); return true; }
 export const gameLocked = (id) => !!(UNLOCKS.minigames[id] && !owned('game:' + id));
 export function buy(key, price) {
   if (owned(key) || state.stats.coins < price) return false;

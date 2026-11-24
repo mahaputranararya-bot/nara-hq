@@ -36,8 +36,15 @@ Owner: Games CEO. Full brief: `docs/BRIEF.md`. Detailed engineering log: `PROGRE
   address on their phone or laptop and get two big A/B buttons to play. Optional: the double-click file still
   works with no network at all.
 
+- **Milestone 9 done:** 40 mini-games (new: Layangan kites, Gasing spinning tops, Egg Catch, Kursi Musik,
+  Copy Me, Mancing, Parachute Panic, Glass Bridge, Sepeda Lambat). Second Party board "Night Market" (Ferris wheel
+  spaces, Coin Magnet item, Star Sale). 4 new characters with new hats; a secret one: type DURIAN on the title screen.
+  Smarter bots in Wobbly Football and Balloon Pump. The secret-traitor idea was tried and skipped (everyone can see
+  the shared keyboard, so nothing stays secret); it can come back with phones in LAN mode.
+
 ## Next
-- Milestone 9+: more mini-games, a second Party Mode board, more characters and secrets.
+- Playtest the 9 new games with real people and tune them.
+- LAN v2: phones show your colour/character; secret-traitor round with private roles on phones.
 - Try LAN mode with real phones on the dorm/school Wi-Fi (only tested on one machine so far).
 
 ## How to play it

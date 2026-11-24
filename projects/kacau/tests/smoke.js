@@ -155,6 +155,13 @@ const only = process.argv[2]; // optional: single mini-game id
     await page.evaluate(() => { window.KACAU.setPlayers(['kb0', 'bot', 'bot']); window.KACAU.playGame('bakiak'); }); await step(30); await shot('21-id-card');
     await step(400); await shot('22-id-play');
     await page.evaluate(() => { window.KACAU.setLang('en'); window.KACAU.go('title'); }); await step(5);
+    // secret code on the title screen unlocks Durian
+    for (const k of 'durian') { await page.keyboard.press(k); await step(1); }
+    await step(20); await shot('23-secret');
+    if (!(await page.evaluate(() => (window.KACAU.state.stats.unlocked || []).includes('char:durian')))) fail('DURIAN code did not unlock the secret character');
+    else console.log('ok secret code unlocks Durian');
+    // character line-up (all characters incl. the new ones)
+    await page.evaluate(() => { const ids = window.KACAU.state; window.KACAU.setPlayers(['bot', 'bot', 'bot', 'bot', 'bot', 'bot', 'bot', 'bot']); window.KACAU.state.players.forEach((p, i) => { p.char = 16 + (i % 8); }); window.KACAU.playGame('simon'); }); await step(400); await shot('24-new-chars');
   }
   console.log(fails ? `\n${fails} problem(s)` : '\nALL GOOD: 0 console errors');
   await browser.close();

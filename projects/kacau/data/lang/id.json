@@ -2,7 +2,8 @@
   "title": {
     "tagline": "Pesta kacau untuk 2-8 teman di satu laptop",
     "press": "Tekan ENTER atau SPASI",
-    "hint": "Panah + ENTER untuk memilih   |   ESC = kembali"
+    "hint": "Panah + ENTER untuk memilih   |   ESC = kembali",
+    "secret": "RAHASIA DITEMUKAN: Durian ikut pesta!"
   },
   "menu": {
     "quick": "MAIN CEPAT",

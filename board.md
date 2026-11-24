@@ -10,7 +10,7 @@ research and give feedback only, Nara writes the submitted work. Unknown → tre
 |---|---|
 | Archipelago life sim (Indonesian-inspired, Harvest Moon-like, browser game) | Released — improving |
 | Basket Random-style game, 1v1 online across devices | Idea |
-| KACAU! — offline party game for 2–8 friends on one laptop (30+ mini-games, Party Mode board, 17 Agustus pack). Folder: `projects/kacau/` | Playable — M1–M8 done (31 mini-games, Party Mode, Tournament, Daily Chaos, 17 Agustus pack, EN/ID, accessibility, optional LAN phone controllers); next M9 (more content) |
+| KACAU! — offline party game for 2–8 friends on one laptop (40 mini-games, 2 Party Mode boards, 17 Agustus pack). Folder: `projects/kacau/` | Playable — M1–M9 done (40 mini-games, 2 Party boards, 24 characters + secret, Tournament, Daily Chaos, 17 Agustus pack, EN/ID, accessibility, optional LAN phone controllers); next: real-player playtest, LAN v2 |
 
 ## School CEO
 | Project | Status | AI use |

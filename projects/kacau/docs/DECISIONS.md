@@ -59,3 +59,14 @@ Short notes on choices made without Nara (he asked for autonomous work). Newest 
     (no game state over the network, no lag-compensation) and reuses the gamepad path: LAN pads are gamepad
     slots 8-15. Server is Node core only (hand-written minimal WebSocket), so `npm run lan` needs no install.
     The client only connects when the page is served over http://, so file:// stays 100% offline.
+24. **Secret-traitor co-op round tried again for one shared screen (M9) and skipped.** Two versions were designed:
+    (a) *eyes-closed reveal*: the screen tells each player privately while the others look away. With 8 players that is
+    8 "close your eyes" passes (~40-60 s of dead time before a 45 s round) and one peek spoils it; (b) *game picks the
+    traitor and sabotages for them*: then the traitor has no choices, so there is nothing to bluff. The bigger problem
+    for both: everyone shares one keyboard, so the others can SEE which keys the traitor presses; hidden actions are
+    impossible, and bots can't join a social-deduction game. Not fun enough to ship. Keep it for LAN v2 (each phone shows
+    its own secret role and has a private sabotage button).
+25. **Second board is a data file + theme** (`data/board2.json`, `theme: 'night'`), not a new scene, so more boards are
+    cheap. Board choice is a setting (default Random) instead of an extra menu step before every party.
+26. **Secret character by code** (type DURIAN on the title) instead of coins, so there is a "did you know?" secret to
+    share with friends. It is cosmetic only, like every unlock.

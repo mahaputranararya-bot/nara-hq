@@ -144,6 +144,24 @@
   "extra": "freckles"
  },
  {
+  "id": "sate",
+  "name": "Pak Sate",
+  "shape": "box",
+  "eyes": "two",
+  "mouth": "grin",
+  "hat": "caping",
+  "extra": "mustache"
+ },
+ {
+  "id": "wayang",
+  "name": "Si Wayang",
+  "shape": "tall",
+  "eyes": "sleepy",
+  "mouth": "smirk",
+  "hat": "blangkon",
+  "extra": "none"
+ },
+ {
   "id": "rendang",
   "name": "Raja Rendang",
   "shape": "wide",
@@ -182,5 +200,25 @@
   "hat": "tophat",
   "extra": "glasses",
   "price": 80
+ },
+ {
+  "id": "esteh",
+  "name": "Es Teh",
+  "shape": "drop",
+  "eyes": "big",
+  "mouth": "o",
+  "hat": "halo",
+  "extra": "blush",
+  "price": 60
+ },
+ {
+  "id": "durian",
+  "name": "Durian",
+  "shape": "round",
+  "eyes": "big",
+  "mouth": "fangs",
+  "hat": "mohawk",
+  "extra": "freckles",
+  "secret": "code"
  }
 ]

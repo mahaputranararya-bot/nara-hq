@@ -2,7 +2,8 @@
   "title": {
     "tagline": "Party chaos for 2-8 friends on one laptop",
     "press": "Press ENTER or SPACE",
-    "hint": "Arrows + ENTER to choose   |   ESC = back"
+    "hint": "Arrows + ENTER to choose   |   ESC = back",
+    "secret": "SECRET FOUND: Durian joined the party!"
   },
   "menu": {
     "quick": "QUICK PLAY",

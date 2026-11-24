@@ -5,7 +5,8 @@ import { text, drawChar, bgStripes, INK, panel } from '../engine/draw.js';
 import { makeMenu } from '../engine/ui.js';
 import { t, lang } from '../engine/i18n.js';
 import { applySettings } from './settings.js';
-import { save } from '../engine/state.js';
+import { save, unlockFree, charLocked } from '../engine/state.js';
+import { confetti, popup, drawParticles, drawPopups } from '../engine/fx.js';
 import { play } from '../engine/audio.js';
 import * as input from '../engine/input.js';
 import { COLORS, CHARS, state } from '../engine/state.js';
@@ -29,6 +30,7 @@ export function drawLogo(g, x, y, size, tm) {
   });
 }
 
+let code = '';
 register('title', {
   enter() {
     time = 0;
@@ -48,6 +50,9 @@ register('title', {
     // quick EN/ID language toggle: L key or click the flag button (top-left)
     const hit = mouse.clicked && mouse.x >= LB.x && mouse.x <= LB.x + LB.w && mouse.y >= LB.y && mouse.y <= LB.y + LB.h;
     if (input.keyPressed('KeyL') || hit) { state.settings.lang = lang() === 'en' ? 'id' : 'en'; applySettings(); save(); play('pop'); if (hit) mouse.clicked = false; }
+    // secret: type D-U-R-I-A-N on the title screen to unlock a hidden character
+    const CODE = 'DURIAN';
+    for (const ch of new Set(CODE)) if (input.keyPressed('Key' + ch)) { code = (code + ch).slice(-CODE.length); if (code === CODE && unlockFree('char:durian')) { play('win'); confetti(W / 2, 200, 120); popup(t('title.secret'), W / 2, 560, { color: '#6fbf3a', size: 34, life: 3, vy: -10 }); } }
     menu.update(dt);
   },
   draw(g) {
@@ -65,8 +70,9 @@ register('title', {
     for (let i = 0; i < 10; i++) {
       const x = ((i * 150 + time * 90) % (W + 200)) - 100;
       const hop = Math.abs(Math.sin(time * 6 + i * 1.3));
-      drawChar(g, { x, y: H - 44 - hop * 22, r: 24, color: COLORS[i % 8].hex, char: CHARS[(i * 3) % CHARS.length], sx: 1 + (1 - hop) * 0.15, sy: 1 - (1 - hop) * 0.15, t: time + i, look: [1, 0], symbol: COLORS[i % 8].symbol });
+      drawChar(g, { x, y: H - 44 - hop * 22, r: 24, color: COLORS[i % 8].hex, char: CHARS[charLocked((i * 3) % CHARS.length) ? i : (i * 3) % CHARS.length], sx: 1 + (1 - hop) * 0.15, sy: 1 - (1 - hop) * 0.15, t: time + i, look: [1, 0], symbol: COLORS[i % 8].symbol });
     }
+    drawParticles(g); drawPopups(g);
     text(g, t('title.hint'), W / 2, H - 14, { size: 16, color: '#cfc6ff', strokeW: 4 });
   },
 });

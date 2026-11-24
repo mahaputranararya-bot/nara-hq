@@ -2,6 +2,7 @@
  "note": "Things bought with coins earned by playing (never pay-to-win). Characters with a price are in characters.json.",
  "minigames": {
   "holdit": 30,
-  "curling": 50
+  "curling": 50,
+  "simon": 40
  }
 }

@@ -2,7 +2,7 @@
 import { TAU, angDiff, clamp } from '../engine/util.js';
 import { rankTeams } from '../engine/rank.js';
 
-const L = 60, R = 1220, T = 120, B = 690, GY0 = 270, GY1 = 540, BALLR = 24;
+const L = 60, R = 1220, T = 120, B = 690, GY0 = 245, GY1 = 565, BALLR = 24;
 
 export default {
   id: 'football', category: 'sports', buttons: 1, teams: true, minPlayers: 2, maxPlayers: 8, duration: 60,
@@ -45,7 +45,7 @@ export default {
       const rv = (c.o.vx - a.o.vx) * nx + (c.o.vy - a.o.vy) * ny;
       if (rv < 0) { const imp = -rv * 1.6 * bnc; a.o.vx -= nx * imp * ta; a.o.vy -= ny * imp * ta; c.o.vx += nx * imp * tc; c.o.vy += ny * imp * tc; if (-rv > 200) ctx.sfx(c.o === st.ball ? 'kick' : 'bonk', a.o.x); }
     }
-    const bl = st.ball, bf = Math.pow(0.5, dt);
+    const bl = st.ball, bf = Math.pow(0.62, dt);
     bl.vx *= bf; bl.vy *= bf; bl.x += bl.vx * dt; bl.y += bl.vy * dt;
     if (bl.y < T + BALLR) { bl.y = T + BALLR; bl.vy = Math.abs(bl.vy) * 0.8 * bnc; } if (bl.y > B - BALLR) { bl.y = B - BALLR; bl.vy = -Math.abs(bl.vy) * 0.8 * bnc; }
     const inMouth = bl.y > GY0 && bl.y < GY1;
@@ -63,11 +63,24 @@ export default {
     const b = st.bodies[i], m = b.ai, s = st.side[i], bl = st.ball; m.wait -= ctx.dt;
     const gx = s ? L - 40 : R + 40, gy = 405;
     const ga = Math.atan2(gy - bl.y, gx - bl.x);
-    const tx = bl.x - Math.cos(ga) * (st.r + BALLR), ty = bl.y - Math.sin(ga) * (st.r + BALLR);
-    const behind = Math.abs(angDiff(Math.atan2(bl.y - b.y, bl.x - b.x), ga)) < 0.6;
-    const want = behind ? Math.atan2(bl.y - b.y, bl.x - b.x) : Math.atan2(ty - b.y, tx - b.x);
+    const back = st.r + BALLR + 30;
+    let tx = bl.x - Math.cos(ga) * back, ty = bl.y - Math.sin(ga) * back;
+    const toBall = Math.atan2(bl.y - b.y, bl.x - b.x), dBall = Math.hypot(bl.x - b.x, bl.y - b.y);
+    const behind = Math.abs(angDiff(toBall, ga)) < 0.7;
+    // not behind the ball: walk round it (aim at a point beside the ball) instead of pushing it the wrong way
+    if (!behind && dBall < back * 2.2) { const side = angDiff(ga, toBall) > 0 ? 1 : -1; tx = bl.x + Math.cos(toBall + side * Math.PI / 2) * back * 1.3; ty = bl.y + Math.sin(toBall + side * Math.PI / 2) * back * 1.3; }
+    // big teams: only the 2 nearest teammates chase the ball, the rest hang back in support (less clumping)
+    const mates = st.teams[s].filter((j) => j !== i), closer = mates.filter((j) => Math.hypot(bl.x - st.bodies[j].x, bl.y - st.bodies[j].y) < dBall).length;
+    if (closer >= 2) {
+      const k = st.teams[s].indexOf(i); tx = bl.x - Math.cos(ga) * 260; ty = 200 + (k % 3) * 200;
+      if (Math.hypot(tx - b.x, ty - b.y) < 90) { m.last = false; return {}; }
+      const w2 = Math.atan2(ty - b.y, tx - b.x); let pr = false;
+      if (b.cd <= 0 && m.wait <= 0 && Math.abs(angDiff(b.dir, w2)) < 0.4) { pr = !m.last; m.wait = 0.4 + ctx.rng() * 0.4; }
+      m.last = pr; return { a: pr };
+    }
+    const want = behind ? toBall : Math.atan2(ty - b.y, tx - b.x);
     let press = false;
-    if (b.cd <= 0 && m.wait <= 0 && Math.abs(angDiff(b.dir, want)) < 0.55 - ctx.skill * 0.3) { press = !m.last; m.wait = 0.2 + (1 - ctx.skill) * 0.5 * ctx.rng(); }
+    if (b.cd <= 0 && m.wait <= 0 && Math.abs(angDiff(b.dir, want)) < 0.5 - ctx.skill * 0.25) { press = !m.last; m.wait = 0.2 + (1 - ctx.skill) * 0.5 * ctx.rng(); }
     m.last = press; return { a: press };
   },
   draw(g, st, ctx) {
