@@ -10,6 +10,16 @@ import colorsnap from './colorsnap.js';
 import tug from './tug.js';
 import sweeper from './sweeper.js';
 import hoops from './hoops.js';
+import pancake from './pancake.js';
+import plane from './plane.js';
+import drums from './drums.js';
+import tiles from './tiles.js';
+import stack from './stack.js';
+import panjat from './panjat.js';
+import balloon from './balloon.js';
+import coconut from './coconut.js';
+import holdit from './holdit.js';
+import curling from './curling.js';
 
-export const MINIGAMES = [sumo, quickdraw, noodle, sack, kerupuk, potato, colorsnap, tug, sweeper, hoops];
+export const MINIGAMES = [sumo, quickdraw, noodle, sack, kerupuk, potato, colorsnap, tug, sweeper, hoops, pancake, plane, drums, tiles, stack, panjat, balloon, coconut, holdit, curling];
 export const getGame = (id) => MINIGAMES.find((m) => m.id === id);

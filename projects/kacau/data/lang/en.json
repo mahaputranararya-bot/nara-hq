@@ -166,6 +166,59 @@
       "name": "Floppy Hoops",
       "desc": "Press to jump toward the ball. Holding it? Press again in the air to SHOOT. Best at the top of your jump!",
       "a": "Jump / Shoot"
+    },
+    "pancake": {
+      "name": "Pancake Panic",
+      "desc": "Press to flip your pancake. It must land FLAT in the pan. Most good flips wins!",
+      "a": "Flip"
+    },
+    "plane": {
+      "name": "Paper Plane",
+      "desc": "Press once to lock the ANGLE, again to lock the POWER. Furthest of 2 throws wins.",
+      "a": "Lock"
+    },
+    "drums": {
+      "name": "Drum Battle",
+      "desc": "Hit your drum when a note reaches the line. Perfect timing = big points, keep the combo!",
+      "a": "Drum"
+    },
+    "tiles": {
+      "name": "Crumble Tiles",
+      "desc": "Your arrow spins. Press to HOP one tile that way. Cracked tiles fall. Don't fall!",
+      "a": "Hop"
+    },
+    "stack": {
+      "name": "Tower Stack",
+      "desc": "Press to drop the sliding block. Overhang gets chopped off. Tallest tower wins!",
+      "a": "Drop"
+    },
+    "panjat": {
+      "name": "Panjat Pinang",
+      "desc": "Team pole climb! Alternate A and B to climb. Same key twice = slide down. Grab the prizes first!",
+      "a": "Climb (left hand)",
+      "b": "Climb (right hand)"
+    },
+    "balloon": {
+      "name": "Balloon Pump",
+      "desc": "Pump your balloon (A), then tie it off (B) before it POPS. Biggest balloon wins!",
+      "a": "Pump",
+      "b": "Tie it off"
+    },
+    "coconut": {
+      "name": "Coconut Rain",
+      "desc": "Move left and right to dodge falling coconuts. Bonk = out!",
+      "a": "Move left",
+      "b": "Move right"
+    },
+    "holdit": {
+      "name": "Hold It!",
+      "desc": "Hold your key and let go at exactly 5.00 seconds. The clock disappears after 2 seconds!",
+      "a": "Hold"
+    },
+    "curling": {
+      "name": "Ice Curling",
+      "desc": "When it's your turn, press to slide your stone. Closest to the bullseye wins. Bump others away!",
+      "a": "Slide"
     }
   },
   "party": {

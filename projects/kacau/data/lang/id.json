@@ -166,6 +166,59 @@
       "name": "Basket Lembek",
       "desc": "Tekan untuk lompat ke arah bola. Pegang bola? Tekan lagi di udara untuk MENEMBAK. Paling akurat di puncak lompatan!",
       "a": "Lompat / Tembak"
+    },
+    "pancake": {
+      "name": "Panik Panekuk",
+      "desc": "Tekan untuk membalik panekuk. Harus mendarat DATAR di wajan!",
+      "a": "Balik"
+    },
+    "plane": {
+      "name": "Pesawat Kertas",
+      "desc": "Tekan untuk kunci SUDUT, tekan lagi untuk kunci TENAGA. Terjauh dari 2 lemparan menang.",
+      "a": "Kunci"
+    },
+    "drums": {
+      "name": "Adu Bedug",
+      "desc": "Pukul saat not sampai di garis. Tepat waktu = poin besar!",
+      "a": "Pukul"
+    },
+    "tiles": {
+      "name": "Ubin Rapuh",
+      "desc": "Panahmu berputar. Tekan untuk LONCAT satu ubin. Ubin retak akan jatuh!",
+      "a": "Loncat"
+    },
+    "stack": {
+      "name": "Menara Susun",
+      "desc": "Tekan untuk menjatuhkan balok. Yang menggantung dipotong. Menara tertinggi menang!",
+      "a": "Jatuhkan"
+    },
+    "panjat": {
+      "name": "Panjat Pinang",
+      "desc": "Panjat tiang licin bersama tim! Tekan A dan B bergantian. Tombol sama dua kali = melorot!",
+      "a": "Panjat (tangan kiri)",
+      "b": "Panjat (tangan kanan)"
+    },
+    "balloon": {
+      "name": "Pompa Balon",
+      "desc": "Pompa balon (A), lalu ikat (B) sebelum MELETUS. Balon terbesar menang!",
+      "a": "Pompa",
+      "b": "Ikat"
+    },
+    "coconut": {
+      "name": "Hujan Kelapa",
+      "desc": "Geser kiri-kanan menghindari kelapa jatuh. Kena = keluar!",
+      "a": "Kiri",
+      "b": "Kanan"
+    },
+    "holdit": {
+      "name": "Tahan!",
+      "desc": "Tahan tombol dan lepas tepat di 5,00 detik. Jam hilang setelah 2 detik!",
+      "a": "Tahan"
+    },
+    "curling": {
+      "name": "Curling Es",
+      "desc": "Saat giliranmu, tekan untuk meluncurkan batu. Paling dekat ke tengah menang!",
+      "a": "Luncur"
     }
   },
   "party": {
