@@ -84,16 +84,36 @@ function validOrder(order) {
   return out;
 }
 
+// Was the finish close? Game can say so with close(st, ctx); otherwise look at st.pts / st.score, or a tie for 1st.
+export function isClose(order) {
+  if (R.game.close) { try { return !!R.game.close(R.st, R.ctx); } catch (e) { console.error(e); } }
+  if (!R.game.teams && order.length > 1 && order[0].length > 1) return true;
+  const arr = Array.isArray(R.st.pts) ? R.st.pts : Array.isArray(R.st.score) ? R.st.score : null;
+  if (arr && arr.length >= 2 && arr.every((v) => typeof v === 'number')) {
+    const s = [...arr].sort((a, b) => b - a);
+    return s[0] > 0 && s[0] - s[1] <= Math.max(1, Math.round(s[0] * 0.1));
+  }
+  return false;
+}
+
 function beginFinish(reason) {
   if (R.phase === 'finish') return;
   let order = null;
   try { order = R.game.rank(R.st, R.ctx); } catch (e) { console.error(e); }
   R.order = validOrder(order);
   R.phase = 'finish'; R.phaseT = 0;
-  announce(reason === 'time' ? t('runner.timeUp') : t('runner.finish'), '#ffd43b', FINISH_TIME);
-  slowmo(1.1, 0.3);
+  R.close = isClose(R.order);
+  if (R.close) {
+    // Close finish: long slow motion, a commentator call and a bigger party.
+    announce(t('comment.photo'), '#ff73c6', FINISH_TIME);
+    slowmo(1.8, 0.2); shake(12); flash('#fff', 0.35);
+    confetti(W * 0.3, 140, 60); confetti(W * 0.7, 140, 60);
+  } else {
+    announce(reason === 'time' ? t('runner.timeUp') : t('runner.finish'), '#ffd43b', FINISH_TIME);
+    slowmo(0.7, 0.5); shake(5);
+    confetti(W / 2, 140, 70);
+  }
   play('honk'); play('cheer');
-  confetti(W / 2, 140, 70);
 }
 
 function crash(e) { console.error('[minigame ' + (R && R.game.id) + ']', e); if (R && R.phase !== 'finish') { R.phase = 'finish'; R.phaseT = FINISH_TIME; R.order = validOrder(null); } }

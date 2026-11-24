@@ -35,9 +35,13 @@ export default {
   ai(st, i, ctx) {
     const p = st.ps[i], m = st.ai[i]; if (p.fin || p.fall > 0 || p.hop > 0) return {};
     const r = p.row + 1, k = st.known[r];
-    if (k >= 0) { if (ctx.rng() < 0.08 + ctx.skill * 0.1) return k ? { b: true } : { a: true }; return {}; }
-    if (m.wait < 0) m.wait = ctx.t + ctx.rng.range(0.5, 4) * (0.5 + ctx.skill);
-    if (ctx.t < m.wait && ctx.t < 25) return {};
+    // known tile: hop after a human-like pause (~0.3-0.6 s), not instantly
+    if (k >= 0) { if (ctx.rng() < (0.02 + ctx.skill * 0.03) * 60 * ctx.dt) return k ? { b: true } : { a: true }; return {}; }
+    // unknown tile: wait to see if someone else tests it; braver as the clock runs down
+    if (m.wait < 0) m.wait = ctx.t + ctx.rng.range(1.5, 6) * (0.6 + ctx.skill);
+    const others = st.ps.some((q, j) => j !== i && !q.fin && q.fall <= 0 && q.row + 1 === r);
+    if (others && ctx.t < 22) m.wait += ctx.dt * 0.5;
+    if (ctx.t < m.wait && ctx.t < 27) return {};
     m.wait = -1; return ctx.rng() < 0.5 ? { a: true } : { b: true };
   },
   draw(g, st, ctx) {

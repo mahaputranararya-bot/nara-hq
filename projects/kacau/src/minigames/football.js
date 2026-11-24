@@ -13,7 +13,7 @@ export default {
   setup(ctx) {
     const idx = ctx.rng.shuffle(ctx.players.map((p, i) => i)), teams = [[], []];
     idx.forEach((i, k) => teams[k % 2].push(i));
-    const st = { teams, side: ctx.players.map((p, i) => (teams[0].includes(i) ? 0 : 1)), score: [0, 0], pause: 0, r: ctx.n > 5 ? 26 : 30, bodies: ctx.players.map(() => ({ x: 0, y: 0, vx: 0, vy: 0, dir: 0, spin: 3, cd: 0, sq: 1, ai: { wait: 0, last: false } })), ball: { x: 640, y: 405, vx: 0, vy: 0 } };
+    const st = { teams, side: ctx.players.map((p, i) => (teams[0].includes(i) ? 0 : 1)), score: [0, 0], pause: 0, r: ctx.n > 5 ? 26 : 30, bodies: ctx.players.map(() => ({ x: 0, y: 0, vx: 0, vy: 0, dir: 0, spin: 3, cd: 0, sq: 1, ai: { wait: 0, last: false } })), ball: { x: 640, y: 405, vx: 0, vy: 0 }, gy: ctx.n > 5 ? [205, 605] : [GY0, GY1] };
     this.kickoff(st, ctx);
     return st;
   },
@@ -45,10 +45,10 @@ export default {
       const rv = (c.o.vx - a.o.vx) * nx + (c.o.vy - a.o.vy) * ny;
       if (rv < 0) { const imp = -rv * 1.6 * bnc; a.o.vx -= nx * imp * ta; a.o.vy -= ny * imp * ta; c.o.vx += nx * imp * tc; c.o.vy += ny * imp * tc; if (-rv > 200) ctx.sfx(c.o === st.ball ? 'kick' : 'bonk', a.o.x); }
     }
-    const bl = st.ball, bf = Math.pow(0.62, dt);
+    const bl = st.ball, bf = Math.pow(ctx.n > 5 ? 0.74 : 0.62, dt);
     bl.vx *= bf; bl.vy *= bf; bl.x += bl.vx * dt; bl.y += bl.vy * dt;
     if (bl.y < T + BALLR) { bl.y = T + BALLR; bl.vy = Math.abs(bl.vy) * 0.8 * bnc; } if (bl.y > B - BALLR) { bl.y = B - BALLR; bl.vy = -Math.abs(bl.vy) * 0.8 * bnc; }
-    const inMouth = bl.y > GY0 && bl.y < GY1;
+    const [g0, g1] = st.gy || [GY0, GY1], inMouth = bl.y > g0 && bl.y < g1;
     if (st.goalT == null && inMouth && (bl.x < L || bl.x > R)) {
       const scorer = bl.x < L ? 1 : 0; st.score[scorer]++; st.goalT = 1.4;
       ctx.sfx('cheer'); ctx.shake(10); ctx.confetti(); ctx.popup(ctx.t_('mg.football.goal'), 640, 300, { color: '#ffd43b', size: 70 });
@@ -71,7 +71,7 @@ export default {
     if (!behind && dBall < back * 2.2) { const side = angDiff(ga, toBall) > 0 ? 1 : -1; tx = bl.x + Math.cos(toBall + side * Math.PI / 2) * back * 1.3; ty = bl.y + Math.sin(toBall + side * Math.PI / 2) * back * 1.3; }
     // big teams: only the 2 nearest teammates chase the ball, the rest hang back in support (less clumping)
     const mates = st.teams[s].filter((j) => j !== i), closer = mates.filter((j) => Math.hypot(bl.x - st.bodies[j].x, bl.y - st.bodies[j].y) < dBall).length;
-    if (closer >= 2) {
+    if (closer >= (ctx.n > 5 ? 1 : 2)) {
       const k = st.teams[s].indexOf(i); tx = bl.x - Math.cos(ga) * 260; ty = 200 + (k % 3) * 200;
       if (Math.hypot(tx - b.x, ty - b.y) < 90) { m.last = false; return {}; }
       const w2 = Math.atan2(ty - b.y, tx - b.x); let pr = false;
@@ -87,7 +87,7 @@ export default {
     g.fillStyle = '#2e8b3e'; g.fillRect(0, 0, 1280, 720);
     for (let x = L; x < R; x += 116) { g.fillStyle = 'rgba(255,255,255,0.06)'; g.fillRect(x, T, 58, B - T); }
     g.strokeStyle = '#fff'; g.lineWidth = 5; g.strokeRect(L, T, R - L, B - T); g.beginPath(); g.moveTo(640, T); g.lineTo(640, B); g.stroke(); g.beginPath(); g.arc(640, 405, 80, 0, TAU); g.stroke();
-    [[L, -1], [R, 1]].forEach(([x, d], k) => { g.fillStyle = k ? '#3d9bff' : '#ff4d5e'; g.fillRect(d < 0 ? x - 40 : x, GY0, 40, GY1 - GY0); g.strokeRect(d < 0 ? x - 40 : x, GY0, 40, GY1 - GY0); });
+    [[L, -1], [R, 1]].forEach(([x, d], k) => { g.fillStyle = k ? '#3d9bff' : '#ff4d5e'; const [g0, g1] = st.gy || [GY0, GY1]; g.fillRect(d < 0 ? x - 40 : x, g0, 40, g1 - g0); g.strokeRect(d < 0 ? x - 40 : x, g0, 40, g1 - g0); });
     const bl = st.ball;
     g.beginPath(); g.arc(bl.x, bl.y, BALLR, 0, TAU); g.fillStyle = '#fff'; g.fill(); g.lineWidth = 3; g.strokeStyle = ctx.INK; g.stroke();
     g.beginPath(); g.arc(bl.x, bl.y, BALLR * 0.4, 0, TAU); g.fillStyle = ctx.INK; g.fill();

@@ -54,6 +54,7 @@ export default {
     if (st.finished.length >= Math.max(1, ctx.n - 1) && !st.endT) st.endT = ctx.t;
     if (st.endT && ctx.t - st.endT > 0.8) ctx.finish();
   },
+  close(st) { const d = st.runners.filter((r) => r.done >= 0).map((r) => r.done).sort((a, b) => a - b); return d.length >= 2 && d[1] - d[0] < 0.25; },
   rank(st) { return rankByScore(st.runners.map((r) => (r.done >= 0 ? 100000 - Math.round(r.done * 600) + Math.min(9, Math.floor((r.x - FINISH) / 4)) : Math.round(r.x)))); },
   ai(st, i, ctx) {
     const r = st.runners[i], m = r.ai;
