@@ -324,6 +324,70 @@
       "dance": "JOGET!",
       "freeze": "DIAM!",
       "caught": "KETAHUAN!"
+    },
+    "layangan": {
+      "name": "Layangan",
+      "desc": "Tahan A untuk menarik layangan naik, lepas supaya turun. Jaga tetap di angin emas! Paling lama di angin menang.",
+      "a": "Tarik (tahan)",
+      "hint": "TAHAN A = NAIK    LEPAS = TURUN"
+    },
+    "gasing": {
+      "name": "Gasing",
+      "desc": "Tekan A dan B bergantian dengan cepat untuk memutar gasing. Lalu kemudikan (A kiri, B kanan) dan tabrak yang lain. Gasing terakhir yang berputar menang!",
+      "a": "Putar / belok kiri",
+      "b": "Putar / belok kanan",
+      "wind": "PUTAR! A B A B",
+      "hint": "A = KIRI   B = KANAN   tabrak gasing yang lemah!"
+    },
+    "egg": {
+      "name": "Tangkap Telur",
+      "desc": "Gerakkan keranjang (A kiri, B kanan). Telur putih +1, telur emas +3, telur busuk hijau -2!",
+      "a": "Ke kiri",
+      "b": "Ke kanan"
+    },
+    "chairs": {
+      "name": "Kursi Musik",
+      "desc": "Jalan terus selama musik main. Saat musik BERHENTI, tekan A untuk duduk. Kursinya kurang satu! Tekan saat musik main, kamu tersandung.",
+      "a": "Duduk!",
+      "walk": "terus jalan...",
+      "sit": "DUDUK!"
+    },
+    "simon": {
+      "name": "Ikuti Aku!",
+      "desc": "Lihat pola A dan B, lalu tekan ulang. Salah sekali langsung keluar. Polanya makin panjang tiap ronde!",
+      "a": "A",
+      "b": "B",
+      "watch": "LIHAT...",
+      "go": "GILIRANMU!",
+      "len": "Panjang pola: {n}"
+    },
+    "fishing": {
+      "name": "Mancing",
+      "desc": "Tunggu ikan MENYAMBAR (!) lalu tekan A cepat. Getaran kecil itu palsu: tekan saat itu dan ikannya kabur. Tangkapan terberat menang!",
+      "a": "Tarik",
+      "hint": "Tunggu  !  lalu tekan A",
+      "scared": "IKANNYA KABUR!",
+      "gone": "lepas..."
+    },
+    "parachute": {
+      "name": "Panik Parasut",
+      "desc": "Kamu jatuh! Tekan A untuk membuka parasut. Makin telat dibuka, makin banyak poin... terlalu telat = GEDEBUK. 3 lompatan.",
+      "a": "Buka parasut",
+      "jump": "LOMPATAN {k} / {n}"
+    },
+    "bridge": {
+      "name": "Jembatan Kaca",
+      "desc": "Tiap baris: ubin KIRI (A) atau KANAN (B). Satu palsu! Semua bisa lihat ubin yang pecah, jadi tunggu dan belajar... tapi waktu terus jalan.",
+      "a": "Ubin kiri",
+      "b": "Ubin kanan",
+      "hint": "Hijau = sudah pernah diinjak (aman!)"
+    },
+    "sepeda": {
+      "name": "Sepeda Lambat",
+      "desc": "Lomba sepeda lambat: tekan A untuk mengayuh. Yang PALING LAMBAT menang! Terlalu pelan, kamu oleng dan jatuh. Lewat garis finis = kalah.",
+      "a": "Kayuh",
+      "hint": "PALING LAMBAT MENANG! (tapi jangan jatuh)",
+      "tooFast": "KECEPATAN!"
     }
   },
   "party": {

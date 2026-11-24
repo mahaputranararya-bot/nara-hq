@@ -324,6 +324,70 @@
       "dance": "DANCE!",
       "freeze": "FREEZE!",
       "caught": "CAUGHT!"
+    },
+    "layangan": {
+      "name": "Layangan",
+      "desc": "Hold A to pull your kite up, let go to let it sink. Keep it inside the golden wind! Most seconds in the wind wins.",
+      "a": "Pull up (hold)",
+      "hint": "HOLD A = UP    LET GO = DOWN"
+    },
+    "gasing": {
+      "name": "Gasing Spin",
+      "desc": "Alternate A and B fast to wind up your spinning top. Then steer it (A left, B right) and bump the others. Last top spinning wins!",
+      "a": "Wind / turn left",
+      "b": "Wind / turn right",
+      "wind": "WIND IT UP! A B A B",
+      "hint": "A = LEFT   B = RIGHT   bump the weak tops!"
+    },
+    "egg": {
+      "name": "Egg Catch",
+      "desc": "Move your basket (A left, B right). White egg +1, golden egg +3, rotten green egg -2!",
+      "a": "Move left",
+      "b": "Move right"
+    },
+    "chairs": {
+      "name": "Kursi Musik",
+      "desc": "Walk while the music plays. When it STOPS, press A to grab a chair. One chair too few! Press during the music and you trip.",
+      "a": "Sit!",
+      "walk": "keep walking...",
+      "sit": "SIT!"
+    },
+    "simon": {
+      "name": "Copy Me!",
+      "desc": "Watch the pattern of A and B, then press it back. One mistake and you are out. It gets longer every round!",
+      "a": "A",
+      "b": "B",
+      "watch": "WATCH...",
+      "go": "YOUR TURN!",
+      "len": "Pattern length: {n}"
+    },
+    "fishing": {
+      "name": "Mancing",
+      "desc": "Wait for the big BITE (!) then press A fast. Little nibbles are fake: press on a nibble and the fish swims away. Heaviest catch wins!",
+      "a": "Reel in",
+      "hint": "Wait for the  !  then press A",
+      "scared": "SCARED IT!",
+      "gone": "got away..."
+    },
+    "parachute": {
+      "name": "Parachute Panic",
+      "desc": "You are falling! Press A to open your parachute. The later you open it, the more points... too late = SPLAT. 3 jumps.",
+      "a": "Open parachute",
+      "jump": "JUMP {k} / {n}"
+    },
+    "bridge": {
+      "name": "Glass Bridge",
+      "desc": "Each row: LEFT tile (A) or RIGHT tile (B). One is fake! Everybody sees broken tiles, so wait and learn... but the clock is ticking.",
+      "a": "Left tile",
+      "b": "Right tile",
+      "hint": "Green = someone already stood there (safe!)"
+    },
+    "sepeda": {
+      "name": "Sepeda Lambat",
+      "desc": "Slow bike race: tap A to pedal. The SLOWEST rider wins! Too slow and you wobble and fall. Cross the finish line and you lose.",
+      "a": "Pedal",
+      "hint": "SLOWEST WINS! (but don't fall over)",
+      "tooFast": "TOO FAST!"
     }
   },
   "party": {
