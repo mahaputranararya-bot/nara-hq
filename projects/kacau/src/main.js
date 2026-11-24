@@ -11,7 +11,7 @@ import './scenes/shop.js';
 import './scenes/bracket.js';
 import { startDaily, startMode } from './modes/session.js';
 import { startParty } from './scenes/party.js';
-import { app, go, start, stepOnce, drawOnce } from './engine/app.js';
+import { app, go, start, stepOnce, drawOnce, perf, setQuality } from './engine/app.js';
 import { state, loadSave, makePlayer } from './engine/state.js';
 import { applySettings } from './scenes/settings.js';
 import { initAudio } from './engine/audio.js';
@@ -48,7 +48,7 @@ window.KACAU = {
   daily() { startDaily(); },
   agustus() { startMode('agustus'); },
   setLang(code) { state.settings.lang = code; applySettings(); },
-  applySettings, lan,
+  applySettings, lan, perf, setQuality,
   tourney() { go('bracket', { fresh: true }); },
   runner: () => runnerState(),
   go,

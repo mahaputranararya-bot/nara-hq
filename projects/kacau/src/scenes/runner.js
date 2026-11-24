@@ -18,12 +18,14 @@ const CAT_COLORS = { sports: '#3d9bff', reaction: '#ff4d5e', survival: '#ff9330'
 let R = null;
 export const runnerState = () => R;
 // Instant replay: ring buffer of small snapshots of the last ~2.5 seconds before (and just after) FINISH.
-const REPLAY_N = 75, replay = { frames: [], n: 0, k: 0, skip: 0 };
+// Captured at 20 fps, 384x216 (copying the big canvas is one of the most expensive things per frame on slow laptops).
+export const REPLAY_FPS = 20;
+const REPLAY_N = 50, replay = { frames: [], n: 0, k: 0, skip: 0 };
 function capture() {
-  if (++replay.skip % 2) return;
+  if (++replay.skip % 3) return;
   let c = replay.frames[replay.k];
-  if (!c) { c = document.createElement('canvas'); c.width = 480; c.height = 270; replay.frames[replay.k] = c; }
-  c.getContext('2d').drawImage(canvas, 0, 0, 480, 270);
+  if (!c) { c = document.createElement('canvas'); c.width = 384; c.height = 216; replay.frames[replay.k] = c; }
+  c.getContext('2d').drawImage(canvas, 0, 0, 384, 216);
   replay.k = (replay.k + 1) % REPLAY_N; replay.n = Math.min(REPLAY_N, replay.n + 1);
 }
 export function getReplay() { const out = []; for (let j = 0; j < replay.n; j++) out.push(replay.frames[(replay.k - replay.n + j + REPLAY_N) % REPLAY_N]); return out; }

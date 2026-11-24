@@ -8,7 +8,7 @@ import { state, COLORS, CHARS, pLabel } from '../engine/state.js';
 import { play } from '../engine/audio.js';
 import { confetti, popup, updateFx, drawParticles, drawPopups, resetFx, announce } from '../engine/fx.js';
 import { easeOutBack, easeOutCubic, clamp } from '../engine/util.js';
-import { getReplay, clearReplay } from './runner.js';
+import { getReplay, clearReplay, REPLAY_FPS } from './runner.js';
 
 let A = null;
 const RESULTS_T = 3.2, BOARD_T = 4.8;
@@ -35,7 +35,7 @@ register('results', {
   update(dt) {
     A.t += dt;
     const skip = input.menu('start') || input.menu('ok') || mouse.clicked || state.players.some((p) => !p.isBot && input.readSource(p.source).aP);
-    if (A.phase === 'replay') { A.rt += dt; if ((skip && A.rt > 0.3) || A.rt > A.frames.length / 30 * 1.6) { A.phase = 'results'; A.t = 0; } return; }
+    if (A.phase === 'replay') { A.rt += dt; if ((skip && A.rt > 0.3) || A.rt > A.frames.length / REPLAY_FPS * 1.6) { A.phase = 'results'; A.t = 0; } return; }
     if (A.phase === 'results') {
       if ((skip && A.t > 0.6) || A.t > RESULTS_T + (A.scoreboard ? 0 : 3)) {
         if (A.scoreboard) { A.phase = 'board'; A.boardT = 0; play('drumroll'); }
@@ -50,7 +50,7 @@ register('results', {
   draw(g) {
     bgStripes(g, '#3a2a7a', '#44318c', A.t, 70);
     if (A.phase === 'replay') {
-      const f = A.frames[Math.min(A.frames.length - 1, Math.floor(A.rt * 30 / 1.6))];
+      const f = A.frames[Math.min(A.frames.length - 1, Math.floor(A.rt * REPLAY_FPS / 1.6))];
       g.drawImage(f, 0, 0, W, H); g.fillStyle = 'rgba(0,0,0,0.15)'; for (let y = 0; y < H; y += 6) g.fillRect(0, y, W, 2);
       g.lineWidth = 12; g.strokeStyle = '#ff4d5e'; g.strokeRect(6, 6, W - 12, H - 12);
       g.fillStyle = 'rgba(20,12,40,0.8)'; g.fillRect(12, H - 74, 400, 50);

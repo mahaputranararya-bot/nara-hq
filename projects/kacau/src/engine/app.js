@@ -1,5 +1,5 @@
 // Scene manager + fixed-timestep main loop (60 updates/s, draw every animation frame).
-import { g, beginFrame, mouse, W, H } from './canvas.js';
+import { g, beginFrame, mouse, W, H, view, resize } from './canvas.js';
 import * as input from './input.js';
 import { updateFx, fx } from './fx.js';
 import { setMusic } from './music.js';
@@ -32,8 +32,17 @@ export function drawOnce() {
 }
 
 let acc = 0, lastT = 0, running = false;
+// Auto quality: if frames stay slow (< ~52 fps) for 3 s, render fewer pixels. Gameplay is unchanged.
+export const perf = { ema: 1 / 60, slowT: 0, lowered: 0, auto: true };
+function watchPerf(dt) {
+  if (!perf.auto || dt <= 0 || dt > 0.25 || view.quality <= 0.6) return;
+  perf.ema += (dt - perf.ema) * 0.05;
+  perf.slowT = perf.ema > 0.0192 ? perf.slowT + dt : 0;
+  if (perf.slowT > 3) { view.quality = view.quality >= 1 ? 0.8 : 0.6; perf.lowered++; perf.slowT = 0; perf.ema = 1 / 60; resize(); }
+}
 function frame(now) {
   const dt = Math.min(0.1, (now - lastT) / 1000 || 0); lastT = now;
+  watchPerf(dt);
   acc += dt;
   let steps = 0;
   while (acc >= STEP && steps < 5) { stepOnce(); acc -= STEP; steps++; }
@@ -42,4 +51,5 @@ function frame(now) {
   app.frames++;
   requestAnimationFrame(frame);
 }
+export function setQuality(q) { view.quality = q; resize(); }
 export function start() { if (running) return; running = true; lastT = performance.now(); requestAnimationFrame(frame); }
