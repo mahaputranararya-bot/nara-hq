@@ -1,0 +1,11 @@
+{
+  "note": "Shared-keyboard slots. a = main button, b = second button (in steering games a = left, b = right). Keys are KeyboardEvent.code values (physical position, works on QWERTY/AZERTY).",
+  "slots": [
+    { "a": "KeyQ",      "b": "KeyW" },
+    { "a": "KeyC",      "b": "KeyV" },
+    { "a": "KeyN",      "b": "KeyM" },
+    { "a": "ArrowLeft", "b": "ArrowRight" },
+    { "a": "KeyO",      "b": "KeyP" },
+    { "a": "KeyG",      "b": "KeyH" }
+  ]
+}

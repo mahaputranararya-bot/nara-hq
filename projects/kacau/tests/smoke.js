@@ -1,0 +1,93 @@
+// Smoke test: opens dist/index.html from file://, joins players with real key presses,
+// auto-plays every mini-game with bots, runs a full Quick Play, checks console errors, takes screenshots.
+const { chromium } = require('playwright');
+const path = require('path');
+const fs = require('fs');
+
+const ROOT = path.join(__dirname, '..');
+const URL = 'file://' + path.join(ROOT, 'dist/index.html');
+const SHOTS = path.join(__dirname, 'screenshots');
+fs.mkdirSync(SHOTS, { recursive: true });
+const only = process.argv[2]; // optional: single mini-game id
+
+(async () => {
+  const browser = await chromium.launch();
+  const page = await browser.newPage({ viewport: { width: 1280, height: 720 } });
+  const errors = [];
+  page.on('console', (m) => { if (m.type() === 'error') errors.push('console: ' + m.text()); });
+  page.on('pageerror', (e) => errors.push('pageerror: ' + e.message));
+  page.on('request', (r) => { if (!r.url().startsWith('file:') && !r.url().startsWith('data:')) errors.push('network request: ' + r.url()); });
+  await page.goto(URL);
+  await page.waitForTimeout(400);
+  const shot = (name) => page.screenshot({ path: path.join(SHOTS, name + '.png') });
+  const step = (n) => page.evaluate((n) => window.KACAU.step(n), n);
+  const scene = () => page.evaluate(() => window.KACAU.scene());
+  let fails = 0;
+  const fail = (msg) => { fails++; console.log('FAIL', msg); };
+
+  if (!only) {
+    await shot('01-title');
+    // Quick Play -> join with real keys
+    await page.keyboard.press('Enter'); await step(2);
+    if ((await scene()) !== 'join') fail('Enter on title did not open join screen');
+    for (const k of ['q', 'c', 'n', 'ArrowLeft']) { await page.keyboard.press(k); await step(2); }
+    await page.keyboard.press('Equal'); await step(2);
+    await page.keyboard.press('q'); await step(2); // change character
+    await page.keyboard.press('w'); await step(2); // change colour
+    const np = await page.evaluate(() => window.KACAU.state.players.length);
+    if (np !== 5) fail('expected 5 players after joining, got ' + np);
+    await page.keyboard.down('m'); await page.keyboard.down('ArrowRight'); await step(5); // ghosting-test display
+    await shot('02-join');
+    await page.keyboard.up('m'); await page.keyboard.up('ArrowRight'); await step(2);
+    await page.keyboard.press('Space'); await step(10);
+    if ((await scene()) !== 'runner') fail('Space did not start Quick Play');
+    await shot('03-card');
+    // humans mash their keys through the round for a bit
+    for (let i = 0; i < 40; i++) { for (const k of ['q', 'c', 'n', 'ArrowLeft']) await page.keyboard.press(k); await step(6); }
+    await shot('04-humans-playing');
+    await page.keyboard.press('Escape'); await step(2);
+    await shot('05-pause');
+    await page.keyboard.press('Escape'); await step(2);
+  }
+
+  // Every mini-game, with 4 and 8 bots
+  const ids = only ? [only] : await page.evaluate(() => window.KACAU.games());
+  for (const id of ids) {
+    for (const n of [4, 8, 2]) {
+      await page.evaluate(([id, n]) => { window.KACAU.lastOrder = null; window.KACAU.setPlayers(Array(n).fill('bot')); window.KACAU.playGame(id); }, [id, n]);
+      let t = 0, shotDone = false;
+      while ((await scene()) === 'runner' && t < 200) {
+        await step(60); t++;
+        if (!shotDone && t === 14 && n !== 2) { await shot(`mg-${id}-${n}p`); shotDone = true; }
+      }
+      const order = await page.evaluate(() => window.KACAU.lastOrder);
+      if (!order) fail(`${id} (${n} bots) did not finish in ${t}s`);
+      else {
+        const flat = order.flat().sort((a, b) => a - b);
+        if (flat.length !== n || flat.some((v, i) => v !== i)) fail(`${id} bad order ${JSON.stringify(order)}`);
+        console.log(`ok ${id} ${n}p finished in ~${t}s order=${JSON.stringify(order)}`);
+      }
+    }
+  }
+
+  if (!only) {
+    // Full Quick Play with bots to the podium
+    await page.evaluate(() => { window.KACAU.setPlayers(['bot', 'bot', 'bot', 'bot']); window.KACAU.quick(6); });
+    let t = 0, seen = {};
+    while ((await scene()) !== 'podium' && t < 900) {
+      await step(30); t++;
+      const s = await scene();
+      if (!seen[s]) { seen[s] = 0; }
+      if (s === 'results' && seen[s] < 2) { seen[s]++; await step(seen[s] === 1 ? 20 : 260); await shot('06-results-' + seen[s]); }
+    }
+    if ((await scene()) !== 'podium') fail('Quick Play never reached podium');
+    else { await step(120); await shot('07-podium'); console.log('ok quick play reached podium'); }
+  }
+
+  const inPage = await page.evaluate(() => window.KACAU.errors);
+  errors.push(...inPage.map((e) => 'window.onerror: ' + e));
+  if (errors.length) { console.log('ERRORS:\n' + [...new Set(errors)].join('\n')); fails += errors.length; }
+  console.log(fails ? `\n${fails} problem(s)` : '\nALL GOOD: 0 console errors');
+  await browser.close();
+  process.exit(fails ? 1 : 0);
+})();

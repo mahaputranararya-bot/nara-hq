@@ -1,0 +1,3 @@
+html, body { margin: 0; padding: 0; height: 100%; background: #14102a; overflow: hidden; }
+body { display: flex; align-items: center; justify-content: center; }
+canvas { display: block; outline: none; image-rendering: auto; cursor: default; }

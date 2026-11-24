@@ -1,0 +1,52 @@
+{
+  "title": { "tagline": "Party chaos for 2-8 friends on one laptop", "press": "Press ENTER or SPACE", "hint": "Arrows + ENTER to choose   |   ESC = back" },
+  "menu": { "quick": "QUICK PLAY", "free": "FREE PICK", "party": "PARTY MODE", "settings": "SETTINGS", "back": "BACK", "soon": "soon!" },
+  "join": {
+    "title": "WHO'S PLAYING?",
+    "pressKey": "Press your key to join!",
+    "padJoin": "Gamepad: press A",
+    "change": "change look",
+    "color": "change colour",
+    "leave": "hold both = leave",
+    "bots": "+ / - = add / remove bot",
+    "start": "SPACE / ENTER = START",
+    "need2": "Need 2+ players (press + to add a bot)",
+    "ghost": "Ghosting test: everyone hold your keys. Unlit key = keyboard can't handle that combo, try a gamepad.",
+    "empty": "free slot",
+    "bot": "BOT"
+  },
+  "settings": {
+    "title": "SETTINGS",
+    "lang": "Language: {v}",
+    "volume": "Volume: {v}%",
+    "sfx": "Sound effects: {v}",
+    "target": "Quick Play target: {v} pts",
+    "bots": "Bot skill: {v}",
+    "shake": "Screen shake: {v}",
+    "flashes": "Screen flashes: {v}",
+    "on": "ON", "off": "OFF",
+    "easy": "Sleepy", "normal": "Normal", "hard": "Spicy"
+  },
+  "runner": {
+    "ready": "READY?", "go": "GO!", "finish": "FINISH!", "timeUp": "TIME!",
+    "paused": "PAUSED", "resume": "RESUME", "skip": "SKIP THIS GAME", "quit": "QUIT TO MENU",
+    "pressReady": "press your key when ready",
+    "pause": "ESC = pause",
+    "only1": "1 BUTTON", "two": "2 BUTTONS", "team": "TEAMS"
+  },
+  "results": { "title": "ROUND RESULTS", "score": "SCOREBOARD", "firstTo": "FIRST TO {n}", "continue": "SPACE / ENTER / A = continue", "draw": "DRAW!", "place": ["1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th"] },
+  "podium": { "winner": "{name} WINS!", "again": "PLAY AGAIN", "menu": "MAIN MENU", "change": "CHANGE PLAYERS" },
+  "free": { "title": "FREE PICK", "hint": "Pick any mini-game to practise. ESC = back" },
+  "comment": {
+    "bonk": ["BONK!", "OOF!", "KAPOW!", "WHAM!"],
+    "out": ["BYE!", "SEE YA!", "OOPS!", "GONE!"],
+    "close": ["SO CLOSE!", "PHOTO FINISH!", "BY A NOSE!"],
+    "win": ["WHAT A LEGEND!", "UNSTOPPABLE!", "TOO EASY!", "CHAMPION!"],
+    "comeback": ["WHAT A COMEBACK!", "FROM ZERO TO HERO!"]
+  },
+  "mg": {
+    "sumo": { "name": "Belly Bump Sumo", "desc": "Your arrow spins. Press to DASH. Bump everyone out of the ring!", "a": "Dash" },
+    "quickdraw": { "name": "Wait For It...", "desc": "Slam your button when it says GO! Too early = OOPS. Watch for fakes!", "a": "Slam" },
+    "noodle": { "name": "Tangled Noodles", "desc": "Steer your noodle. Don't crash into any noodle or the wall!", "a": "Turn left", "b": "Turn right" }
+  }
+}

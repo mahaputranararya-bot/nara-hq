@@ -1,0 +1,11 @@
+{
+  "lang": "en",
+  "volume": 0.8,
+  "sfx": true,
+  "music": 0.5,
+  "target": 10,
+  "botSkill": 0.6,
+  "shake": true,
+  "flashes": true,
+  "bigText": false
+}

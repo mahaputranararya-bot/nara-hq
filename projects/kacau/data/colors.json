@@ -1,0 +1,10 @@
+[
+  { "id": "red",    "hex": "#FF4D5E", "dark": "#B3243A", "symbol": "circle",   "name": { "en": "Sambal Red",   "id": "Merah Sambal" } },
+  { "id": "blue",   "hex": "#3D9BFF", "dark": "#1C5BB0", "symbol": "triangle", "name": { "en": "Sky Blue",     "id": "Biru Langit" } },
+  { "id": "yellow", "hex": "#FFD43B", "dark": "#B8901A", "symbol": "square",   "name": { "en": "Banana",       "id": "Kuning Pisang" } },
+  { "id": "green",  "hex": "#34D27F", "dark": "#1C8A50", "symbol": "diamond",  "name": { "en": "Pandan Green", "id": "Hijau Pandan" } },
+  { "id": "purple", "hex": "#A974FF", "dark": "#6A3FC0", "symbol": "star",     "name": { "en": "Ube Purple",   "id": "Ungu Ubi" } },
+  { "id": "orange", "hex": "#FF9330", "dark": "#B85A10", "symbol": "plus",     "name": { "en": "Mango",        "id": "Oranye Mangga" } },
+  { "id": "pink",   "hex": "#FF73C6", "dark": "#B33A85", "symbol": "heart",    "name": { "en": "Bubblegum",    "id": "Pink Permen" } },
+  { "id": "cyan",   "hex": "#2FE0E0", "dark": "#14948F", "symbol": "hexagon",  "name": { "en": "Lagoon",       "id": "Tosca Laguna" } }
+]

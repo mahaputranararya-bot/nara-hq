@@ -1,0 +1,14 @@
+{
+  "name": "kacau",
+  "version": "0.1.0",
+  "private": true,
+  "description": "KACAU! - offline local-multiplayer party game for 2-8 friends on one laptop",
+  "scripts": {
+    "build": "node build.js",
+    "dev": "node build.js --dev",
+    "test": "node build.js && node tests/run-all.js"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.0"
+  }
+}
