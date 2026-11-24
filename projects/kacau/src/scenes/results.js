@@ -53,8 +53,9 @@ register('results', {
       const f = A.frames[Math.min(A.frames.length - 1, Math.floor(A.rt * 30 / 1.6))];
       g.drawImage(f, 0, 0, W, H); g.fillStyle = 'rgba(0,0,0,0.15)'; for (let y = 0; y < H; y += 6) g.fillRect(0, y, W, 2);
       g.lineWidth = 12; g.strokeStyle = '#ff4d5e'; g.strokeRect(6, 6, W - 12, H - 12);
-      if (Math.sin(A.rt * 8) > 0) { g.beginPath(); g.arc(50, 50, 14, 0, Math.PI * 2); g.fillStyle = '#ff4d5e'; g.fill(); }
-      text(g, t('results.replay') + '  x0.5', 76, 52, { size: 32, align: 'left', color: '#fff', strokeW: 7 });
+      g.fillStyle = 'rgba(20,12,40,0.8)'; g.fillRect(12, H - 74, 400, 50);
+      if (Math.sin(A.rt * 8) > 0) { g.beginPath(); g.arc(40, H - 49, 12, 0, Math.PI * 2); g.fillStyle = '#ff4d5e'; g.fill(); }
+      text(g, t('results.replay') + '  x0.5', 62, H - 48, { size: 26, align: 'left', color: '#fff', strokeW: 6, maxW: 340 });
       text(g, t('results.continue'), W / 2, H - 22, { size: 18, color: '#fff', strokeW: 4 });
       return;
     }

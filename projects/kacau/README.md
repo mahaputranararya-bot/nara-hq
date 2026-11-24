@@ -51,7 +51,7 @@ npm run build      # writes dist/index.html
 npm test           # build + Playwright smoke test (plays every mini-game with bots, checks console errors)
 node tests/smoke.js sumo   # auto-play one mini-game
 ```
-Screenshots from tests go to `tests/screenshots/`. `npm test` also checks that every English text has a Bahasa Indonesia version (`tests/lang.js`).
+Screenshots from tests go to `tests/screenshots/` (git-ignored). `npm test` also checks that every English text has a Bahasa Indonesia version (`tests/lang.js`).
 
 ## LAN mode
 Not built yet (milestone M8, optional). The single-file version will always work without it.

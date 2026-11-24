@@ -77,18 +77,26 @@ Read this first in a new session. Also read `docs/BRIEF.md` (spec), `docs/DECISI
   EN | ID toggle on the title (click or `L`). `tests/lang.js` (in `npm test`) checks key parity + every game's texts.
 - Tutorial card: long descriptions shrink to fit, boxes tightened for 8 players.
 
+### M7 — DONE
+- Tournament bracket draws every round from the start (future slots "?", winners fill in, connector lines).
+- Accessibility settings: colour-blind palette (Okabe-Ito, `applyPalette` in state.js swaps COLORS in place; shapes stay),
+  big name tags (`A11Y.tagScale` in draw.js), game speed 100/85/70% (runner dt). Settings menu is 2 columns
+  (arrows move, ENTER/click cycles; `ui.js` multi-column ENTER = `right()`); BACK was cut off before.
+- Bots: noodle scans 13 directions further ahead; tug bots vary per bot + FINAL PULL after 15 s (pulls get stronger).
+  Spinning Log ramps up faster. Replay label moved to a bottom-left banner (covered game text before).
+- Smoke test now also plays sumo with all accessibility settings on.
+
 ## In progress
 - Nothing half-done.
 
 ## Known bugs / rough edges
-- Noodle bots sometimes crash early in 2-player games (AI is simple ray probing).
-- Tug of war between equal bot teams usually ends on time, not at the line (humans mash harder, fine).
+- Wobbly Football between bots is low-scoring (0-2 goals a match); humans score more.
+- Balloon Pump rounds with only bots are very short (~5 s).
 - Same-tick finishes in Balap Karung can tie (broken by overshoot distance).
 - Gamepad support is untested on real hardware (headless tests can't plug in a pad).
 
 ## Next (M6 and on, see docs/ROADMAP.md)
-- M6: 30+ mini-games, full 17 Agustus pack (have Balap Karung, Makan Kerupuk, Tarik Tambang, Panjat Pinang; add e.g. kelereng/egg-spoon race, bakiak team walk), full ID translation check.
-- Tournament bracket only shows rounds played so far (future columns empty) — could pre-draw them.
-- Ideas queue for mini-games: panjat pinang (team pole climb), pancake flip, paper plane distance, rhythm drums,
-  falling tiles, rising lava, balance stack, volleyball giant ball, wobbly football, 2v2 hoops, traitor co-op round.
+- M8 (optional): LAN mode (`npm run lan`, tiny Node WebSocket server, phones/laptops as controllers).
+- Secret-traitor round only makes sense with private screens (LAN), see DECISIONS 20.
+- Ideas queue for mini-games: 2v2 hoops, egg toss, ragdoll race, shrinking platform, kites (layangan), gasing (spinning top).
 - Party Mode polish: board camera zoom on the current player, more boards in data/, mini-game choice by votes.

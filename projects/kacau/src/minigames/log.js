@@ -18,7 +18,7 @@ export default {
   },
   update(st, dt, ctx) {
     st.nextT -= dt; st.warn = Math.max(0, st.warn - dt);
-    const lvl = 0.9 + ctx.t * 0.07;
+    const lvl = 0.9 + ctx.t * 0.1;
     if (st.nextT <= 0) { st.nextT = ctx.rng.range(2, 4); st.target = (ctx.rng() < 0.5 ? -1 : 1) * ctx.rng.range(0.5, 1) * lvl; if (Math.sign(st.target) !== Math.sign(st.spin)) { st.warn = 1; ctx.sfx('honk'); } }
     st.spin += (st.target - st.spin) * Math.min(1, dt * 1.5);
     st.roll += st.spin * dt * 3;

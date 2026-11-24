@@ -22,8 +22,19 @@ Owner: Games CEO. Full brief: `docs/BRIEF.md`. Detailed engineering log: `PROGRE
 - **Milestone 5 done:** Tournament bracket (1v1 knockout), Daily Chaos (same 5 crazy games for everyone each day),
   instant replay of each round's last moments, funny awards (Most Falls, Button Masher, Biggest Clown), music.
 
+- **Milestone 6 done:** 31 mini-games (new: Marble Spoon Race, Bakiak Team Walk, Nail in the Bottle, Jump Rope,
+  Rising Lava, Spinning Log, Giant Volleyball, Wobbly Football, Chicken Chase, More or Less?, Statue!).
+  A "17 August Pack" menu entry plays only the 7 lomba 17-an games. Every word in the game now has a
+  Bahasa Indonesia version; EN | ID button on the title screen (or press L).
+
+- **Milestone 7 done:** tournament shows the whole bracket from the start, accessibility settings
+  (colour-blind colours, big name tags, slower game speed), settings screen fits on one page,
+  smarter bots in Tangled Noodles and Tarik Tambang (with a "final pull" so it ends at the line), tidier
+  tutorial cards and replay label.
+
 ## Next
-- Milestone 6: 30+ mini-games, the full 17 Agustus pack, check the Bahasa Indonesia translation.
+- Milestone 8 (optional): LAN mode so other laptops can join over school Wi-Fi.
+- More mini-games, boards and characters after that.
 
 ## How to play it
 - Double-click `projects/kacau/dist/index.html` (Chrome/Edge). Keys: P1 Q W, P2 C V, P3 N M, P4 arrow keys,

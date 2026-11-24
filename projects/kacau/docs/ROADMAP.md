@@ -8,7 +8,7 @@
 | M4 | Depth | 20 mini-games, modifiers, coins + unlocks, localStorage save, export/import | done |
 | M5 | Modes + juice | Tournament, Daily Chaos, instant replay, awards, music loops | done |
 | M6 | Content | 30+ mini-games, 17 Agustus pack, full Bahasa Indonesia | done |
-| M7 | Polish | balancing, accessibility (colour-blind, text size), settings | planned |
+| M7 | Polish | balancing, accessibility (colour-blind, text size), settings | done |
 | M8 | LAN (optional) | `npm run lan` WebSocket host | planned |
 | M9+ | More | mini-games, arenas, characters, secrets | planned |
 
