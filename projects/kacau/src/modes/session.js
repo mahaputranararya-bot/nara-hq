@@ -23,17 +23,19 @@ export function startMode(mode) {
   if (mode === 'party') { startParty(state.settings.partyTurns || 8); return; }
   if (mode === 'daily') { startDaily(); return; }
   if (mode === 'tourney') { go('bracket', { fresh: true }); return; }
+  if (mode === 'agustus') { startQuick({ mode: 'agustus', pool: 'local' }); return; }
   startQuick();
 }
 
 export function startQuick(opts = {}) {
   for (const p of state.players) { p.score = 0; p.stats = { wins: 0, presses: 0, falls: 0, lasts: 0 }; }
-  state.session = { mode: opts.mode || 'quick', target: opts.target || state.settings.target, bag: [], round: 0, history: [], last: null, list: opts.list, mods: opts.mods, rounds: opts.rounds };
+  state.session = { mode: opts.mode || 'quick', target: opts.target || state.settings.target, bag: [], round: 0, history: [], last: null, list: opts.list, mods: opts.mods, rounds: opts.rounds, pool: opts.pool };
   nextRound();
 }
 
 function drawFromBag(s) {
-  const pool = playable(state.players.length);
+  let pool = playable(state.players.length);
+  if (s.pool) { const f = pool.filter((m) => m.category === s.pool); if (f.length) pool = f; }
   if (!s.bag.length) {
     s.bag = rng.shuffle(pool.map((m) => m.id));
     if (s.bag.length > 1 && s.bag[0] === s.last) s.bag.push(s.bag.shift()); // no immediate repeat

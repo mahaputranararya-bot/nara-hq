@@ -49,7 +49,7 @@ export default {
         if (st.pts[i] >= goalFor(ctx.n) && st.winner < 0) { st.winner = i; ctx.finish(); }
       } else {
         st.pts[i] = Math.max(0, st.pts[i] - 1); st.stun[i] = 0.9;
-        ctx.sfx('buzz', st.xs[i]); ctx.popup('BZZT -1', st.xs[i], 470, { color: '#ff4d5e', size: 30 }); ctx.shake(3);
+        ctx.sfx('buzz', st.xs[i]); ctx.popup(ctx.t_('mgui.bzzt') + ' -1', st.xs[i], 470, { color: '#ff4d5e', size: 30 }); ctx.shake(3);
       }
     });
   },
@@ -79,7 +79,7 @@ export default {
     g.beginPath(); for (let a = 0; a <= TAU + 0.01; a += 0.1) { const r = 150 + Math.sin(a * 5 + ctx.t * 4) * 8; g.lineTo(Math.cos(a) * r, Math.sin(a) * r); }
     g.fillStyle = col; g.fill(); g.lineWidth = 10; g.strokeStyle = ctx.INK; g.stroke();
     if (sym) ctx.symbol(g, sym, 0, 0, 60, '#fff');
-    if (c && c.gold) ctx.text(g, 'EVERYONE!', 0, 110, { size: 30, color: '#fff' });
+    if (c && c.gold) ctx.text(g, ctx.t_('mgui.everyone'), 0, 110, { size: 30, color: '#fff' });
     if (!c) ctx.text(g, '...', 0, 0, { size: 60, color: 'rgba(255,255,255,0.4)', stroke: false });
     g.restore();
     ctx.text(g, `FIRST TO ${goalFor(ctx.n)}`, 640, 440, { size: 22, color: '#cfc6ff', strokeW: 4 });

@@ -33,6 +33,7 @@ register('title', {
       { label: () => t('menu.party'), action: () => go('join', { next: 'party' }) },
       { label: () => t('menu.tourney'), action: () => go('join', { next: 'tourney' }) },
       { label: () => t('menu.daily'), action: () => go('join', { next: 'daily' }) },
+      { label: () => t('menu.agustus'), action: () => go('join', { next: 'agustus' }) },
       { label: () => t('menu.free'), action: () => go('join', { next: 'free' }) },
       { label: () => t('menu.shop') + '  (' + (state.stats.coins || 0) + 'c)', action: () => go('shop') },
       { label: () => t('menu.settings'), action: () => go('settings') },

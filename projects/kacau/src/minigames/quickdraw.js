@@ -26,7 +26,7 @@ export default {
       for (const f of st.fakes) if (st.t >= f.at && st.t < f.at + 0.55) { st.sign = f.word; st.signFake = true; if (!f.played) { f.played = true; ctx.sfx('gasp'); } }
       P.forEach((p, i) => {
         const s = st.pl[i];
-        if (p.input.aP && !s.out && s.time < 0) { s.out = true; s.sq = 1.4; ctx.sfx('buzz', s.x); ctx.popup('OOPS!', s.x, 380, { color: '#ff4d5e', size: 40 }); ctx.shake(4); }
+        if (p.input.aP && !s.out && s.time < 0) { s.out = true; s.sq = 1.4; ctx.sfx('buzz', s.x); ctx.popup(ctx.t_('mgui.oops'), s.x, 380, { color: '#ff4d5e', size: 40 }); ctx.shake(4); }
       });
       if (st.t >= st.goAt) { st.phase = 'go'; st.goT = st.t; st.sign = 'GO!'; st.signFake = false; ctx.sfx('go'); ctx.flash('#34d27f', 0.25); }
       if (st.pl.every((s) => s.out)) { st.phase = 'show'; st.showT = 0; st.winner = -1; }
@@ -97,7 +97,7 @@ export default {
       // score stars
       for (let k = 0; k < st.pts[i]; k++) ctx.symbol(g, 'star', x - (st.pts[i] - 1) * 11 + k * 22, 600, 9, '#ffd43b');
       if (s.time >= 0) ctx.text(g, Math.round(s.time * 1000) + ' ms', x, 640, { size: 20, color: st.winner === i ? '#ffd43b' : '#fff', strokeW: 5 });
-      else if (s.out) ctx.text(g, 'OOPS', x, 640, { size: 20, color: '#ff4d5e', strokeW: 5 });
+      else if (s.out) ctx.text(g, ctx.t_('mgui.oops'), x, 640, { size: 20, color: '#ff4d5e', strokeW: 5 });
     });
   },
 };

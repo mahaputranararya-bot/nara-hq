@@ -65,11 +65,11 @@ export default {
     // beat indicator
     const bx = 640, by = 110, br = 34 + st.beatFlash * 14;
     g.beginPath(); g.arc(bx, by, br, 0, TAU); g.fillStyle = st.beatFlash > 0.5 ? '#ffd43b' : '#fff'; g.fill(); g.lineWidth = 5; g.strokeStyle = ctx.INK; g.stroke();
-    ctx.text(g, 'PULL ON THE BEAT = x2', 640, 170, { size: 22, color: '#fff', strokeW: 5 });
+    ctx.text(g, ctx.t_('mg.tug.hint'), 640, 170, { size: 22, color: '#fff', strokeW: 5 });
     // team zones
     g.fillStyle = 'rgba(61,155,255,0.18)'; g.fillRect(0, 0, 640 + st.pos - 120, 720); g.fillStyle = 'rgba(255,77,94,0.16)'; g.fillRect(640 + st.pos + 120, 0, 1280, 720);
-    ctx.text(g, 'TEAM A', 160, 60, { size: 32, color: '#3d9bff', strokeW: 7 });
-    ctx.text(g, 'TEAM B', 1120, 60, { size: 32, color: '#ff4d5e', strokeW: 7 });
+    ctx.text(g, ctx.t_('mgui.team') + ' A', 160, 60, { size: 32, color: '#3d9bff', strokeW: 7 });
+    ctx.text(g, ctx.t_('mgui.team') + ' B', 1120, 60, { size: 32, color: '#ff4d5e', strokeW: 7 });
     // rope
     const ropeY = 440, off = st.pos;
     g.strokeStyle = '#8a6a3c'; g.lineWidth = 12; g.beginPath(); g.moveTo(40, ropeY + 4); g.lineTo(1240, ropeY + 4); g.stroke();

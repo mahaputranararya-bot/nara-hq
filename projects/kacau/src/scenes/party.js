@@ -267,7 +267,7 @@ function drawBoard(g) {
     g.beginPath(); g.ellipse(sp.x, sp.y, 22, 15, 0, 0, TAU); g.fillStyle = SPACE_COL[sp.type]; g.fill(); g.lineWidth = 3; g.strokeStyle = INK; g.stroke();
     const icon = { B: '+', R: '-', E: '?', I: '!', L: '$' }[sp.type];
     text(g, icon, sp.x, sp.y + 1, { size: 18, color: '#fff', strokeW: 4 });
-    if (i === 0) text(g, 'START', sp.x, sp.y - 28, { size: 14, color: '#fff', strokeW: 4 });
+    if (i === 0) text(g, t('mgui.start'), sp.x, sp.y - 28, { size: 14, color: '#fff', strokeW: 4 });
   });
   // star
   const st = S.spaces[S.starAt];

@@ -50,7 +50,7 @@ export default {
         if (rv < 0) { a.vx += nx * rv * 0.6; a.vy += ny * rv * 0.6; c.vx -= nx * rv * 0.6; c.vy -= ny * rv * 0.6; }
         if (-rv > 450 && (st.holder === i || st.holder === j)) {
           const h = st.holder; st.holder = -1; b.vx = (h === i ? -nx : nx) * 300; b.vy = -500; b.noGrab = h; b.noGrabT = 0.4; P[h].stun = 0.4;
-          ctx.sfx('bonk', a.x); ctx.popup('STEAL!', b.x, b.y - 50, { color: '#ffd43b', size: 30 }); ctx.shake(5);
+          ctx.sfx('bonk', a.x); ctx.popup(ctx.t_('mgui.steal'), b.x, b.y - 50, { color: '#ffd43b', size: 30 }); ctx.shake(5);
         }
       }
     }

@@ -100,7 +100,7 @@ const only = process.argv[2]; // optional: single mini-game id
   }
 
   if (!only || only === 'm5') {
-    for (const [mode, n] of [['tourney', 5], ['daily', 4]]) {
+    for (const [mode, n] of [['tourney', 5], ['daily', 4], ['agustus', 3]]) {
       await page.evaluate(([mode, n]) => { window.KACAU.setPlayers(['kb0', ...Array(n - 1).fill('bot')]); window.KACAU[mode](); }, [mode, n]);
       let t = 0, shots = 0;
       while ((await scene()) !== 'podium' && t < 1500) {
@@ -131,6 +131,13 @@ const only = process.argv[2]; // optional: single mini-game id
   const inPage = await page.evaluate(() => window.KACAU.errors);
   errors.push(...inPage.map((e) => 'window.onerror: ' + e));
   if (errors.length) { console.log('ERRORS:\n' + [...new Set(errors)].join('\n')); fails += errors.length; }
+  if (!only) {
+    // Bahasa Indonesia pass: title, a tutorial card and a mini-game in ID, then back to EN
+    await page.evaluate(() => { window.KACAU.setLang('id'); window.KACAU.go('title'); }); await step(10); await shot('20-id-title');
+    await page.evaluate(() => { window.KACAU.setPlayers(['kb0', 'bot', 'bot']); window.KACAU.playGame('bakiak'); }); await step(30); await shot('21-id-card');
+    await step(400); await shot('22-id-play');
+    await page.evaluate(() => { window.KACAU.setLang('en'); window.KACAU.go('title'); }); await step(5);
+  }
   console.log(fails ? `\n${fails} problem(s)` : '\nALL GOOD: 0 console errors');
   await browser.close();
   process.exit(fails ? 1 : 0);

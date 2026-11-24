@@ -59,7 +59,7 @@ export default {
           ctx.popup(st.finished.length === 1 ? 'NYAM!' : '#' + st.finished.length, e.x, 300, { color: '#ffd43b', size: 44 });
         }
       } else {
-        e.cd = 0.5; ctx.sfx('pop', e.x); ctx.popup('CHOMP?', e.x, BAR_Y + e.len + 40, { color: '#fff', size: 22 });
+        e.cd = 0.5; ctx.sfx('pop', e.x); ctx.popup(ctx.t_('mgui.chomp'), e.x, BAR_Y + e.len + 40, { color: '#fff', size: 22 });
       }
     });
     if (st.finished.length >= Math.max(1, ctx.n - 1) && !st.endT) st.endT = ctx.t;
@@ -82,7 +82,7 @@ export default {
     g.fillStyle = '#8a5a3b'; g.fillRect(20, BAR_Y - 70, 18, 560); g.fillRect(1242, BAR_Y - 70, 18, 560);
     g.fillStyle = '#e63946'; g.fillRect(20, BAR_Y - 10, 1240, 16);
     for (let x = 20; x < 1260; x += 40) { g.fillStyle = '#fff'; g.fillRect(x, BAR_Y - 10, 20, 16); }
-    ctx.text(g, 'LOMBA MAKAN KERUPUK', 640, 60, { size: 40, color: '#fff', strokeW: 8 });
+    ctx.text(g, ctx.t_('mg.kerupuk.name').toUpperCase(), 640, 60, { size: 40, color: '#fff', strokeW: 8 });
     st.eaters.forEach((e, i) => {
       const p = ctx.players[i];
       const cx = e.x + Math.sin(e.ang) * e.len, cy = BAR_Y + Math.cos(e.ang) * e.len;

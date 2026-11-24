@@ -20,6 +20,17 @@ import balloon from './balloon.js';
 import coconut from './coconut.js';
 import holdit from './holdit.js';
 import curling from './curling.js';
+import kelereng from './kelereng.js';
+import bakiak from './bakiak.js';
+import paku from './paku.js';
+import jumprope from './jumprope.js';
+import lava from './lava.js';
+import log from './log.js';
+import volley from './volley.js';
+import football from './football.js';
+import chicken from './chicken.js';
+import bigger from './bigger.js';
+import patung from './patung.js';
 
-export const MINIGAMES = [sumo, quickdraw, noodle, sack, kerupuk, potato, colorsnap, tug, sweeper, hoops, pancake, plane, drums, tiles, stack, panjat, balloon, coconut, holdit, curling];
+export const MINIGAMES = [sumo, quickdraw, noodle, sack, kerupuk, potato, colorsnap, tug, sweeper, hoops, pancake, plane, drums, tiles, stack, panjat, balloon, coconut, holdit, curling, kelereng, bakiak, paku, jumprope, lava, log, volley, football, chicken, bigger, patung];
 export const getGame = (id) => MINIGAMES.find((m) => m.id === id);

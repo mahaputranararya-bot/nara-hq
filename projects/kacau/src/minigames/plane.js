@@ -40,6 +40,6 @@ export default {
       if (p.stage === 1) { g.fillStyle = '#333'; g.fillRect(130, y0 - 70, 60, 8); g.fillStyle = p.pow > 0.85 ? '#34d27f' : '#ffd43b'; g.fillRect(130, y0 - 70, 60 * p.pow, 8); }
       ctx.text(g, p.best + 'm', 1220, y0 - 30, { size: 20, color: pl.color, strokeW: 4 });
     });
-    ctx.text(g, 'PRESS = ANGLE, PRESS = POWER', 640, 40, { size: 26, color: '#fff' });
+    ctx.text(g, ctx.t_('mg.plane.hint'), 640, 40, { size: 26, color: '#fff' });
   },
 };

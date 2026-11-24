@@ -112,6 +112,6 @@ export default {
       ctx.drawPlayer(g, p, h.x, h.y, 15, { look: [Math.cos(h.ang), Math.sin(h.ang)], noHat: true, alpha: h.gap > 0 ? 0.6 : 1 });
       if (ctx.t < 2.5) { ctx.tag(g, p, h.x, h.y - 32, 15); g.strokeStyle = p.color; g.lineWidth = 3; g.setLineDash([6, 6]); g.beginPath(); g.moveTo(h.x, h.y); g.lineTo(h.x + Math.cos(h.ang) * 60, h.y + Math.sin(h.ang) * 60); g.stroke(); g.setLineDash([]); }
     });
-    ctx.text(g, 'TANGLED NOODLES', 160, 36, { size: 24, color: '#e94f37', strokeW: 5 });
+    ctx.text(g, ctx.t_('mg.noodle.name').toUpperCase(), 160, 36, { size: 24, color: '#e94f37', strokeW: 5 });
   },
 };

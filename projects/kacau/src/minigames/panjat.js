@@ -17,7 +17,7 @@ export default {
       st.slip[i] = Math.max(0, st.slip[i] - dt); if (st.slip[i] > 0) return;
       const k = p.input.aP ? 'a' : p.input.bP ? 'b' : ''; if (!k) return;
       const s = st.side[i];
-      if (k === st.last[i]) { st.slip[i] = 0.6; st.h[s] = Math.max(0, st.h[s] - 25); ctx.sfx('slurp'); ctx.popup('SLIPPERY!', s ? 960 : 320, 600 - st.h[s], { color: '#ff4d5e', size: 22 }); st.last[i] = ''; return; }
+      if (k === st.last[i]) { st.slip[i] = 0.6; st.h[s] = Math.max(0, st.h[s] - 25); ctx.sfx('slurp'); ctx.popup(ctx.t_('mgui.slippery'), s ? 960 : 320, 600 - st.h[s], { color: '#ff4d5e', size: 22 }); st.last[i] = ''; return; }
       st.last[i] = k; st.h[s] += 11 * st.mult[s] / Math.sqrt(st.teams[s].length); ctx.sfx('hop');
       if (st.h[s] >= BASE - TOP - 60) { st.win = s; st.winT = ctx.t; ctx.sfx('win'); ctx.confetti(s ? 960 : 320, TOP); }
     });
@@ -31,7 +31,7 @@ export default {
       g.fillStyle = '#b0412f'; g.fillRect(x - 12, TOP, 24, BASE - TOP); g.fillStyle = 'rgba(255,255,255,0.3)'; g.fillRect(x - 6, TOP, 5, BASE - TOP);
       g.strokeStyle = '#8a5a3b'; g.lineWidth = 4; g.beginPath(); g.arc(x, TOP, 70, Math.PI, 0); g.stroke();
       ['#ffd43b', '#ff4d5e', '#34d27f', '#3d9bff', '#fff'].forEach((c, k) => { g.fillStyle = c; g.fillRect(x - 70 + k * 30, TOP + 4 + (k % 2) * 10, 20, 26); });
-      ctx.text(g, s ? 'TEAM B' : 'TEAM A', x, 60, { size: 30, color: s ? '#ff4d5e' : '#3d9bff' });
+      ctx.text(g, ctx.t_('mgui.team') + (s ? ' B' : ' A'), x, 60, { size: 30, color: s ? '#ff4d5e' : '#3d9bff' });
       st.teams[s].forEach((pi, k) => { const pl = ctx.players[pi], y = BASE - 30 - st.h[s] + k * 44; ctx.drawPlayer(g, pl, x + (k % 2 ? 22 : -22), y, 22, { mood: st.slip[pi] > 0 ? 'scared' : st.win === s ? 'happy' : null, look: [0, -1] }); ctx.tag(g, pl, x + (k % 2 ? 70 : -70), y, 13); });
     });
   },

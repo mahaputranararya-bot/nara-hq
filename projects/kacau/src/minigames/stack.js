@@ -12,10 +12,10 @@ export default {
       p.mv += p.dir * dt * (90 + p.blocks.length * 9) * (ctx.mods.fast ? 1.3 : 1); if (Math.abs(p.mv) > range) { p.mv = Math.sign(p.mv) * range; p.dir *= -1; }
       if (!ctx.players[i].input.aP) return;
       const l = Math.max(p.mv - top.wd / 2, top.off - top.wd / 2), r = Math.min(p.mv + top.wd / 2, top.off + top.wd / 2);
-      if (r - l < 4) { p.dead = true; ctx.sfx('fall', p.cx); ctx.popup('CRASH!', p.cx, 300, { color: '#ff4d5e', size: 28 }); return; }
+      if (r - l < 4) { p.dead = true; ctx.sfx('fall', p.cx); ctx.popup(ctx.t_('mgui.crash'), p.cx, 300, { color: '#ff4d5e', size: 28 }); return; }
       const perfect = r - l > top.wd - 4;
       p.blocks.push({ off: perfect ? top.off : (l + r) / 2, wd: perfect ? top.wd : r - l });
-      ctx.sfx(perfect ? 'ding' : 'bonk', p.cx); if (perfect) ctx.popup('PERFECT', p.cx, 260, { color: '#ffd43b', size: 20 });
+      ctx.sfx(perfect ? 'ding' : 'bonk', p.cx); if (perfect) ctx.popup(ctx.t_('mgui.perfect'), p.cx, 260, { color: '#ffd43b', size: 20 });
       p.mv = -range * p.dir;
     });
     if (st.ps.every((p) => p.dead)) ctx.finish();

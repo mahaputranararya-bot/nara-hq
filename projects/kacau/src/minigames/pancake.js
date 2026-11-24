@@ -14,7 +14,7 @@ export default {
       if (p.h <= 0) {
         p.h = 0; p.air = false; const a = ((p.rot % Math.PI) + Math.PI) % Math.PI, flat = Math.min(a, Math.PI - a);
         if (flat < 0.45) { p.pts++; ctx.sfx('splat', p.x); ctx.popup(flat < 0.15 ? 'PERFECT!' : '+1', p.x, 420, { color: '#ffd43b', size: 30 }); }
-        else { p.burnt = 0.8; ctx.sfx('buzz', p.x); ctx.popup('SPLAT!', p.x, 420, { color: '#ff4d5e', size: 28 }); }
+        else { p.burnt = 0.8; ctx.sfx('buzz', p.x); ctx.popup(ctx.t_('mgui.splat'), p.x, 420, { color: '#ff4d5e', size: 28 }); }
         p.rot = 0;
       }
     });

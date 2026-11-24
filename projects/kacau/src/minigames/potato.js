@@ -112,6 +112,6 @@ export default {
         if (Math.random() < 0.5) ctx.burst(bx + 10 + 26 * (1 - urgency) * 0.6, by - 30 - 26 * (1 - urgency), ['#ffd43b', '#ff9330'], 1, { speed: 80, gravity: -50, size: 3, life: 0.3 });
       }
     }
-    ctx.text(g, 'HOT POTATO BOMB', 640, 40, { size: 34, color: '#ff9330', strokeW: 7 });
+    ctx.text(g, ctx.t_('mg.potato.name').toUpperCase(), 640, 40, { size: 34, color: '#ff9330', strokeW: 7 });
   },
 };

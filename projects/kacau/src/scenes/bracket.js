@@ -57,7 +57,7 @@ register('bracket', {
     time += dt;
     if (T.champ >= 0) {
       T.doneT += dt;
-      if (T.doneT > 3.5) go('podium', { order: finalOrder(), label: (i) => (i === T.champ ? 'CHAMPION' : i === finalOrder()[1] ? t('tourney.finalist') : ''), again: () => go('bracket', { fresh: true }), next: 'tourney' });
+      if (T.doneT > 3.5) go('podium', { order: finalOrder(), label: (i) => (i === T.champ ? t('tourney.champion') : i === finalOrder()[1] ? t('tourney.finalist') : ''), again: () => go('bracket', { fresh: true }), next: 'tourney' });
       return;
     }
     if (input.keyPressed('Escape')) { go('title'); return; }
@@ -71,7 +71,7 @@ register('bracket', {
     T.rounds.forEach((r, ri) => {
       const x = 130 + ri * (1020 / Math.max(1, total - 1 || 1));
       const left = total - ri - 1;
-      text(g, (left <= 2 ? t('tourney.round.r' + left) : 'ROUND ' + (ri + 1)), x, 100, { size: 18, color: '#fff', strokeW: 4 });
+      text(g, (left <= 2 ? t('tourney.round.r' + left) : t('tourney.roundN', { n: ri + 1 })), x, 100, { size: 18, color: '#fff', strokeW: 4 });
       r.forEach((m, mi) => {
         const y = 150 + (mi + 0.5) * (440 / r.length);
         const cur = m === current();

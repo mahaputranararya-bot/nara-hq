@@ -44,7 +44,7 @@ register('join', {
     buttons = [
       { x: 900, y: 640, w: 110, h: 54, label: '+ BOT', fn: () => addBot() },
       { x: 1020, y: 640, w: 110, h: 54, label: '- BOT', fn: () => removeBot() },
-      { x: 1140, y: 640, w: 120, h: 54, label: 'START', fn: () => tryStart() },
+      { x: 1140, y: 640, w: 120, h: 54, label: 'START', start: true, fn: () => tryStart() },
     ];
   },
   update(dt) {
@@ -96,8 +96,8 @@ register('join', {
     else text(g, t('join.need2'), 865, 686, { size: 18, color: msgT > 0 ? '#e63946' : '#6b6390', stroke: false, align: 'right' });
     for (const b of buttons) {
       const hot = mouse.x > b.x && mouse.x < b.x + b.w && mouse.y > b.y && mouse.y < b.y + b.h;
-      panel(g, b.x, b.y, b.w, b.h, { fill: b.label === 'START' ? (canStart() ? '#34d27f' : '#aaa') : hot ? '#ffd43b' : '#f4f1ff', r: 14 });
-      text(g, b.label, b.x + b.w / 2, b.y + b.h / 2 + 2, { size: 22, color: INK, stroke: false });
+      panel(g, b.x, b.y, b.w, b.h, { fill: b.start ? (canStart() ? '#34d27f' : '#aaa') : hot ? '#ffd43b' : '#f4f1ff', r: 14 });
+      text(g, b.start ? t('mgui.start') : b.label, b.x + b.w / 2, b.y + b.h / 2 + 2, { size: 22, color: INK, stroke: false });
     }
     if (state.players.filter((p) => p.source.type === 'kb').length >= 2) {
       const lines = wrapText(g, t('join.ghost'), 1200, 15);

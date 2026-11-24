@@ -19,7 +19,7 @@ export default {
   ai(st, i, ctx) { const p = st.ps[i]; if (p.res >= 0) return {}; p.goal = p.goal ?? TARGET + (ctx.rng() - 0.5) * (1.6 - ctx.skill * 1.3); if (p.start < 0) return { a: ctx.t > 0.5 + i * 0.2 }; return { a: ctx.t - p.start < p.goal }; },
   draw(g, st, ctx) {
     g.fillStyle = '#243b55'; g.fillRect(0, 0, 1280, 720);
-    ctx.text(g, 'HOLD... LET GO AT 5.00s', 640, 70, { size: 40, color: '#ffd43b' });
+    ctx.text(g, ctx.t_('mg.holdit.hint'), 640, 70, { size: 40, color: '#ffd43b' });
     const n = ctx.n, w = Math.min(150, 1180 / n);
     st.ps.forEach((p, i) => {
       const x = 640 + (i - (n - 1) / 2) * w, pl = ctx.players[i], el = p.start < 0 ? 0 : p.res >= 0 ? p.res : ctx.t - p.start;

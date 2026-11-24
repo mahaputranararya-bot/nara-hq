@@ -10,7 +10,7 @@ export default {
       p.sq += (1 - p.sq) * Math.min(1, dt * 8);
       if (p.popped || p.banked) return;
       const inp = ctx.players[i].input;
-      if (inp.bP && p.size > 10) { p.banked = true; ctx.sfx('ding', p.x); ctx.popup('TIED!', p.x, 200, { color: '#34d27f', size: 26 }); return; }
+      if (inp.bP && p.size > 10) { p.banked = true; ctx.sfx('ding', p.x); ctx.popup(ctx.t_('mgui.tied'), p.x, 200, { color: '#34d27f', size: 26 }); return; }
       if (inp.aP) { p.size += 4; p.sq = 1.15; ctx.sfx('pop', p.x); if (p.size > p.pop) { p.popped = true; ctx.sfx('explode', p.x); ctx.shake(8); ctx.burst(p.x, 330, ctx.players[i].color, 30, { speed: 400 }); ctx.say('out', p.x, 260, '#fff'); } }
     });
     if (st.ps.every((p) => p.popped || p.banked)) ctx.finish();
@@ -25,6 +25,6 @@ export default {
       ctx.drawPlayer(g, pl, p.x, 570, Math.min(34, st.w * 0.25), { mood: p.popped ? 'out' : p.size > 50 ? 'scared' : p.banked ? 'happy' : null, look: [0, -1] });
       ctx.tag(g, pl, p.x, 620, 15); ctx.text(g, p.popped ? 'POP' : Math.round(p.size), p.x, 660, { size: 26, color: p.banked ? '#34d27f' : '#fff' });
     });
-    ctx.text(g, 'A = PUMP    B = TIE IT OFF (keep it)', 640, 50, { size: 26, color: '#ff73c6' });
+    ctx.text(g, ctx.t_('mg.balloon.hint'), 640, 50, { size: 26, color: '#ff73c6' });
   },
 };

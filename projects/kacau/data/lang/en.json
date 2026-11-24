@@ -14,7 +14,8 @@
     "shop": "UNLOCKS",
     "coins": "{n} coins",
     "daily": "DAILY CHAOS",
-    "tourney": "TOURNAMENT"
+    "tourney": "TOURNAMENT",
+    "agustus": "17 AUGUST PACK"
   },
   "join": {
     "title": "WHO'S PLAYING?",
@@ -170,7 +171,8 @@
     "tug": {
       "name": "Tarik Tambang",
       "desc": "Tug of war, two teams! Mash to pull. Pull on the drum beat for DOUBLE power.",
-      "a": "Pull"
+      "a": "Pull",
+      "hint": "PULL ON THE BEAT = x2"
     },
     "sweeper": {
       "name": "Spin Sweeper",
@@ -190,7 +192,8 @@
     "plane": {
       "name": "Paper Plane",
       "desc": "Press once to lock the ANGLE, again to lock the POWER. Furthest of 2 throws wins.",
-      "a": "Lock"
+      "a": "Lock",
+      "hint": "PRESS = ANGLE, PRESS = POWER"
     },
     "drums": {
       "name": "Drum Battle",
@@ -217,7 +220,8 @@
       "name": "Balloon Pump",
       "desc": "Pump your balloon (A), then tie it off (B) before it POPS. Biggest balloon wins!",
       "a": "Pump",
-      "b": "Tie it off"
+      "b": "Tie it off",
+      "hint": "A = PUMP    B = TIE IT OFF (keep it)"
     },
     "coconut": {
       "name": "Coconut Rain",
@@ -228,12 +232,90 @@
     "holdit": {
       "name": "Hold It!",
       "desc": "Hold your key and let go at exactly 5.00 seconds. The clock disappears after 2 seconds!",
-      "a": "Hold"
+      "a": "Hold",
+      "hint": "HOLD... LET GO AT 5.00s"
     },
     "curling": {
       "name": "Ice Curling",
       "desc": "When it's your turn, press to slide your stone. Closest to the bullseye wins. Bump others away!",
       "a": "Slide"
+    },
+    "kelereng": {
+      "name": "Marble Spoon Race",
+      "desc": "HOLD to walk with a marble on your spoon. Too fast = it wobbles off! Let go to steady it.",
+      "a": "Hold = walk",
+      "drop": "DROPPED!",
+      "hint": "HOLD = WALK   LET GO = STEADY"
+    },
+    "bakiak": {
+      "name": "Bakiak Team Walk",
+      "desc": "Your team shares giant wooden clogs. Everyone presses the foot on the sign, then you step. Wrong foot = everybody trips!",
+      "a": "Left foot",
+      "b": "Right foot",
+      "left": "LEFT (A)",
+      "right": "RIGHT (B)",
+      "trip": "TRIP!"
+    },
+    "paku": {
+      "name": "Nail in the Bottle",
+      "desc": "A nail swings from a string on your back. HOLD to lower it and drop it into the bottle when it's right above. Most nails wins!",
+      "a": "Hold = lower",
+      "clink": "CLINK!",
+      "hint": "HOLD = LOWER THE NAIL"
+    },
+    "jumprope": {
+      "name": "Jump Rope",
+      "desc": "Jump when the rope hits your feet. It keeps getting faster! Last one jumping wins.",
+      "a": "Jump",
+      "speed": "SPEED x{n}"
+    },
+    "lava": {
+      "name": "Rising Lava",
+      "desc": "Ledges slide left and right. Jump to the next one up when it's above you. Miss = drop down. Don't touch the lava!",
+      "a": "Jump up",
+      "miss": "MISS!"
+    },
+    "log": {
+      "name": "Spinning Log",
+      "desc": "Balance on a rolling log over the mud. Lean against the spin! It changes direction. Last one standing wins.",
+      "a": "Lean left",
+      "b": "Lean right",
+      "spin": "SPIN"
+    },
+    "volley": {
+      "name": "Giant Volleyball",
+      "desc": "Team game. Run under the HUGE ball and bonk it over the net with your head. Don't let it land on your side!",
+      "a": "Run left",
+      "b": "Run right",
+      "point": "POINT TEAM {t}!",
+      "hint": "First to {n}  ·  A+B = jump"
+    },
+    "football": {
+      "name": "Wobbly Football",
+      "desc": "Team game. Your arrow spins: press to DASH and bump the ball into the other team's goal.",
+      "a": "Dash",
+      "goal": "GOAAAL!"
+    },
+    "chicken": {
+      "name": "Chicken Chase",
+      "desc": "Whoever wears the chicken hat earns points. Everyone else: DASH into them to steal it! Most points wins.",
+      "a": "Dash",
+      "steal": "GOT THE CHICKEN!"
+    },
+    "bigger": {
+      "name": "More or Less?",
+      "desc": "Which pile has MORE snacks? A = left, B = right. First right answer scores, a wrong one costs a point.",
+      "a": "Left pile",
+      "b": "Right pile",
+      "q": "WHICH PILE HAS MORE?"
+    },
+    "patung": {
+      "name": "Statue!",
+      "desc": "Music on: MASH to dance and score. Music off: FREEZE! Press in the silence and you lose a third of your points.",
+      "a": "Dance",
+      "dance": "DANCE!",
+      "freeze": "FREEZE!",
+      "caught": "CAUGHT!"
     }
   },
   "party": {
@@ -304,12 +386,30 @@
     },
     "go": "SPACE / A = play",
     "winsMatch": "{a} wins!",
-    "finalist": "FINALIST"
+    "finalist": "FINALIST",
+    "champion": "CHAMPION",
+    "roundN": "ROUND {n}"
   },
   "awards": {
     "falls": "Most Falls",
     "masher": "Button Masher",
     "clown": "Biggest Clown",
     "none": "-"
+  },
+  "mgui": {
+    "team": "TEAM",
+    "tied": "TIED!",
+    "bzzt": "BZZT",
+    "everyone": "EVERYONE!",
+    "steal": "STEAL!",
+    "chomp": "CHOMP?",
+    "splat": "SPLAT!",
+    "slippery": "SLIPPERY!",
+    "oops": "OOPS!",
+    "crash": "CRASH!",
+    "perfect": "PERFECT",
+    "reverse": "REVERSE!",
+    "tangled": "TANGLED!",
+    "start": "START"
   }
 }

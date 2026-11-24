@@ -19,7 +19,7 @@ export default {
     st.w = Math.min(5, 1.8 + ctx.t * 0.06);
     if (ctx.t > 22 && st.beams.length === 1) { st.beams.push(st.beams[0] + Math.PI); ctx.announce('DOUBLE TROUBLE!', '#ff4d5e', 1.4); ctx.sfx('honk'); }
     st.revT -= dt;
-    if (st.revT <= 0) { st.dir *= -1; st.revT = ctx.rng.range(6, 12); ctx.popup('REVERSE!', CX, CY - 220, { color: '#ffd43b', size: 44 }); ctx.sfx('zap'); }
+    if (st.revT <= 0) { st.dir *= -1; st.revT = ctx.rng.range(6, 12); ctx.popup(ctx.t_('mgui.reverse'), CX, CY - 220, { color: '#ffd43b', size: 44 }); ctx.sfx('zap'); }
     const prev = st.beams.slice();
     st.beams = st.beams.map((b) => b + st.w * st.dir * dt);
     const outNow = [];

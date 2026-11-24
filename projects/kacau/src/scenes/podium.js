@@ -8,7 +8,7 @@ import { state, COLORS, CHARS, pLabel } from '../engine/state.js';
 import { play } from '../engine/audio.js';
 import { confetti, drawParticles, drawPopups, resetFx } from '../engine/fx.js';
 import { easeOutBack, clamp } from '../engine/util.js';
-import { startQuick } from '../modes/session.js';
+import { startMode } from '../modes/session.js';
 
 let P = null;
 register('podium', {
@@ -20,7 +20,7 @@ register('podium', {
       title: args.title || ((i) => t('podium.winner', { name: pLabel(state.players[i]) + ' ' + CHARS[state.players[i].char].name })) };
     play('win');
     P.menu = makeMenu([
-      { label: () => t('podium.again'), action: () => (args.again ? args.again() : startQuick()) },
+      { label: () => t('podium.again'), action: () => (args.again ? args.again() : startMode((state.session && state.session.mode) || 'quick')) },
       { label: () => t('podium.change'), action: () => go('join', { next: args.next || 'quick' }) },
       { label: () => t('podium.menu'), action: () => go('title') },
     ], { y: 548, w: 330, h: 56, cols: 3, gap: 20, size: 24 });

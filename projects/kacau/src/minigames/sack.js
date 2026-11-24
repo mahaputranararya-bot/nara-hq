@@ -34,7 +34,7 @@ export default {
       if (!press) return;
       if (press === 'both' || press === r.last) {
         r.down = 0.9; r.last = ''; r.vx = 0; r.sq = 0.6;
-        ctx.sfx('bonk', r.x); ctx.popup(press === 'both' ? 'TANGLED!' : 'OOPS!', r.x, r.laneY - 70, { color: '#ff4d5e', size: 26 });
+        ctx.sfx('bonk', r.x); ctx.popup(ctx.t_(press === 'both' ? 'mgui.tangled' : 'mgui.oops'), r.x, r.laneY - 70, { color: '#ff4d5e', size: 26 });
         ctx.players[i].ref.stats.falls = (ctx.players[i].ref.stats.falls || 0) + 1;
         return;
       }

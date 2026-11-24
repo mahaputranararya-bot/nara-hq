@@ -14,7 +14,8 @@
     "shop": "BUKA KUNCI",
     "coins": "{n} koin",
     "daily": "KACAU HARIAN",
-    "tourney": "TURNAMEN"
+    "tourney": "TURNAMEN",
+    "agustus": "PAKET 17-AN"
   },
   "join": {
     "title": "SIAPA YANG MAIN?",
@@ -170,7 +171,8 @@
     "tug": {
       "name": "Tarik Tambang",
       "desc": "Dua tim adu tarik! Tekan terus untuk menarik. Tarik pas ketukan drum = tenaga DUA KALI.",
-      "a": "Tarik"
+      "a": "Tarik",
+      "hint": "TARIK PAS KETUKAN = x2"
     },
     "sweeper": {
       "name": "Baling-Baling Maut",
@@ -190,7 +192,8 @@
     "plane": {
       "name": "Pesawat Kertas",
       "desc": "Tekan untuk kunci SUDUT, tekan lagi untuk kunci TENAGA. Terjauh dari 2 lemparan menang.",
-      "a": "Kunci"
+      "a": "Kunci",
+      "hint": "TEKAN = SUDUT, TEKAN = TENAGA"
     },
     "drums": {
       "name": "Adu Bedug",
@@ -217,7 +220,8 @@
       "name": "Pompa Balon",
       "desc": "Pompa balon (A), lalu ikat (B) sebelum MELETUS. Balon terbesar menang!",
       "a": "Pompa",
-      "b": "Ikat"
+      "b": "Ikat",
+      "hint": "A = POMPA    B = IKAT (simpan)"
     },
     "coconut": {
       "name": "Hujan Kelapa",
@@ -228,12 +232,90 @@
     "holdit": {
       "name": "Tahan!",
       "desc": "Tahan tombol dan lepas tepat di 5,00 detik. Jam hilang setelah 2 detik!",
-      "a": "Tahan"
+      "a": "Tahan",
+      "hint": "TAHAN... LEPAS DI 5.00 DETIK"
     },
     "curling": {
       "name": "Curling Es",
       "desc": "Saat giliranmu, tekan untuk meluncurkan batu. Paling dekat ke tengah menang!",
       "a": "Luncur"
+    },
+    "kelereng": {
+      "name": "Lomba Kelereng Sendok",
+      "desc": "TAHAN untuk jalan dengan kelereng di sendok. Terlalu cepat = kelerengnya jatuh! Lepas supaya stabil.",
+      "a": "Tahan = jalan",
+      "drop": "JATUH!",
+      "hint": "TAHAN = JALAN   LEPAS = STABIL"
+    },
+    "bakiak": {
+      "name": "Lomba Bakiak",
+      "desc": "Satu tim memakai bakiak raksasa. Semua tekan kaki yang tertulis di papan, lalu melangkah. Salah kaki = satu tim jatuh!",
+      "a": "Kaki kiri",
+      "b": "Kaki kanan",
+      "left": "KIRI (A)",
+      "right": "KANAN (B)",
+      "trip": "JATUH!"
+    },
+    "paku": {
+      "name": "Paku Masuk Botol",
+      "desc": "Paku berayun di tali di punggungmu. TAHAN untuk menurunkan, masukkan ke botol saat pas di atasnya. Paku terbanyak menang!",
+      "a": "Tahan = turunkan",
+      "clink": "TING!",
+      "hint": "TAHAN = TURUNKAN PAKU"
+    },
+    "jumprope": {
+      "name": "Lompat Tali",
+      "desc": "Lompat saat tali sampai di kakimu. Makin lama makin cepat! Yang terakhir masih lompat menang.",
+      "a": "Lompat",
+      "speed": "KECEPATAN x{n}"
+    },
+    "lava": {
+      "name": "Lava Naik",
+      "desc": "Pijakan bergeser kiri-kanan. Lompat ke pijakan atas saat pas di atasmu. Meleset = turun. Jangan kena lava!",
+      "a": "Lompat naik",
+      "miss": "MELESET!"
+    },
+    "log": {
+      "name": "Batang Berputar",
+      "desc": "Jaga keseimbangan di batang kayu yang berputar di atas lumpur. Condong melawan putaran! Arahnya bisa berubah.",
+      "a": "Condong kiri",
+      "b": "Condong kanan",
+      "spin": "PUTAR"
+    },
+    "volley": {
+      "name": "Voli Bola Raksasa",
+      "desc": "Main tim. Lari ke bawah bola RAKSASA dan sundul melewati net. Jangan biarkan jatuh di sisimu!",
+      "a": "Lari kiri",
+      "b": "Lari kanan",
+      "point": "POIN TIM {t}!",
+      "hint": "Duluan {n}  ·  A+B = lompat"
+    },
+    "football": {
+      "name": "Sepak Bola Goyang",
+      "desc": "Main tim. Panahmu berputar: tekan untuk MELUNCUR dan dorong bola ke gawang lawan.",
+      "a": "Meluncur",
+      "goal": "GOOOL!"
+    },
+    "chicken": {
+      "name": "Kejar Ayam",
+      "desc": "Yang memakai topi ayam dapat poin. Yang lain: TABRAK dia untuk merebut topinya! Poin terbanyak menang.",
+      "a": "Meluncur",
+      "steal": "DAPAT AYAMNYA!"
+    },
+    "bigger": {
+      "name": "Lebih Banyak Mana?",
+      "desc": "Tumpukan mana yang camilannya LEBIH BANYAK? A = kiri, B = kanan. Jawaban benar pertama dapat poin, salah dikurangi satu.",
+      "a": "Tumpukan kiri",
+      "b": "Tumpukan kanan",
+      "q": "MANA YANG LEBIH BANYAK?"
+    },
+    "patung": {
+      "name": "Patung!",
+      "desc": "Musik nyala: TEKAN terus untuk joget dan dapat poin. Musik mati: DIAM! Menekan saat sunyi = poinmu hilang sepertiga.",
+      "a": "Joget",
+      "dance": "JOGET!",
+      "freeze": "DIAM!",
+      "caught": "KETAHUAN!"
     }
   },
   "party": {
@@ -304,12 +386,30 @@
     },
     "go": "SPASI / A = main",
     "winsMatch": "{a} menang!",
-    "finalist": "FINALIS"
+    "finalist": "FINALIS",
+    "champion": "JUARA",
+    "roundN": "BABAK {n}"
   },
   "awards": {
     "falls": "Paling Sering Jatuh",
     "masher": "Tukang Pencet",
     "clown": "Badut Terbesar",
     "none": "-"
+  },
+  "mgui": {
+    "team": "TIM",
+    "tied": "DIIKAT!",
+    "bzzt": "BZZT",
+    "everyone": "SEMUANYA!",
+    "steal": "REBUT!",
+    "chomp": "KRAUK?",
+    "splat": "PLOK!",
+    "slippery": "LICIN!",
+    "oops": "WADUH!",
+    "crash": "RUNTUH!",
+    "perfect": "SEMPURNA",
+    "reverse": "BALIK!",
+    "tangled": "KUSUT!",
+    "start": "MULAI"
   }
 }

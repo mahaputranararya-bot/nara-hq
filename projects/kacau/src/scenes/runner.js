@@ -201,20 +201,21 @@ function drawCard(g) {
   g.lineWidth = 5; g.strokeStyle = INK; rrect(g, x, y, w, h, 28); g.stroke();
   text(g, t('mg.' + game.id + '.name'), W / 2, y + 50, { size: 54, color: '#fff', strokeW: 10, maxW: w - 260 });
   const badge = game.teams ? t('runner.team') : (game.buttons === 2 ? t('runner.two') : t('runner.only1'));
-  panel(g, x + w - 190, y + 112, 170, 40, { fill: '#ffd43b', r: 20, depth: 3, lineW: 3 });
-  text(g, badge, x + w - 105, y + 133, { size: 20, color: INK, stroke: false });
+  panel(g, x + w - 190, y + 106, 170, 40, { fill: '#ffd43b', r: 20, depth: 3, lineW: 3 });
+  text(g, badge, x + w - 105, y + 127, { size: 20, color: INK, stroke: false });
   const modNames = Object.keys(R.ctx.mods).filter((k) => R.ctx.mods[k]).map((k) => tl((MODS.find((m) => m.id === k) || { name: k }).name));
-  if (modNames.length) { panel(g, x + w - 430, y + 112, 230, 40, { fill: '#ff4d8d', r: 20, depth: 3, lineW: 3 }); text(g, modNames.join(' + '), x + w - 315, y + 133, { size: 16, color: '#fff', strokeW: 4, maxW: 220 }); }
+  if (modNames.length) { panel(g, x + w - 430, y + 106, 230, 40, { fill: '#ff4d8d', r: 20, depth: 3, lineW: 3 }); text(g, modNames.join(' + '), x + w - 315, y + 127, { size: 16, color: '#fff', strokeW: 4, maxW: 220 }); }
   // icon
   if (game.icon) { try { g.save(); game.icon(g, x + 110, y + 190, 70, R.phaseT, R.ctx); g.restore(); } catch (e) { console.error(e); } }
-  const lines = wrapText(g, t('mg.' + game.id + '.desc'), w - 420, 30);
-  lines.slice(0, 3).forEach((ln, i) => text(g, ln, x + 210, y + 160 + i * 40 + (3 - Math.min(3, lines.length)) * 20, { size: 30, color: INK, stroke: false, align: 'left' }));
+  let dsz = 30, lines = wrapText(g, t('mg.' + game.id + '.desc'), w - 250, dsz);
+  if (lines.length > 3) { dsz = 25; lines = wrapText(g, t('mg.' + game.id + '.desc'), w - 250, dsz); }
+  lines.slice(0, 3).forEach((ln, i) => text(g, ln, x + 210, y + 171 + i * dsz * 1.14 + (3 - Math.min(3, lines.length)) * dsz * 0.6, { size: dsz, color: INK, stroke: false, align: 'left' }));
   // players + their keys
   const perRow = n > 4 ? Math.ceil(n / 2) : n;
-  const cw = Math.min(250, (w - 40) / perRow - 12), ch = 150;
+  const cw = Math.min(250, (w - 40) / perRow - 12), ch = n > 4 ? 136 : 150;
   R.players.forEach((p, i) => {
     const row = Math.floor(i / perRow), col = i % perRow, inRow = row === 0 ? Math.min(perRow, n) : n - perRow;
-    const cx = W / 2 + (col - (inRow - 1) / 2) * (cw + 12), cy = y + 330 + row * (ch + 14);
+    const cx = W / 2 + (col - (inRow - 1) / 2) * (cw + 12), cy = y + 332 + row * (ch + 10);
     const ready = R.ready.has(p.i);
     panel(g, cx - cw / 2, cy - ch / 2, cw, ch, { fill: ready ? '#d6ffe6' : '#fff', r: 18, depth: 4, line: p.color, lineW: 5 });
     drawChar(g, { x: cx - cw / 2 + 40, y: cy - 34, r: 26, color: p.color, char: p.char, symbol: p.symbol, t: R.phaseT + i, mood: ready ? 'happy' : null });
