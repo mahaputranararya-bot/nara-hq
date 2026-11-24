@@ -29,7 +29,8 @@
     "need2": "Need 2+ players (press + to add a bot)",
     "ghost": "Ghosting test: everyone hold your keys. Unlit key = keyboard can't handle that combo, try a gamepad.",
     "empty": "free slot",
-    "bot": "BOT"
+    "bot": "BOT",
+    "lan": "LAN: on phones/laptops open {url} and tap A to join"
   },
   "settings": {
     "title": "SETTINGS",

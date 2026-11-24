@@ -3,6 +3,7 @@ import { register, go } from '../engine/app.js';
 import { W, H, mouse } from '../engine/canvas.js';
 import { text, drawChar, panel, keyCap, symbol, bgStripes, rrect, INK, wrapText } from '../engine/draw.js';
 import { t } from '../engine/i18n.js';
+import { lan } from '../engine/lan.js';
 import * as input from '../engine/input.js';
 import { KB_SLOTS, keyLabel } from '../engine/input.js';
 import { state, makePlayer, COLORS, CHARS, freeColor, pLabel, charLocked } from '../engine/state.js';
@@ -91,6 +92,7 @@ register('join', {
     text(g, t('join.pressKey'), 30, 650, { size: 20, color: INK, stroke: false, align: 'left' });
     let x = 70;
     freeSlots.forEach((s) => { keyCap(g, keyLabel(KB_SLOTS[s].a), x, 685, 32, { pressed: input.keyDown(KB_SLOTS[s].a) }); keyCap(g, keyLabel(KB_SLOTS[s].b), x + 38, 685, 32, { pressed: input.keyDown(KB_SLOTS[s].b) }); x += 100; });
+    if (lan.on) text(g, t('join.lan', { url: lan.urls[0] || '' }), 640, 88, { size: 16, color: '#fff', strokeW: 4 });
     text(g, t('join.padJoin') + '   ' + t('join.bots'), 865, 650, { size: 18, color: INK, stroke: false, align: 'right' });
     if (canStart()) text(g, t('join.start'), 865, 686, { size: 24 + Math.sin(time * 6) * 2, color: '#2bb673', stroke: false, align: 'right' });
     else text(g, t('join.need2'), 865, 686, { size: 18, color: msgT > 0 ? '#e63946' : '#6b6390', stroke: false, align: 'right' });
@@ -136,7 +138,7 @@ function drawCard(g, i, p) {
     keyCap(g, k.b, r.x + r.w - 60, r.y + 200, 40, { pressed: inp.b, color: col.hex });
     text(g, t('join.change'), r.x + 60, r.y + 232, { size: 13, color: INK, stroke: false });
     text(g, t('join.color'), r.x + r.w - 60, r.y + 232, { size: 13, color: INK, stroke: false });
-    if (k.pad) text(g, 'PAD', r.x + r.w / 2, r.y + 200, { size: 18, stroke: false, color: '#6b6390' });
+    if (k.pad) text(g, k.lan ? 'LAN' : 'PAD', r.x + r.w / 2, r.y + 200, { size: 18, stroke: false, color: '#6b6390' });
     if (a.hold > 0) { g.fillStyle = 'rgba(230,57,70,0.8)'; g.fillRect(r.x + 10, r.y + r.h - 8, (r.w - 20) * Math.min(1, a.hold), 6); text(g, t('join.leave'), r.x + r.w / 2, r.y + 158, { size: 14, color: '#e63946' }); }
   }
   g.restore();

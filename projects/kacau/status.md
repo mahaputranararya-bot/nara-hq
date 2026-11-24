@@ -32,9 +32,13 @@ Owner: Games CEO. Full brief: `docs/BRIEF.md`. Detailed engineering log: `PROGRE
   smarter bots in Tangled Noodles and Tarik Tambang (with a "final pull" so it ends at the line), tidier
   tutorial cards and replay label.
 
+- **Milestone 8 done (first version):** LAN mode. Run `npm run lan` on the host laptop; friends open the shown
+  address on their phone or laptop and get two big A/B buttons to play. Optional: the double-click file still
+  works with no network at all.
+
 ## Next
-- Milestone 8 (optional): LAN mode so other laptops can join over school Wi-Fi.
-- More mini-games, boards and characters after that.
+- Milestone 9+: more mini-games, a second Party Mode board, more characters and secrets.
+- Try LAN mode with real phones on the dorm/school Wi-Fi (only tested on one machine so far).
 
 ## How to play it
 - Double-click `projects/kacau/dist/index.html` (Chrome/Edge). Keys: P1 Q W, P2 C V, P3 N M, P4 arrow keys,

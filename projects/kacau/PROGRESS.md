@@ -86,6 +86,15 @@ Read this first in a new session. Also read `docs/BRIEF.md` (spec), `docs/DECISI
   Spinning Log ramps up faster. Replay label moved to a bottom-left banner (covered game text before).
 - Smoke test now also plays sumo with all accessibility settings on.
 
+### M8 (optional LAN) — DONE (v1)
+- `npm run lan [port]` → `lan/server.js` (Node core only, minimal RFC 6455 WebSocket, text frames). Serves
+  `dist/index.html` at `/` and the controller page `lan/pad.html` at `/pad` (two big A/B buttons, multi-touch,
+  mouse and keys). Host page connects to `/ws?role=host` only when served over http (`src/engine/lan.js`).
+- Pads arrive as `{t:'in', slot, a, b}` → `input.lanInput()` → gamepad slots 8..15 (`LAN_BASE`), so join hot-join,
+  tutorial cards ("LAN"), menus and all games work unchanged. Quick taps between ticks are latched.
+- Join screen shows the address to open when LAN is on. `tests/lan.js` (in `npm test`): starts the server on a
+  random localhost port, a controller joins, plays a round, leaves.
+
 ## In progress
 - Nothing half-done.
 
@@ -94,9 +103,10 @@ Read this first in a new session. Also read `docs/BRIEF.md` (spec), `docs/DECISI
 - Balloon Pump rounds with only bots are very short (~5 s).
 - Same-tick finishes in Balap Karung can tie (broken by overshoot distance).
 - Gamepad support is untested on real hardware (headless tests can't plug in a pad).
+- LAN mode tested only on localhost (headless); real phones over school Wi-Fi untested.
 
 ## Next (M6 and on, see docs/ROADMAP.md)
-- M8 (optional): LAN mode (`npm run lan`, tiny Node WebSocket server, phones/laptops as controllers).
+- LAN v2 ideas: show each phone its player colour/character, secret-traitor round with private info on phones.
 - Secret-traitor round only makes sense with private screens (LAN), see DECISIONS 20.
 - Ideas queue for mini-games: 2v2 hoops, egg toss, ragdoll race, shrinking platform, kites (layangan), gasing (spinning top).
 - Party Mode polish: board camera zoom on the current player, more boards in data/, mini-game choice by votes.

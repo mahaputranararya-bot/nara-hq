@@ -29,7 +29,8 @@
     "need2": "Butuh 2+ pemain (tekan + untuk tambah bot)",
     "ghost": "Tes ghosting: semua tahan tombol. Tombol tidak menyala = keyboard tidak kuat, coba gamepad.",
     "empty": "slot kosong",
-    "bot": "BOT"
+    "bot": "BOT",
+    "lan": "LAN: di HP/laptop lain buka {url} lalu tekan A untuk ikut"
   },
   "settings": {
     "title": "PENGATURAN",

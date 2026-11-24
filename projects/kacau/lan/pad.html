@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>KACAU! pad</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #2a1b5e; color: #fff; font: 900 18px system-ui, sans-serif; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none; }
+  #top { position: absolute; top: 0; left: 0; right: 0; text-align: center; padding: 8px; }
+  #pad { position: absolute; top: 44px; bottom: 0; left: 0; right: 0; display: flex; gap: 12px; padding: 12px; box-sizing: border-box; }
+  .b { flex: 1; border-radius: 28px; border: 6px solid #1b1233; display: flex; align-items: center; justify-content: center; font-size: 22vmin; box-shadow: 0 10px 0 #1b1233; transition: transform 0.05s; }
+  #A { background: #ffd43b; color: #1b1233; } #B { background: #3d9bff; color: #fff; }
+  .on { transform: translateY(8px); box-shadow: 0 2px 0 #1b1233; filter: brightness(1.15); }
+</style>
+</head>
+<body>
+<div id="top">KACAU! <span id="st">connecting... / menyambung...</span></div>
+<div id="pad"><div class="b" id="A">A</div><div class="b" id="B">B</div></div>
+<script>
+(function () {
+  var st = document.getElementById('st'), els = { a: document.getElementById('A'), b: document.getElementById('B') };
+  var state = { a: false, b: false }, ws = null, touches = {};
+  function send() { if (ws && ws.readyState === 1) ws.send(JSON.stringify({ t: 'in', a: state.a, b: state.b })); }
+  function set(k, v) { if (state[k] === v) return; state[k] = v; els[k].className = 'b' + (v ? ' on' : ''); if (v && navigator.vibrate) navigator.vibrate(15); send(); }
+  function connect() {
+    ws = new WebSocket('ws://' + location.host + '/ws?role=pad');
+    ws.onmessage = function (e) { var m = JSON.parse(e.data); if (m.t === 'slot') st.textContent = 'LAN ' + (m.slot + 1) + ' - press A to join / tekan A untuk ikut'; if (m.t === 'full') st.textContent = 'game full / penuh'; };
+    ws.onclose = function () { st.textContent = 'reconnecting... / menyambung ulang...'; setTimeout(connect, 1500); };
+    ws.onopen = function () { send(); };
+  }
+  connect();
+  function which(x) { return x < window.innerWidth / 2 ? 'a' : 'b'; }
+  function sync() { var a = false, b = false; for (var id in touches) { if (touches[id] === 'a') a = true; else b = true; } set('a', a); set('b', b); }
+  document.addEventListener('touchstart', function (e) { e.preventDefault(); for (var i = 0; i < e.changedTouches.length; i++) { var t = e.changedTouches[i]; touches[t.identifier] = which(t.clientX); } sync(); }, { passive: false });
+  document.addEventListener('touchmove', function (e) { e.preventDefault(); for (var i = 0; i < e.changedTouches.length; i++) { var t = e.changedTouches[i]; touches[t.identifier] = which(t.clientX); } sync(); }, { passive: false });
+  function end(e) { e.preventDefault(); for (var i = 0; i < e.changedTouches.length; i++) delete touches[e.changedTouches[i].identifier]; sync(); }
+  document.addEventListener('touchend', end, { passive: false }); document.addEventListener('touchcancel', end, { passive: false });
+  document.addEventListener('mousedown', function (e) { touches.mouse = which(e.clientX); sync(); });
+  document.addEventListener('mouseup', function () { delete touches.mouse; sync(); });
+  var KEYS = { KeyA: 'a', KeyQ: 'a', ArrowLeft: 'a', KeyS: 'b', KeyW: 'b', KeyL: 'b', ArrowRight: 'b', Space: 'a' };
+  document.addEventListener('keydown', function (e) { var k = KEYS[e.code]; if (k) { e.preventDefault(); set(k, true); } });
+  document.addEventListener('keyup', function (e) { var k = KEYS[e.code]; if (k) set(k, false); });
+  window.addEventListener('blur', function () { touches = {}; set('a', false); set('b', false); });
+})();
+</script>
+</body>
+</html>

@@ -9,7 +9,7 @@
 | M5 | Modes + juice | Tournament, Daily Chaos, instant replay, awards, music loops | done |
 | M6 | Content | 30+ mini-games, 17 Agustus pack, full Bahasa Indonesia | done |
 | M7 | Polish | balancing, accessibility (colour-blind, text size), settings | done |
-| M8 | LAN (optional) | `npm run lan` WebSocket host | planned |
+| M8 | LAN (optional) | `npm run lan` WebSocket host, phones as controllers | done (v1) |
 | M9+ | More | mini-games, arenas, characters, secrets | planned |
 
 Each milestone must leave `dist/index.html` playable from `file://` with zero console errors

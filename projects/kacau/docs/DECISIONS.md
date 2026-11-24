@@ -54,3 +54,8 @@ Short notes on choices made without Nara (he asked for autonomous work). Newest 
 22. **Language toggle on the title screen** (EN | ID button, or `L`) as well as in Settings: a crowd shouldn't
     have to dig in menus to switch language. All in-game words go through `ctx.t_()`; `tests/lang.js` fails the
     build test if any English key is missing in Bahasa Indonesia.
+23. **LAN mode = phones/laptops as controllers, not a second game screen.** Everyone still watches the host
+    laptop (it's a crowd-around-one-screen game); remote devices only send A/B. This keeps sync trivial
+    (no game state over the network, no lag-compensation) and reuses the gamepad path: LAN pads are gamepad
+    slots 8-15. Server is Node core only (hand-written minimal WebSocket), so `npm run lan` needs no install.
+    The client only connects when the page is served over http://, so file:// stays 100% offline.

@@ -53,8 +53,19 @@ node tests/smoke.js sumo   # auto-play one mini-game
 ```
 Screenshots from tests go to `tests/screenshots/` (git-ignored). `npm test` also checks that every English text has a Bahasa Indonesia version (`tests/lang.js`).
 
-## LAN mode
-Not built yet (milestone M8, optional). The single-file version will always work without it.
+## LAN mode (optional)
+Lets friends use their **phones or other laptops as controllers** over the same Wi-Fi. Never needed: the
+double-click version works without it and makes no network requests.
+```
+npm run lan            # builds, then starts a tiny server on port 8080 (npm run lan -- 9000 for another port)
+```
+1. On the host laptop open `http://localhost:8080/` (the normal game, shown on the big screen).
+2. The terminal (and the join screen) shows an address like `http://192.168.1.23:8080/pad`. Friends type it into
+   their phone/laptop browser and get two huge buttons, **A** and **B**. Tap A on the join screen to join.
+3. LAN players act exactly like gamepads (up to 8), mixed with keyboard players and bots.
+No internet is used; the server only talks to devices on your local network. Some school networks block
+device-to-device traffic (client isolation); if friends can't connect, use keyboards or gamepads instead.
+The server is plain Node.js with no extra packages (`lan/server.js`, controller page `lan/pad.html`).
 
 ## Docs
 - `docs/BRIEF.md` – the full brief · `docs/DESIGN.md` · `docs/ROADMAP.md` · `docs/DECISIONS.md`

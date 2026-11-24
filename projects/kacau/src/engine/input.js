@@ -74,12 +74,33 @@ function pollPads() {
   }
 }
 
+// LAN controllers (phones / other laptops via `npm run lan`) behave like gamepads 8..15.
+export const LAN_BASE = 8;
+const lanLive = new Map(); // slot -> { a, b, pressA, pressB }
+export function lanInput(slot, a, b) {
+  const s = lanLive.get(slot) || { a: false, b: false, pressA: false, pressB: false };
+  if (a && !s.a) s.pressA = true; if (b && !s.b) s.pressB = true; // keep quick taps between ticks
+  s.a = a; s.b = b; lanLive.set(slot, s);
+}
+export function lanLeave(slot) { lanLive.delete(slot); const s = padState(LAN_BASE + slot); s.connected = false; s.a = s.b = false; }
+function pollLan() {
+  for (const [slot, l] of lanLive) {
+    const s = padState(LAN_BASE + slot);
+    s.pa = s.a; s.pb = s.b;
+    s.connected = true; s.id = 'LAN ' + (slot + 1); s.lan = true;
+    s.a = l.a || l.pressA; s.b = l.b || l.pressB; s.x = 0; l.pressA = l.pressB = false;
+    if (s.a && !s.pa) { menuNow.push('ok'); anyPress = true; }
+    if (s.b && !s.pb) anyPress = true;
+  }
+}
+
 // Call once per fixed update step, before anything reads input.
 export function tick() {
   tickPressed = pressedQ; pressedQ = new Map();
   menuNow = menuQ; menuQ = [];
   anyPress = anyPressQ; anyPressQ = false;
   pollPads();
+  pollLan();
 }
 
 export const keyDown = (code) => held.has(code) || tickPressed.has(code);
@@ -109,6 +130,6 @@ export function readSource(src) {
 // Labels for showing a player's keys.
 export function sourceKeys(src) {
   if (src.type === 'kb') { const s = KB_SLOTS[src.slot]; return { a: keyLabel(s.a), b: keyLabel(s.b) }; }
-  if (src.type === 'pad') return { a: 'A', b: 'B', pad: true };
+  if (src.type === 'pad') return { a: 'A', b: 'B', pad: true, lan: src.index >= LAN_BASE };
   return { a: 'BOT', b: 'BOT', bot: true };
 }

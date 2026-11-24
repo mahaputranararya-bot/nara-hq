@@ -16,6 +16,7 @@ import { state, loadSave, makePlayer } from './engine/state.js';
 import { applySettings } from './scenes/settings.js';
 import { initAudio } from './engine/audio.js';
 import { onFirstGesture } from './engine/input.js';
+import { startLan, lan } from './engine/lan.js';
 import { MINIGAMES, getGame } from './minigames/index.js';
 import { runnerState } from './scenes/runner.js';
 import { startQuick } from './modes/session.js';
@@ -23,6 +24,7 @@ import { startQuick } from './modes/session.js';
 loadSave();
 applySettings();
 onFirstGesture(initAudio);
+startLan();
 
 // Debug / test hooks (used by tests/*.js through Playwright).
 const errors = [];
@@ -46,7 +48,7 @@ window.KACAU = {
   daily() { startDaily(); },
   agustus() { startMode('agustus'); },
   setLang(code) { state.settings.lang = code; applySettings(); },
-  applySettings,
+  applySettings, lan,
   tourney() { go('bracket', { fresh: true }); },
   runner: () => runnerState(),
   go,
