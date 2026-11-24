@@ -1,6 +1,6 @@
 # Nara HQ — Main Board
 
-Kept up to date by Azalea. Last updated: 21 Nov 2026.
+Kept up to date by Azalea. Last updated: 24 Nov 2026.
 
 **AI use** column (school projects): **Full** = teacher allows AI to do the work; **Support** = AI helps plan,
 research and give feedback only, Nara writes the submitted work. Unknown → treat as Support and ask Nara.
@@ -10,6 +10,7 @@ research and give feedback only, Nara writes the submitted work. Unknown → tre
 |---|---|
 | Archipelago life sim (Indonesian-inspired, Harvest Moon-like, browser game) | Released — improving |
 | Basket Random-style game, 1v1 online across devices | Idea |
+| KACAU! — offline party game for 2–8 friends on one laptop (30+ mini-games, Party Mode board, 17 Agustus pack). Folder: `projects/kacau/` | Building (started 24 Nov) |
 
 ## School CEO
 | Project | Status | AI use |
