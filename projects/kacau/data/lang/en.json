@@ -54,7 +54,11 @@
     "import": "Import save (file)",
     "imported": "Save imported!",
     "bad": "That file isn't a KACAU! save",
-    "music": "Music: {v}%"
+    "music": "Music: {v}%",
+    "cb": "Colour-blind colours: {v}",
+    "bigText": "Big name tags: {v}",
+    "speed": "Game speed: {v}%",
+    "hint": "Arrows = move   ENTER / click = change   ESC = back"
   },
   "runner": {
     "ready": "READY?",
@@ -172,7 +176,8 @@
       "name": "Tarik Tambang",
       "desc": "Tug of war, two teams! Mash to pull. Pull on the drum beat for DOUBLE power.",
       "a": "Pull",
-      "hint": "PULL ON THE BEAT = x2"
+      "hint": "PULL ON THE BEAT = x2",
+      "final": "FINAL PULL! Every pull counts more!"
     },
     "sweeper": {
       "name": "Spin Sweeper",
@@ -388,7 +393,8 @@
     "winsMatch": "{a} wins!",
     "finalist": "FINALIST",
     "champion": "CHAMPION",
-    "roundN": "ROUND {n}"
+    "roundN": "ROUND {n}",
+    "byeShort": "BYE"
   },
   "awards": {
     "falls": "Most Falls",

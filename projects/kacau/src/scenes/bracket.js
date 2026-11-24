@@ -67,19 +67,36 @@ register('bracket', {
   draw(g) {
     bgStripes(g, '#1f4e79', '#235a8a', time, 70);
     text(g, t('tourney.title'), W / 2, 44, { size: 50, color: '#ffd43b', strokeW: 9 });
-    const R = T.rounds.length, total = Math.ceil(Math.log2(Math.max(2, state.players.length)));
-    T.rounds.forEach((r, ri) => {
-      const x = 130 + ri * (1020 / Math.max(1, total - 1 || 1));
-      const left = total - ri - 1;
+    // full bracket: rounds played so far + future rounds (winners fill in as they're known, "?" otherwise)
+    const counts = [Math.ceil(state.players.length / 2)];
+    while (counts[counts.length - 1] > 1) counts.push(Math.ceil(counts[counts.length - 1] / 2));
+    const total = counts.length, cols = [];
+    for (let ri = 0; ri < total; ri++) {
+      if (T.rounds[ri]) { cols.push(T.rounds[ri]); continue; }
+      const prev = cols[ri - 1], ms = [];
+      for (let k = 0; k < counts[ri]; k++) {
+        const pa = prev[k * 2], pb = prev[k * 2 + 1];
+        ms.push({ a: pa ? (pa.w ?? -2) : -1, b: pb ? (pb.w ?? -2) : -1, w: null, future: true });
+      }
+      cols.push(ms);
+    }
+    const colX = (ri) => 130 + ri * (1020 / Math.max(1, total - 1));
+    const rowY = (ri, mi) => 150 + (mi + 0.5) * (440 / cols[ri].length);
+    g.strokeStyle = 'rgba(255,255,255,0.45)'; g.lineWidth = 4;
+    cols.forEach((r, ri) => { if (ri === total - 1) return; r.forEach((m, mi) => { const x0 = colX(ri) + 100, y0 = rowY(ri, mi), x1 = colX(ri + 1) - 100, y1 = rowY(ri + 1, Math.floor(mi / 2)), xm = (x0 + x1) / 2; g.beginPath(); g.moveTo(x0, y0); g.lineTo(xm, y0); g.lineTo(xm, y1); g.lineTo(x1, y1); g.stroke(); }); });
+    cols.forEach((r, ri) => {
+      const x = colX(ri), left = total - ri - 1;
       text(g, (left <= 2 ? t('tourney.round.r' + left) : t('tourney.roundN', { n: ri + 1 })), x, 100, { size: 18, color: '#fff', strokeW: 4 });
       r.forEach((m, mi) => {
-        const y = 150 + (mi + 0.5) * (440 / r.length);
+        const y = rowY(ri, mi);
         const cur = m === current();
         [m.a, m.b].forEach((pi, s) => {
           const yy = y - 22 + s * 44, p = state.players[pi];
-          panel(g, x - 100, yy - 18, 200, 36, { fill: pi < 0 ? '#9a94b5' : m.w === pi ? '#ffd43b' : m.w != null ? '#b7aee0' : cur ? '#fff6c7' : '#fff', r: 10, depth: 3, lineW: 3 });
-          if (pi < 0) { text(g, 'BYE', x, yy, { size: 16, color: INK, stroke: false }); return; }
-          drawChar(g, { x: x - 78, y: yy, r: 13, color: COLORS[p.color].hex, char: CHARS[p.char], t: time + pi, noHat: true, mood: m.w != null && m.w !== pi ? 'dizzy' : null });
+          const fill = pi === -2 ? 'rgba(255,255,255,0.35)' : pi < 0 ? '#9a94b5' : m.w === pi ? '#ffd43b' : m.w != null ? '#b7aee0' : cur ? '#fff6c7' : '#fff';
+          panel(g, x - 100, yy - 18, 200, 36, { fill, r: 10, depth: 3, lineW: 3 });
+          if (pi === -2) { text(g, '?', x, yy + 1, { size: 20, color: '#fff', strokeW: 4 }); return; }
+          if (pi < 0) { text(g, m.future ? '—' : t('tourney.byeShort'), x, yy, { size: 16, color: INK, stroke: false }); return; }
+          drawChar(g, { x: x - 78, y: yy, r: 13, color: COLORS[p.color].hex, char: CHARS[p.char], t: time + pi, noHat: true, mood: m.w != null && m.w !== pi ? 'dizzy' : null, symbol: COLORS[p.color].symbol });
           text(g, pLabel(p), x + 10, yy + 1, { size: 18, color: COLORS[p.color].hex, strokeW: 4 });
         });
       });

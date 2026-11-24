@@ -42,6 +42,7 @@ export function makeMenu(items, o = {}) {
       }
     }
     if (input.menu('ok') && it.action && !(it.disabled && it.disabled())) { play('confirm'); it.action(); }
+    else if (input.menu('ok') && !it.action && it.right) { it.right(); play('select'); } // multi-column menus: ENTER cycles the value
   };
   m.draw = (g) => {
     m.items.forEach((it, i) => {
@@ -51,7 +52,7 @@ export function makeMenu(items, o = {}) {
       panel(g, -r.w / 2, -r.h / 2, r.w, r.h, { fill: dis ? '#9a94b5' : on ? (o.selColor || '#ffd43b') : '#f4f1ff', r: 20, lineW: on ? 6 : 4 });
       const lbl = it.label();
       text(g, lbl, 0, 2, { size: o.size || 32, color: INK, stroke: false, maxW: r.w - (it.left ? 90 : 30) });
-      if (on && (it.left || it.right)) { text(g, '◀', -r.w / 2 + 28, 2, { size: 26, color: INK, stroke: false }); text(g, '▶', r.w / 2 - 28, 2, { size: 26, color: INK, stroke: false }); }
+      if (on && (it.left || it.right) && m.cols === 1) { text(g, '◀', -r.w / 2 + 28, 2, { size: 26, color: INK, stroke: false }); text(g, '▶', r.w / 2 - 28, 2, { size: 26, color: INK, stroke: false }); }
       g.restore();
     });
   };

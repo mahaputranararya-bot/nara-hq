@@ -203,7 +203,9 @@ export function wrapText(g, str, maxW, size, weight = 900) {
   return lines;
 }
 // small name tag in player colour, e.g. above a head
+export const A11Y = { tagScale: 1 };
 export function tag(g, label, x, y, color, size = 18) {
+  size *= A11Y.tagScale;
   const w = textWidth(g, label, size) + 14;
   rrect(g, x - w / 2, y - size * 0.7, w, size * 1.4, size * 0.5); g.fillStyle = color; g.fill();
   g.lineWidth = 3; g.strokeStyle = INK; g.stroke();

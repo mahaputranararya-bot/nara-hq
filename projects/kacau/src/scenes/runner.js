@@ -133,7 +133,7 @@ register('runner', {
       if (R.phaseT >= COUNT_TIME) { R.phase = 'play'; R.phaseT = 0; play('go'); }
       return;
     }
-    const gdt = dt * timeScale() * (ctx.mods.fast ? 1.5 : 1);
+    const gdt = dt * timeScale() * (ctx.mods.fast ? 1.5 : 1) * (state.settings.speed || 1);
     ctx.dt = gdt;
     readInputs(R.phase === 'finish');
     try { R.game.update(R.st, gdt, ctx); } catch (e) { crash(e); }

@@ -46,6 +46,7 @@ window.KACAU = {
   daily() { startDaily(); },
   agustus() { startMode('agustus'); },
   setLang(code) { state.settings.lang = code; applySettings(); },
+  applySettings,
   tourney() { go('bracket', { fresh: true }); },
   runner: () => runnerState(),
   go,

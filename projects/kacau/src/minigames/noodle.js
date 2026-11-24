@@ -90,11 +90,15 @@ export default {
     h.aiT -= ctx.dt;
     if (h.aiT <= 0) {
       h.aiT = 0.05 + (1 - ctx.skill) * 0.12;
-      const look = 70 + ctx.skill * 110;
+      const look = 110 + ctx.skill * 150;
       const free = (da) => { for (let d = 8; d < look; d += 6) if (blocked(st, i, h.x + Math.cos(h.ang + da) * d, h.y + Math.sin(h.ang + da) * d, ctx.t + 1)) return d; return look; };
       const f0 = free(0);
       if (f0 >= look) h.steer = ctx.rng() < 0.08 ? ctx.rng.pick([-1, 1]) : 0;
-      else { const l = free(-0.35) + free(-0.8) + free(-1.4) * 0.6, r = free(0.35) + free(0.8) + free(1.4) * 0.6; h.steer = l === r ? (h.steer || 1) : l > r ? -1 : 1; }
+      else {
+        let best = 0, bs = -1e9;
+        for (let da = -2.4; da <= 2.41; da += 0.4) { const sc = free(da) - Math.abs(da) * 6 + (Math.sign(da) === h.steer ? 4 : 0); if (sc > bs) { bs = sc; best = da; } }
+        h.steer = Math.abs(best) < 0.05 ? 0 : Math.sign(best);
+      }
     }
     return { a: h.steer < 0, b: h.steer > 0 };
   },

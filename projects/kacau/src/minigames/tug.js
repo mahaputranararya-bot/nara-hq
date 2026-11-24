@@ -26,7 +26,7 @@ export default {
       ctx.players.forEach((p, i) => {
         if (!p.input.aP) return;
         const phase = st.beatT, onBeat = phase < 0.09 || phase > BEAT - 0.07;
-        const imp = (onBeat ? 2 : 1) * 34 * st.mult[st.side[i]];
+        const imp = (onBeat ? 2 : 1) * 34 * st.mult[st.side[i]] * (ctx.t > 15 ? 1 + (ctx.t - 15) * 0.15 : 1);
         st.v += st.side[i] === 0 ? -imp : imp;
         st.lean[i] = 1;
         if (onBeat) { st.perfect[i] = 0.4; }
@@ -48,7 +48,8 @@ export default {
     const m = st.ai[i];
     m.t -= ctx.dt;
     if (m.t > 0) return {};
-    const rate = 4 + ctx.skill * 5;
+    m.k = m.k ?? ctx.rng.range(0.92, 1.08);
+    const rate = (4 + ctx.skill * 5) * m.k * (1 + Math.sin(ctx.t * 0.8 + i * 1.7) * 0.12);
     m.t = (1 / rate) * ctx.rng.range(0.7, 1.3);
     if (ctx.rng() < ctx.skill * 0.4) { const toBeat = BEAT - st.beatT; if (toBeat < 0.25) m.t = toBeat + 0.01; }
     return { a: true };
@@ -65,7 +66,7 @@ export default {
     // beat indicator
     const bx = 640, by = 110, br = 34 + st.beatFlash * 14;
     g.beginPath(); g.arc(bx, by, br, 0, TAU); g.fillStyle = st.beatFlash > 0.5 ? '#ffd43b' : '#fff'; g.fill(); g.lineWidth = 5; g.strokeStyle = ctx.INK; g.stroke();
-    ctx.text(g, ctx.t_('mg.tug.hint'), 640, 170, { size: 22, color: '#fff', strokeW: 5 });
+    ctx.text(g, ctx.t > 15 && st.done < 0 ? ctx.t_('mg.tug.final') : ctx.t_('mg.tug.hint'), 640, 170, { size: ctx.t > 15 ? 30 : 22, color: ctx.t > 15 ? '#ffd43b' : '#fff', strokeW: 5 });
     // team zones
     g.fillStyle = 'rgba(61,155,255,0.18)'; g.fillRect(0, 0, 640 + st.pos - 120, 720); g.fillStyle = 'rgba(255,77,94,0.16)'; g.fillRect(640 + st.pos + 120, 0, 1280, 720);
     ctx.text(g, ctx.t_('mgui.team') + ' A', 160, 60, { size: 32, color: '#3d9bff', strokeW: 7 });

@@ -96,6 +96,13 @@ const only = process.argv[2]; // optional: single mini-game id
     await page.keyboard.press('Enter'); await step(5);
     if (!(await page.evaluate(() => (window.KACAU.state.stats.unlocked || []).length))) fail('shop purchase failed');
     await page.evaluate(() => window.KACAU.go('settings')); await step(10); await shot('11-settings');
+    // accessibility: colour-blind palette + big tags + slower speed, play one game, then reset
+    await page.evaluate(() => { const s = window.KACAU.state.settings; s.colorblind = true; s.bigText = true; s.speed = 0.7; window.KACAU.applySettings(); window.KACAU.lastOrder = null; window.KACAU.setPlayers(['bot', 'bot', 'bot', 'bot']); window.KACAU.playGame('sumo'); });
+    for (let k = 0; k < 10; k++) await step(60);
+    await shot('14-a11y-colourblind');
+    { let t = 0; while ((await scene()) === 'runner' && t < 150) { await step(60); t++; } }
+    if (!(await page.evaluate(() => window.KACAU.lastOrder))) fail('sumo with accessibility settings did not finish');
+    await page.evaluate(() => { const s = window.KACAU.state.settings; s.colorblind = false; s.bigText = false; s.speed = 1; window.KACAU.applySettings(); });
     await page.evaluate(() => window.KACAU.go('title')); await step(5);
   }
 

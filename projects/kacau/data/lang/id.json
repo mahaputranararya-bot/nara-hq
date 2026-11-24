@@ -54,7 +54,11 @@
     "import": "Impor simpanan (file)",
     "imported": "Simpanan diimpor!",
     "bad": "File itu bukan simpanan KACAU!",
-    "music": "Musik: {v}%"
+    "music": "Musik: {v}%",
+    "cb": "Warna ramah buta warna: {v}",
+    "bigText": "Label nama besar: {v}",
+    "speed": "Kecepatan game: {v}%",
+    "hint": "Panah = pindah   ENTER / klik = ubah   ESC = kembali"
   },
   "runner": {
     "ready": "SIAP?",
@@ -172,7 +176,8 @@
       "name": "Tarik Tambang",
       "desc": "Dua tim adu tarik! Tekan terus untuk menarik. Tarik pas ketukan drum = tenaga DUA KALI.",
       "a": "Tarik",
-      "hint": "TARIK PAS KETUKAN = x2"
+      "hint": "TARIK PAS KETUKAN = x2",
+      "final": "TARIKAN TERAKHIR! Tiap tarikan makin kuat!"
     },
     "sweeper": {
       "name": "Baling-Baling Maut",
@@ -388,7 +393,8 @@
     "winsMatch": "{a} menang!",
     "finalist": "FINALIS",
     "champion": "JUARA",
-    "roundN": "BABAK {n}"
+    "roundN": "BABAK {n}",
+    "byeShort": "LOLOS"
   },
   "awards": {
     "falls": "Paling Sering Jatuh",

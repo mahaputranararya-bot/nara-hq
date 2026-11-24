@@ -27,6 +27,11 @@ export function makePlayer(source, color, char) {
   return { id: nextId++, source, color, char, score: 0, isBot: source.type === 'bot', stats: {} };
 }
 export const pColor = (p) => COLORS[p.color];
+// Colour-blind friendly palette (Okabe-Ito based), swapped in place so every screen picks it up. Shapes stay the same.
+const CB = ['#D55E00', '#0072B2', '#F0E442', '#009E73', '#CC79A7', '#E69F00', '#BBBBBB', '#56B4E9'];
+const CB_DARK = ['#8A3D00', '#004A75', '#9C9420', '#00664B', '#85506D', '#966800', '#7A7A7A', '#387596'];
+const ORIG = COLORS.map((c) => [c.hex, c.dark]);
+export function applyPalette(cb) { COLORS.forEach((c, i) => { c.hex = cb ? CB[i] : ORIG[i][0]; c.dark = cb ? CB_DARK[i] : ORIG[i][1]; }); }
 export const pChar = (p) => CHARS[p.char];
 export function pLabel(p) {
   const i = state.players.indexOf(p);
