@@ -39,3 +39,24 @@ export function freeColor(start = 0, skip = null) {
   }
   return start % COLORS.length;
 }
+
+// ---- coins + unlocks (shared by everyone on this laptop) ----
+import UNLOCKS from '../../data/unlocks.json';
+export function owned(key) { return (state.stats.unlocked || []).includes(key); }
+export const charLocked = (i) => !!(CHARS[i].price && !owned('char:' + CHARS[i].id));
+export const gameLocked = (id) => !!(UNLOCKS.minigames[id] && !owned('game:' + id));
+export function buy(key, price) {
+  if (owned(key) || state.stats.coins < price) return false;
+  state.stats.coins -= price; (state.stats.unlocked = state.stats.unlocked || []).push(key); save(); return true;
+}
+export function earn(n) { state.stats.coins = (state.stats.coins || 0) + n; save(); }
+export function exportSave() {
+  const blob = new Blob([JSON.stringify({ kacau: 1, settings: state.settings, stats: state.stats }, null, 1)], { type: 'application/json' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'kacau-save.json'; document.body.appendChild(a); a.click(); a.remove();
+}
+export function importSave(done) {
+  const inp = document.createElement('input'); inp.type = 'file'; inp.accept = '.json,application/json';
+  inp.onchange = () => { const f = inp.files[0]; if (!f) return; f.text().then((txt) => { try { const s = JSON.parse(txt); if (!s.kacau) throw 0; Object.assign(state.settings, s.settings || {}); Object.assign(state.stats, s.stats || {}); save(); done(true); } catch (e) { done(false); } }); };
+  inp.click();
+}
+export { UNLOCKS };

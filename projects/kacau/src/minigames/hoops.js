@@ -37,7 +37,7 @@ export default {
         else if (holding) shoot(st, i, ctx);
       }
       if (p.ground) { const dx = target - p.x; p.vx += clamp(dx, -1, 1) * 900 * dt; p.vx *= Math.pow(0.02, dt); }
-      p.vy += GRAV * dt; p.x += p.vx * dt; p.y += p.vy * dt;
+      p.vy += GRAV * (ctx.mods.lowgrav ? 0.5 : 1) * dt; p.x += p.vx * dt; p.y += p.vy * dt;
       if (p.y >= FLOOR - st.r) { if (!p.ground && p.vy > 200) p.sq = 1.3; p.y = FLOOR - st.r; p.vy = 0; p.ground = true; }
       if (p.x < st.r + 20) { p.x = st.r + 20; p.vx = Math.abs(p.vx); } if (p.x > 1260 - st.r) { p.x = 1260 - st.r; p.vx = -Math.abs(p.vx); }
     });
@@ -60,7 +60,7 @@ export default {
       const h = P[st.holder]; b.x = h.x + h.face * st.r * 0.8; b.y = h.y - st.r * 0.9; b.vx = h.vx; b.vy = h.vy;
     } else {
       b.vy += GRAV * 0.8 * dt; b.x += b.vx * dt; b.y += b.vy * dt; b.rot += b.vx * dt * 0.05;
-      if (b.y > FLOOR - b.r) { b.y = FLOOR - b.r; if (Math.abs(b.vy) > 120) ctx.sfx('boing', b.x); b.vy *= -0.68; b.vx *= 0.9; }
+      if (b.y > FLOOR - b.r) { b.y = FLOOR - b.r; if (Math.abs(b.vy) > 120) ctx.sfx('boing', b.x); b.vy *= ctx.mods.bouncy ? -0.95 : -0.68; b.vx *= 0.9; }
       if (b.x < b.r) { b.x = b.r; b.vx = Math.abs(b.vx) * 0.8; } if (b.x > 1280 - b.r) { b.x = 1280 - b.r; b.vx = -Math.abs(b.vx) * 0.8; }
       if (b.y < b.r) { b.y = b.r; b.vy = Math.abs(b.vy) * 0.5; }
       for (const hp of HOOPS) {

@@ -1,18 +1,186 @@
 [
-  { "id": "tahu",     "name": "Tahu Bulat",     "shape": "round", "eyes": "two",    "mouth": "grin",   "hat": "peci",      "extra": "blush" },
-  { "id": "kumis",    "name": "Pak Kumis",      "shape": "box",   "eyes": "two",    "mouth": "smirk",  "hat": "none",      "extra": "mustache" },
-  { "id": "cilok",    "name": "Cilok",          "shape": "round", "eyes": "big",    "mouth": "tongue", "hat": "propeller", "extra": "none" },
-  { "id": "jamu",     "name": "Bu Jamu",        "shape": "pear",  "eyes": "sleepy", "mouth": "smirk",  "hat": "flower",    "extra": "blush" },
-  { "id": "bakso",    "name": "Bakso Boss",     "shape": "round", "eyes": "two",    "mouth": "teeth",  "hat": "crown",     "extra": "none" },
-  { "id": "kerupuk",  "name": "Kerupuk",        "shape": "wide",  "eyes": "two",    "mouth": "o",      "hat": "party",     "extra": "freckles" },
-  { "id": "ondel",    "name": "Ondel",          "shape": "tall",  "eyes": "big",    "mouth": "grin",   "hat": "headband",  "extra": "none" },
-  { "id": "klepon",   "name": "Klepon",         "shape": "round", "eyes": "two",    "mouth": "grin",   "hat": "leaf",      "extra": "blush" },
-  { "id": "wobbles",  "name": "Sir Wobbles",    "shape": "bean",  "eyes": "two",    "mouth": "o",      "hat": "tophat",    "extra": "glasses" },
-  { "id": "noodle",   "name": "Noodle",         "shape": "tall",  "eyes": "sleepy", "mouth": "tongue", "hat": "chef",      "extra": "none" },
-  { "id": "sock",     "name": "Captain Sock",   "shape": "drop",  "eyes": "one",    "mouth": "grin",   "hat": "bandana",   "extra": "none" },
-  { "id": "mochi",    "name": "Mochi Max",      "shape": "wide",  "eyes": "three",  "mouth": "smirk",  "hat": "antenna",   "extra": "none" },
-  { "id": "gorengan", "name": "Gorengan",       "shape": "box",   "eyes": "two",    "mouth": "fangs",  "hat": "beanie",    "extra": "freckles" },
-  { "id": "bebek",    "name": "Dino Bebek",     "shape": "bean",  "eyes": "big",    "mouth": "o",      "hat": "horns",     "extra": "none" },
-  { "id": "bonk",     "name": "Professor Bonk", "shape": "pear",  "eyes": "one",    "mouth": "teeth",  "hat": "helmet",    "extra": "mustache" },
-  { "id": "cendol",   "name": "Cendol",         "shape": "drop",  "eyes": "two",    "mouth": "tongue", "hat": "cap",       "extra": "freckles" }
+ {
+  "id": "tahu",
+  "name": "Tahu Bulat",
+  "shape": "round",
+  "eyes": "two",
+  "mouth": "grin",
+  "hat": "peci",
+  "extra": "blush"
+ },
+ {
+  "id": "kumis",
+  "name": "Pak Kumis",
+  "shape": "box",
+  "eyes": "two",
+  "mouth": "smirk",
+  "hat": "none",
+  "extra": "mustache"
+ },
+ {
+  "id": "cilok",
+  "name": "Cilok",
+  "shape": "round",
+  "eyes": "big",
+  "mouth": "tongue",
+  "hat": "propeller",
+  "extra": "none"
+ },
+ {
+  "id": "jamu",
+  "name": "Bu Jamu",
+  "shape": "pear",
+  "eyes": "sleepy",
+  "mouth": "smirk",
+  "hat": "flower",
+  "extra": "blush"
+ },
+ {
+  "id": "bakso",
+  "name": "Bakso Boss",
+  "shape": "round",
+  "eyes": "two",
+  "mouth": "teeth",
+  "hat": "crown",
+  "extra": "none"
+ },
+ {
+  "id": "kerupuk",
+  "name": "Kerupuk",
+  "shape": "wide",
+  "eyes": "two",
+  "mouth": "o",
+  "hat": "party",
+  "extra": "freckles"
+ },
+ {
+  "id": "ondel",
+  "name": "Ondel",
+  "shape": "tall",
+  "eyes": "big",
+  "mouth": "grin",
+  "hat": "headband",
+  "extra": "none"
+ },
+ {
+  "id": "klepon",
+  "name": "Klepon",
+  "shape": "round",
+  "eyes": "two",
+  "mouth": "grin",
+  "hat": "leaf",
+  "extra": "blush"
+ },
+ {
+  "id": "wobbles",
+  "name": "Sir Wobbles",
+  "shape": "bean",
+  "eyes": "two",
+  "mouth": "o",
+  "hat": "tophat",
+  "extra": "glasses"
+ },
+ {
+  "id": "noodle",
+  "name": "Noodle",
+  "shape": "tall",
+  "eyes": "sleepy",
+  "mouth": "tongue",
+  "hat": "chef",
+  "extra": "none"
+ },
+ {
+  "id": "sock",
+  "name": "Captain Sock",
+  "shape": "drop",
+  "eyes": "one",
+  "mouth": "grin",
+  "hat": "bandana",
+  "extra": "none"
+ },
+ {
+  "id": "mochi",
+  "name": "Mochi Max",
+  "shape": "wide",
+  "eyes": "three",
+  "mouth": "smirk",
+  "hat": "antenna",
+  "extra": "none"
+ },
+ {
+  "id": "gorengan",
+  "name": "Gorengan",
+  "shape": "box",
+  "eyes": "two",
+  "mouth": "fangs",
+  "hat": "beanie",
+  "extra": "freckles"
+ },
+ {
+  "id": "bebek",
+  "name": "Dino Bebek",
+  "shape": "bean",
+  "eyes": "big",
+  "mouth": "o",
+  "hat": "horns",
+  "extra": "none"
+ },
+ {
+  "id": "bonk",
+  "name": "Professor Bonk",
+  "shape": "pear",
+  "eyes": "one",
+  "mouth": "teeth",
+  "hat": "helmet",
+  "extra": "mustache"
+ },
+ {
+  "id": "cendol",
+  "name": "Cendol",
+  "shape": "drop",
+  "eyes": "two",
+  "mouth": "tongue",
+  "hat": "cap",
+  "extra": "freckles"
+ },
+ {
+  "id": "rendang",
+  "name": "Raja Rendang",
+  "shape": "wide",
+  "eyes": "big",
+  "mouth": "teeth",
+  "hat": "crown",
+  "extra": "mustache",
+  "price": 60
+ },
+ {
+  "id": "petir",
+  "name": "Si Petir",
+  "shape": "drop",
+  "eyes": "three",
+  "mouth": "fangs",
+  "hat": "antenna",
+  "extra": "none",
+  "price": 40
+ },
+ {
+  "id": "seblak",
+  "name": "Mbak Seblak",
+  "shape": "pear",
+  "eyes": "big",
+  "mouth": "tongue",
+  "hat": "flower",
+  "extra": "blush",
+  "price": 40
+ },
+ {
+  "id": "kopi",
+  "name": "Kapten Kopi",
+  "shape": "box",
+  "eyes": "sleepy",
+  "mouth": "smirk",
+  "hat": "tophat",
+  "extra": "glasses",
+  "price": 80
+ }
 ]

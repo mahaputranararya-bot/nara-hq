@@ -8,5 +8,6 @@
   "shake": true,
   "flashes": true,
   "bigText": false,
-  "partyTurns": 8
+  "partyTurns": 8,
+  "mods": "random"
 }

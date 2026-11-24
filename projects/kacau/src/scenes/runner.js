@@ -10,6 +10,8 @@ import { play } from '../engine/audio.js';
 import { fx, burst, confetti, popup, announce, shake, flash, slowmo, timeScale, resetFx, drawParticles, drawPopups, shakeOffset } from '../engine/fx.js';
 import { makeRng, clamp } from '../engine/util.js';
 import { makeMenu } from '../engine/ui.js';
+import MODS from '../../data/modifiers.json';
+import { tl } from '../engine/i18n.js';
 
 const CARD_TIME = 4.2, COUNT_TIME = 1.0, FINISH_TIME = 2.2;
 const CAT_COLORS = { sports: '#3d9bff', reaction: '#ff4d5e', survival: '#ff9330', team: '#a974ff', skill: '#34d27f', local: '#e63946' };
@@ -34,7 +36,7 @@ function makeCtx(players, seed) {
     say: (key, x, y, color) => popup(t('comment.' + key), x, y, { color: color || '#fff', size: 38 }),
     t_: t,
     finish: () => { if (R) R.finishReq = true; },
-    drawPlayer: (g, p, x, y, r, o = {}) => drawChar(g, { x, y, r, color: p.color, char: p.char, symbol: p.symbol, t: ctx.t + p.i * 0.7, ...o }),
+    drawPlayer: (g, p, x, y, r, o = {}) => drawChar(g, { x, y: ctx.mods.giant ? y - r * 0.4 : y, r: r * (ctx.mods.giant ? 1.6 : ctx.mods.tiny ? 0.6 : 1), color: p.color, char: p.char, symbol: p.symbol, t: ctx.t + p.i * 0.7, ...o }),
     tag: (g, p, x, y, size) => tag(g, p.label, x, y, p.color, size),
     text, panel, symbol, keyCap, rrect, INK,
   };
@@ -118,7 +120,7 @@ register('runner', {
       if (R.phaseT >= COUNT_TIME) { R.phase = 'play'; R.phaseT = 0; play('go'); }
       return;
     }
-    const gdt = dt * timeScale();
+    const gdt = dt * timeScale() * (ctx.mods.fast ? 1.5 : 1);
     ctx.dt = gdt;
     readInputs(R.phase === 'finish');
     try { R.game.update(R.st, gdt, ctx); } catch (e) { crash(e); }
@@ -155,6 +157,8 @@ register('runner', {
       text(g, go_ ? t('runner.go') : t('runner.ready'), 0, 0, { size: 120, color: go_ ? '#34d27f' : '#ffd43b', strokeW: 16 });
       g.restore();
     }
+    const mk = Object.keys(R.ctx.mods).filter((k) => R.ctx.mods[k]);
+    if (mk.length && R.phase === 'play') text(g, mk.map((k) => tl(MODS.find((m) => m.id === k).name)).join(' + '), 12, H - 14, { size: 16, align: 'left', color: '#ff73c6', strokeW: 4 });
     if (R.phase === 'play' && R.phaseT > 0.6 && R.phaseT < 4) text(g, t('runner.pause'), W - 12, H - 14, { size: 14, align: 'right', color: 'rgba(255,255,255,0.7)', strokeW: 3 });
     if (R.paused) {
       g.fillStyle = 'rgba(20,12,40,0.75)'; g.fillRect(0, 0, W, H);
@@ -185,6 +189,8 @@ function drawCard(g) {
   const badge = game.teams ? t('runner.team') : (game.buttons === 2 ? t('runner.two') : t('runner.only1'));
   panel(g, x + w - 190, y + 112, 170, 40, { fill: '#ffd43b', r: 20, depth: 3, lineW: 3 });
   text(g, badge, x + w - 105, y + 133, { size: 20, color: INK, stroke: false });
+  const modNames = Object.keys(R.ctx.mods).filter((k) => R.ctx.mods[k]).map((k) => tl((MODS.find((m) => m.id === k) || { name: k }).name));
+  if (modNames.length) { panel(g, x + w - 430, y + 112, 230, 40, { fill: '#ff4d8d', r: 20, depth: 3, lineW: 3 }); text(g, modNames.join(' + '), x + w - 315, y + 133, { size: 16, color: '#fff', strokeW: 4, maxW: 220 }); }
   // icon
   if (game.icon) { try { g.save(); game.icon(g, x + 110, y + 190, 70, R.phaseT, R.ctx); g.restore(); } catch (e) { console.error(e); } }
   const lines = wrapText(g, t('mg.' + game.id + '.desc'), w - 420, 30);

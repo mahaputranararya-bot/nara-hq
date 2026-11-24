@@ -27,7 +27,7 @@ export default {
       p.sq += (1 - p.sq) * Math.min(1, dt * 10);
       if (!p.alive) { if (p.fly) { p.fly.x += p.fly.vx * dt; p.fly.y += p.fly.vy * dt; p.fly.vy += 1400 * dt; p.fly.rot += 12 * dt; } return; }
       if (p.z <= 0 && ctx.players[i].input.aP) { p.vz = 540; p.sq = 0.7; ctx.sfx('jump', CX + Math.cos(p.a) * RX); }
-      if (p.z > 0 || p.vz > 0) { p.vz -= 2700 * dt; p.z += p.vz * dt; if (p.z <= 0) { p.z = 0; p.vz = 0; p.sq = 1.3; } }
+      if (p.z > 0 || p.vz > 0) { p.vz -= 2700 * (ctx.mods.lowgrav ? 0.5 : 1) * dt; p.z += p.vz * dt; if (p.z <= 0) { p.z = 0; p.vz = 0; p.sq = 1.3; } }
       if (p.z < 22) {
         for (let k = 0; k < st.beams.length; k++) {
           const d0 = angDiff(prev[k], p.a), d1 = angDiff(st.beams[k], p.a);

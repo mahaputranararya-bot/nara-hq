@@ -5,7 +5,7 @@ import { text, bgDots } from '../engine/draw.js';
 import { makeMenu } from '../engine/ui.js';
 import { t } from '../engine/i18n.js';
 import * as input from '../engine/input.js';
-import { state } from '../engine/state.js';
+import { state, gameLocked } from '../engine/state.js';
 import { play } from '../engine/audio.js';
 import { MINIGAMES } from '../minigames/index.js';
 import { freePlay } from '../modes/session.js';
@@ -15,7 +15,7 @@ register('free', {
   enter() {
     time = 0;
     const n = state.players.length;
-    menu = makeMenu(MINIGAMES.map((m) => ({ label: () => t('mg.' + m.id + '.name'), action: () => { lastSel = menu.sel; freePlay(m); }, disabled: () => n < (m.minPlayers || 2) || n > (m.maxPlayers || 8) })), { y: 140, w: 360, h: 62, gap: 14, cols: 3, size: 24 });
+    menu = makeMenu(MINIGAMES.map((m) => ({ label: () => (gameLocked(m.id) ? '? ' + t('shop.locked') : t('mg.' + m.id + '.name')), action: () => { lastSel = menu.sel; freePlay(m); }, disabled: () => gameLocked(m.id) || n < (m.minPlayers || 2) || n > (m.maxPlayers || 8) })), { y: 135, w: 290, h: 50, gap: 10, cols: 4, size: 20 });
     menu.sel = Math.min(lastSel, MINIGAMES.length - 1);
   },
   update(dt) { time += dt; menu.update(dt); if (input.menu('back')) { play('back'); go('title'); } },

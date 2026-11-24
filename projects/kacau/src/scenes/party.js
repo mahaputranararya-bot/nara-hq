@@ -11,7 +11,8 @@ import { burst, confetti, popup, announce, shake, resetFx, drawParticles, drawPo
 import { TAU, rng, clamp, easeOutBack } from '../engine/util.js';
 import { makeMenu } from '../engine/ui.js';
 import BOARD from '../../data/board.json';
-import { playable } from '../modes/session.js';
+import { playable, pickMods } from '../modes/session.js';
+import { earn } from '../engine/state.js';
 
 const SPACE_COL = { B: '#3d9bff', R: '#ff4d5e', E: '#a974ff', I: '#34d27f', L: '#ffd43b' };
 const HOP_T = 0.22;
@@ -143,7 +144,7 @@ function launchMinigame() {
   if (!S.bag.length) S.bag = rng.shuffle(pool.map((m) => m.id));
   const game = pool.find((m) => m.id === S.bag.shift()) || pool[0];
   go('runner', {
-    game,
+    game, mods: pickMods(),
     onDone: (order) => {
       if (!order) { afterMinigame(); return; }
       const n = state.players.length, coins = new Array(n).fill(0), place = new Array(n).fill(n);
@@ -153,7 +154,7 @@ function launchMinigame() {
         p += grp.length;
       });
       order[0].forEach((i) => { if (order.length > 1) { tok(i).mgWins++; state.players[i].stats.wins = (state.players[i].stats.wins || 0) + 1; } });
-      coins.forEach((c, i) => addCoins(i, c));
+      coins.forEach((c, i) => addCoins(i, c)); earn(3);
       go('results', { game, order, points: coins, place, before: null, scoreboard: false, unit: ' ' + t('party.coinsUnit'), after: afterMinigame });
     },
   });

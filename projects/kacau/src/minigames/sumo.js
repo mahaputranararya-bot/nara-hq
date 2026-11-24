@@ -50,7 +50,7 @@ export default {
       a.x -= nx * over; a.y -= ny * over; c.x += nx * over; c.y += ny * over;
       const rv = (c.vx - a.vx) * nx + (c.vy - a.vy) * ny;
       if (rv < 0) {
-        const imp = -rv * 1.15 + 60; // extra bouncy bellies
+        const imp = -rv * (ctx.mods.bouncy ? 1.8 : 1.15) + (ctx.mods.bouncy ? 160 : 60); // extra bouncy bellies
         a.vx -= nx * imp; a.vy -= ny * imp; c.vx += nx * imp; c.vy += ny * imp;
         const hard = -rv;
         if (hard > 260) {

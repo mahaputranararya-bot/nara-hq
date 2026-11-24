@@ -24,7 +24,7 @@ export default {
       const inp = ctx.players[i].input;
       r.sq += (1 - r.sq) * Math.min(1, dt * 10);
       // physics
-      r.vy += 2200 * dt; r.y += r.vy * dt; r.x += r.vx * dt;
+      r.vy += 2200 * (ctx.mods.lowgrav ? 0.45 : 1) * dt; r.y += r.vy * dt; r.x += r.vx * dt;
       if (r.y >= 0) { if (r.vy > 300) { r.sq = 1.3; } r.y = 0; r.vy = 0; r.vx *= Math.pow(0.002, dt); }
       if (r.down > 0) { r.down -= dt; return; }
       if (r.done >= 0) return;

@@ -1,12 +1,22 @@
 // Game modes: Quick Play (random playlist, first to X points) and Free Pick (practice any game).
 import { go } from '../engine/app.js';
-import { state, save } from '../engine/state.js';
+import { state, save, gameLocked, earn } from '../engine/state.js';
+import MODS from '../../data/modifiers.json';
 import { MINIGAMES } from '../minigames/index.js';
 import { pointsFor } from '../engine/rank.js';
 import { rng } from '../engine/util.js';
 import { startParty } from '../scenes/party.js';
 
-export function playable(n) { return MINIGAMES.filter((m) => n >= (m.minPlayers || 2) && n <= (m.maxPlayers || 8)); }
+export function playable(n) { return MINIGAMES.filter((m) => n >= (m.minPlayers || 2) && n <= (m.maxPlayers || 8) && !gameLocked(m.id)); }
+// Random rule modifiers for a round, depending on the Modifiers setting (off / random / chaos).
+export function pickMods(r = rng, level = state.settings.mods) {
+  const mods = {};
+  if (level === 'off' || (level === 'random' && r() > 0.3)) return mods;
+  const n = level === 'chaos' && r() < 0.4 ? 2 : 1;
+  for (let k = 0; k < n; k++) mods[r.pick(MODS).id] = true;
+  if (mods.giant && mods.tiny) delete mods.tiny;
+  return mods;
+}
 
 export function startMode(mode) {
   if (mode === 'free') { go('free'); return; }
@@ -32,9 +42,9 @@ function drawFromBag(s) {
 export function nextRound() {
   const s = state.session;
   s.round++;
-  const game = s.forceGame ? MINIGAMES.find((m) => m.id === s.forceGame) : drawFromBag(s);
+  const game = s.list ? MINIGAMES.find((m) => m.id === s.list[(s.round - 1) % s.list.length]) : drawFromBag(s);
   s.last = game.id;
-  go('runner', { game, onDone: (order, info) => roundDone(game, order, info) });
+  go('runner', { game, mods: s.mods ? s.mods[s.round - 1] || {} : pickMods(), onDone: (order, info) => roundDone(game, order, info) });
 }
 
 function roundDone(game, order, info = {}) {
@@ -44,7 +54,7 @@ function roundDone(game, order, info = {}) {
   const { points, place } = pointsFor(order, n);
   const before = state.players.map((p) => p.score);
   state.players.forEach((p, i) => { p.score += points[i]; if (place[i] === 1) p.stats.wins = (p.stats.wins || 0) + 1; });
-  state.stats.roundsPlayed++; save();
+  state.stats.roundsPlayed++; earn(2 + points.reduce((a, b) => a + b, 0));
   s.history.push({ game: game.id, order, points });
   const max = Math.max(...state.players.map((p) => p.score));
   const winners = state.players.filter((p) => p.score >= s.target && p.score === max);
@@ -64,6 +74,7 @@ export function freePlay(game) {
     onDone: (order) => {
       if (!order) { go('free'); return; }
       const { points, place } = pointsFor(order, state.players.length);
+      earn(1);
       go('results', { game, order, points, place, before: null, scoreboard: false, after: () => go('free') });
     },
   });

@@ -10,7 +10,9 @@
     "party": "PARTY MODE",
     "settings": "SETTINGS",
     "back": "BACK",
-    "soon": "soon!"
+    "soon": "soon!",
+    "shop": "UNLOCKS",
+    "coins": "{n} coins"
   },
   "join": {
     "title": "WHO'S PLAYING?",
@@ -40,7 +42,15 @@
     "easy": "Sleepy",
     "normal": "Normal",
     "hard": "Spicy",
-    "partyTurns": "Party Mode turns: {v}"
+    "partyTurns": "Party Mode turns: {v}",
+    "mods": "Modifiers: {v}",
+    "modOff": "Off",
+    "modRandom": "Sometimes",
+    "modChaos": "Always (CHAOS)",
+    "export": "Export save (download)",
+    "import": "Import save (file)",
+    "imported": "Save imported!",
+    "bad": "That file isn't a KACAU! save"
   },
   "runner": {
     "ready": "READY?",
@@ -55,7 +65,8 @@
     "pause": "ESC = pause",
     "only1": "1 BUTTON",
     "two": "2 BUTTONS",
-    "team": "TEAMS"
+    "team": "TEAMS",
+    "mod": "MODIFIER: {v}"
   },
   "results": {
     "title": "ROUND RESULTS",
@@ -263,5 +274,14 @@
       "teleport": "WHOOSH! Teleported somewhere random!",
       "charity": "Charity day! {name} gives 2 coins to everyone"
     }
+  },
+  "shop": {
+    "title": "UNLOCKS",
+    "hint": "Earn coins by playing. ENTER = buy, ESC = back",
+    "owned": "OWNED",
+    "char": "Character: {name}",
+    "game": "Secret game: {name}",
+    "locked": "LOCKED",
+    "need": "Not enough coins"
   }
 }

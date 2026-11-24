@@ -10,7 +10,9 @@
     "party": "MODE PESTA",
     "settings": "PENGATURAN",
     "back": "KEMBALI",
-    "soon": "segera!"
+    "soon": "segera!",
+    "shop": "BUKA KUNCI",
+    "coins": "{n} koin"
   },
   "join": {
     "title": "SIAPA YANG MAIN?",
@@ -40,7 +42,15 @@
     "easy": "Ngantuk",
     "normal": "Biasa",
     "hard": "Pedas",
-    "partyTurns": "Giliran Mode Pesta: {v}"
+    "partyTurns": "Giliran Mode Pesta: {v}",
+    "mods": "Modifier: {v}",
+    "modOff": "Mati",
+    "modRandom": "Kadang-kadang",
+    "modChaos": "Selalu (KACAU)",
+    "export": "Ekspor simpanan (unduh)",
+    "import": "Impor simpanan (file)",
+    "imported": "Simpanan diimpor!",
+    "bad": "File itu bukan simpanan KACAU!"
   },
   "runner": {
     "ready": "SIAP?",
@@ -55,7 +65,8 @@
     "pause": "ESC = jeda",
     "only1": "1 TOMBOL",
     "two": "2 TOMBOL",
-    "team": "TIM"
+    "team": "TIM",
+    "mod": "MODIFIER: {v}"
   },
   "results": {
     "title": "HASIL RONDE",
@@ -263,5 +274,14 @@
       "teleport": "WUSSS! Pindah ke tempat acak!",
       "charity": "Hari amal! {name} memberi 2 koin ke semua"
     }
+  },
+  "shop": {
+    "title": "BUKA KUNCI",
+    "hint": "Dapat koin dengan bermain. ENTER = beli, ESC = kembali",
+    "owned": "PUNYA",
+    "char": "Tokoh: {name}",
+    "game": "Game rahasia: {name}",
+    "locked": "TERKUNCI",
+    "need": "Koin kurang"
   }
 }

@@ -42,3 +42,6 @@ Short notes on choices made without Nara (he asked for autonomous work). Newest 
     underdog dice (1-12), lucky-space bonus for last place, a chicken that robs the richest, a rare star thief
     that targets the leader, a Clown Star bonus for the unluckiest player, doubled coins in the final stretch.
 17. **Party Mode mini-game coins:** 10 / 6 / 3 / 1, last place 0 (everyone tied = 3 each).
+18. **Coins are one shared wallet per laptop**, not per player: players are anonymous key slots, so per-player
+    wallets would be confusing. Unlocks are cosmetic/extra content only (never pay-to-win).
+19. **Modifiers default to "Sometimes" (30% of rounds)** so the base games are learned first, then chaos.

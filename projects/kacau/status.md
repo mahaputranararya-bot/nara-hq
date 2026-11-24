@@ -14,8 +14,13 @@ Owner: Games CEO. Full brief: `docs/BRIEF.md`. Detailed engineering log: `PROGRE
   funny events (a chicken that robs the richest player, a star thief), comeback bonuses for whoever is last,
   a mini-game every turn, bonus stars at the end.
 
+- **Milestone 4 done:** 20 mini-games (new: pancake flip, paper plane, drums, crumbling tiles, tower stack,
+  Panjat Pinang, balloon pump, coconut rain, Hold It!, ice curling), crazy modifiers (low gravity, giant heads,
+  reversed controls...), coins you earn by playing to unlock 4 secret characters and 2 secret games,
+  and save backup (export/import file) in Settings.
+
 ## Next
-- Milestone 4: 20 mini-games, modifiers (low gravity, reversed controls...), coins and unlocks, save backup.
+- Milestone 5: Tournament, Daily Chaos, instant replay, funny awards, music.
 
 ## How to play it
 - Double-click `projects/kacau/dist/index.html` (Chrome/Edge). Keys: P1 Q W, P2 C V, P3 N M, P4 arrow keys,

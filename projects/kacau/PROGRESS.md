@@ -43,8 +43,21 @@ Read this first in a new session. Also read `docs/BRIEF.md` (spec), `docs/DECISI
   most coins earned, Clown Star for most red spaces), then podium sorted by stars then coins.
 - Smoke test plays a 3-turn party with 1 keyboard human + 3 bots to the podium.
 
+### M4 — DONE
+- 20 mini-games: + `pancake` Pancake Panic, `plane` Paper Plane, `drums` Drum Battle, `tiles` Crumble Tiles,
+  `stack` Tower Stack, `panjat` Panjat Pinang (teams), `balloon` Balloon Pump, `coconut` Coconut Rain,
+  `holdit` Hold It! (secret, 30c), `curling` Ice Curling (secret, 50c).
+- Modifiers (`data/modifiers.json`): lowgrav, giant, tiny, slippery, reverse, fast, bouncy. Setting Off/Sometimes(30%)/Always.
+  Generic in runner: fast (dt x1.5), giant/tiny (draw size), reverse (swap A/B). Physics ones are read by games
+  (`ctx.mods.*`: sumo slippery/bouncy, hoops lowgrav/bouncy, sack/sweeper/coconut/pancake/plane lowgrav, panjat/curling/coconut slippery).
+  Shown on the tutorial card and bottom-left during play.
+- Coins (shared wallet in save): +2 + points per Quick Play round, +3 per party mini-game, +1 Free Pick.
+  Unlocks shop (`src/scenes/shop.js`, `data/unlocks.json`): 4 secret characters, 2 secret mini-games. Locked ones are
+  skipped on the join screen and in playlists.
+- Settings: Export save (downloads kacau-save.json), Import save (file picker). localStorage key `kacau.save.v1`.
+
 ## In progress
-- Nothing half-done. Next up is M4.
+- M5.
 
 ## Known bugs / rough edges
 - Noodle bots sometimes crash early in 2-player games (AI is simple ray probing).
@@ -53,9 +66,6 @@ Read this first in a new session. Also read `docs/BRIEF.md` (spec), `docs/DECISI
 - Gamepad support is untested on real hardware (headless tests can't plug in a pad).
 
 ## Next (M4 and on, see docs/ROADMAP.md)
-- M4: 10 more mini-games (20 total), modifiers (low gravity, giant heads, slippery, reversed, double speed,
-  tiny players, explosive bounces — `ctx.mods` already exists; `mods.reverse` is handled in the runner),
-  coins + unlocks (hats/arenas/secret games), save export/import JSON.
 - Ideas queue for mini-games: panjat pinang (team pole climb), pancake flip, paper plane distance, rhythm drums,
   falling tiles, rising lava, balance stack, volleyball giant ball, wobbly football, 2v2 hoops, traitor co-op round.
 - Party Mode polish: board camera zoom on the current player, more boards in data/, mini-game choice by votes.

@@ -5,7 +5,8 @@ import { text, drawChar, panel, keyCap, symbol, bgStripes, rrect, INK, wrapText 
 import { t } from '../engine/i18n.js';
 import * as input from '../engine/input.js';
 import { KB_SLOTS, keyLabel } from '../engine/input.js';
-import { state, makePlayer, COLORS, CHARS, freeColor, pLabel } from '../engine/state.js';
+import { state, makePlayer, COLORS, CHARS, freeColor, pLabel, charLocked } from '../engine/state.js';
+const nextChar = (c) => { for (let k = 1; k <= CHARS.length; k++) { const j = (c + k) % CHARS.length; if (!charLocked(j)) return j; } return c; };
 import { play } from '../engine/audio.js';
 import { burst } from '../engine/fx.js';
 import { rng, TAU } from '../engine/util.js';
@@ -16,8 +17,8 @@ let time = 0, next = 'quick', anim = new Map(), msgT = 0, buttons = [];
 
 function randomFreeChar() {
   const used = new Set(state.players.map((p) => p.char));
-  const free = CHARS.map((c, i) => i).filter((i) => !used.has(i));
-  return free.length ? rng.pick(free) : rng.int(0, CHARS.length - 1);
+  const free = CHARS.map((c, i) => i).filter((i) => !used.has(i) && !charLocked(i));
+  return free.length ? rng.pick(free) : 0;
 }
 function addPlayer(source, prefColor) {
   if (state.players.length >= MAX) { play('buzz'); return null; }
@@ -55,7 +56,7 @@ register('join', {
       const p = state.players.find((q) => q.source.type === 'kb' && q.source.slot === slot);
       if (!p) { addPlayer({ type: 'kb', slot }, slot); continue; }
       if (input.keyDown(KB_SLOTS[slot].a) && input.keyDown(KB_SLOTS[slot].b)) continue; // holding both = leaving
-      if (code === KB_SLOTS[slot].a) { p.char = (p.char + 1) % CHARS.length; play('pop'); bump(p); }
+      if (code === KB_SLOTS[slot].a) { p.char = nextChar(p.char); play('pop'); bump(p); }
       else { p.color = freeColor(p.color + 1, p); play('boing'); bump(p); }
     }
     // gamepads (hot-join)
@@ -64,7 +65,7 @@ register('join', {
       const aP = pd.a && !pd.pa, bP = pd.b && !pd.pb;
       if (!p) { if (aP) addPlayer({ type: 'pad', index: pd.index }); continue; }
       if (pd.a && pd.b) continue;
-      if (aP) { p.char = (p.char + 1) % CHARS.length; play('pop'); bump(p); }
+      if (aP) { p.char = nextChar(p.char); play('pop'); bump(p); }
       if (bP) { p.color = freeColor(p.color + 1, p); play('boing'); bump(p); }
     }
     // hold both to leave

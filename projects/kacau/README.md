@@ -28,9 +28,11 @@ Most games use only button A. Steering games use A = left, B = right. Gamepads h
 If someone's key doesn't light up on the join screen while everyone holds their keys, that laptop keyboard
 can't handle the combo ("ghosting"); give that player a gamepad.
 
-## Mini-games (10 so far)
+## Mini-games (20)
 Belly Bump Sumo, Wait For It..., Tangled Noodles, Balap Karung, Makan Kerupuk, Hot Potato Bomb, Colour Snap,
-Tarik Tambang (teams), Spin Sweeper, Floppy Hoops. Details: `PROGRESS.md`.
+Tarik Tambang (teams), Spin Sweeper, Floppy Hoops, Pancake Panic, Paper Plane, Drum Battle, Crumble Tiles,
+Tower Stack, Panjat Pinang, Balloon Pump, Coconut Rain, Hold It! and Ice Curling (last two unlock with coins).
+Modifiers, coins + Unlocks shop, and Export/Import save are in the menu. Details: `PROGRESS.md`.
 
 ## Party Mode in 20 seconds
 On your turn press **A** to hit the dice (press **B** first to use an item). Blue space +3 coins, red -3,

@@ -4,7 +4,9 @@ import { text, bgDots } from '../engine/draw.js';
 import { makeMenu } from '../engine/ui.js';
 import { t, setLang, lang, LANG_LIST } from '../engine/i18n.js';
 import * as input from '../engine/input.js';
-import { state, save } from '../engine/state.js';
+import { state, save, exportSave, importSave } from '../engine/state.js';
+import { popup } from '../engine/fx.js';
+import { drawPopups } from '../engine/fx.js';
 import { audioState, applyVolume, play } from '../engine/audio.js';
 import { fx } from '../engine/fx.js';
 
@@ -37,15 +39,18 @@ register('settings', {
       { label: () => t('settings.target', { v: S().target }), ...lr((d) => { S().target = cycle(TARGETS, S().target, d); }) },
       { label: () => t('settings.partyTurns', { v: S().partyTurns }), ...lr((d) => { S().partyTurns = cycle(TURNS, S().partyTurns, d); }) },
       { label: () => t('settings.bots', { v: t('settings.' + ['easy', 'normal', 'hard'][Math.max(0, SKILLS.indexOf(S().botSkill))]) }), ...lr((d) => { S().botSkill = cycle(SKILLS, S().botSkill, d); }) },
+      { label: () => t('settings.mods', { v: t('settings.mod' + { off: 'Off', random: 'Random', chaos: 'Chaos' }[S().mods || 'random']) }), ...lr((d) => { S().mods = cycle(['off', 'random', 'chaos'], S().mods, d); }) },
       { label: () => t('settings.shake', { v: onOff(S().shake) }), ...lr(() => { S().shake = !S().shake; }) },
       { label: () => t('settings.flashes', { v: onOff(S().flashes) }), ...lr(() => { S().flashes = !S().flashes; }) },
+      { label: () => t('settings.export'), action: () => exportSave() },
+      { label: () => t('settings.import'), action: () => importSave((ok) => { applySettings(); popup(t(ok ? 'settings.imported' : 'settings.bad'), W / 2, 660, { color: ok ? '#34d27f' : '#ff4d5e', size: 30, life: 2 }); }) },
       { label: () => t('menu.back'), action: () => go('title') },
-    ], { y: 120, w: 620, h: 52, gap: 10, size: 26 });
+    ], { y: 112, w: 620, h: 42, gap: 6, size: 22 });
   },
   update(dt) { time += dt; menu.update(dt); if (input.menu('back')) { play('back'); go('title'); } },
   draw(g) {
     bgDots(g, '#1f6f8b', '#2a87a6', time);
     text(g, t('settings.title'), W / 2, 70, { size: 64, color: '#ffd43b', strokeW: 10 });
-    menu.draw(g);
+    menu.draw(g); drawPopups(g);
   },
 });

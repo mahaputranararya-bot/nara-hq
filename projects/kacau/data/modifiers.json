@@ -1,0 +1,51 @@
+[
+ {
+  "id": "lowgrav",
+  "name": {
+   "en": "LOW GRAVITY",
+   "id": "GRAVITASI RENDAH"
+  }
+ },
+ {
+  "id": "giant",
+  "name": {
+   "en": "GIANT HEADS",
+   "id": "KEPALA RAKSASA"
+  }
+ },
+ {
+  "id": "tiny",
+  "name": {
+   "en": "TINY PLAYERS",
+   "id": "PEMAIN MINI"
+  }
+ },
+ {
+  "id": "slippery",
+  "name": {
+   "en": "EVERYTHING SLIPPERY",
+   "id": "SEMUA LICIN"
+  }
+ },
+ {
+  "id": "reverse",
+  "name": {
+   "en": "REVERSED CONTROLS",
+   "id": "KONTROL TERBALIK"
+  }
+ },
+ {
+  "id": "fast",
+  "name": {
+   "en": "DOUBLE SPEED",
+   "id": "KECEPATAN GANDA"
+  }
+ },
+ {
+  "id": "bouncy",
+  "name": {
+   "en": "EXPLOSIVE BOUNCES",
+   "id": "PANTULAN MELEDAK"
+  }
+ }
+]

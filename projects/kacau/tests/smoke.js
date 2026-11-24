@@ -51,7 +51,7 @@ const only = process.argv[2]; // optional: single mini-game id
   }
 
   // Every mini-game, with 4 and 8 bots
-  const ids = only ? (only === 'party' ? [] : [only]) : await page.evaluate(() => window.KACAU.games());
+  const ids = only ? (['party', 'mods'].includes(only) ? [] : [only]) : await page.evaluate(() => window.KACAU.games());
   for (const id of ids) {
     for (const n of [4, 8, 2]) {
       await page.evaluate(([id, n]) => { window.KACAU.lastOrder = null; window.KACAU.setPlayers(Array(n).fill('bot')); window.KACAU.playGame(id); }, [id, n]);
@@ -82,6 +82,21 @@ const only = process.argv[2]; // optional: single mini-game id
     }
     if ((await scene()) !== 'podium') fail('Quick Play never reached podium');
     else { await step(120); await shot('07-podium'); console.log('ok quick play reached podium'); }
+  }
+
+  if (!only || only === 'mods') {
+    // every modifier on a few physics games
+    for (const mod of ['lowgrav', 'giant', 'tiny', 'slippery', 'reverse', 'fast', 'bouncy']) for (const id of ['sumo', 'hoops', 'sack', 'coconut']) {
+      await page.evaluate(([id, mod]) => { window.KACAU.lastOrder = null; window.KACAU.setPlayers(['bot', 'bot', 'bot', 'bot']); window.KACAU.playGame(id, null, { [mod]: true }); }, [id, mod]);
+      let t = 0; while ((await scene()) === 'runner' && t < 120) { await step(60); t++; if (t === 6 && id === 'hoops') await shot('mod-' + mod); }
+      if (!(await page.evaluate(() => window.KACAU.lastOrder))) fail(`${id} with ${mod} did not finish`);
+    }
+    console.log('ok modifiers');
+    await page.evaluate(() => { window.KACAU.state.stats.coins = 100; window.KACAU.go('shop'); }); await step(10); await shot('10-shop');
+    await page.keyboard.press('Enter'); await step(5);
+    if (!(await page.evaluate(() => (window.KACAU.state.stats.unlocked || []).length))) fail('shop purchase failed');
+    await page.evaluate(() => window.KACAU.go('settings')); await step(10); await shot('11-settings');
+    await page.evaluate(() => window.KACAU.go('title')); await step(5);
   }
 
   if (!only || only === 'party') {
