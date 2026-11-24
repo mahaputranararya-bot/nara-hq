@@ -12,7 +12,9 @@
     "back": "BACK",
     "soon": "soon!",
     "shop": "UNLOCKS",
-    "coins": "{n} coins"
+    "coins": "{n} coins",
+    "daily": "DAILY CHAOS",
+    "tourney": "TOURNAMENT"
   },
   "join": {
     "title": "WHO'S PLAYING?",
@@ -50,7 +52,8 @@
     "export": "Export save (download)",
     "import": "Import save (file)",
     "imported": "Save imported!",
-    "bad": "That file isn't a KACAU! save"
+    "bad": "That file isn't a KACAU! save",
+    "music": "Music: {v}%"
   },
   "runner": {
     "ready": "READY?",
@@ -83,7 +86,8 @@
       "6th",
       "7th",
       "8th"
-    ]
+    ],
+    "replay": "INSTANT REPLAY"
   },
   "podium": {
     "winner": "{name} WINS!",
@@ -283,5 +287,29 @@
     "game": "Secret game: {name}",
     "locked": "LOCKED",
     "need": "Not enough coins"
+  },
+  "daily": {
+    "title": "DAILY CHAOS {d}",
+    "info": "Today's 5 games, every one with crazy modifiers. Same for everyone today!"
+  },
+  "tourney": {
+    "title": "TOURNAMENT",
+    "next": "NEXT MATCH: {a}  vs  {b}",
+    "bye": "{a} gets a free pass!",
+    "champ": "{name} IS THE CHAMPION!",
+    "round": {
+      "r0": "FINAL",
+      "r1": "SEMI-FINALS",
+      "r2": "QUARTER-FINALS"
+    },
+    "go": "SPACE / A = play",
+    "winsMatch": "{a} wins!",
+    "finalist": "FINALIST"
+  },
+  "awards": {
+    "falls": "Most Falls",
+    "masher": "Button Masher",
+    "clown": "Biggest Clown",
+    "none": "-"
   }
 }

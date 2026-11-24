@@ -1,7 +1,7 @@
 // Mini-game runner: tutorial card -> READY/GO -> play -> FINISH (slow-mo) -> onDone(order).
 // Builds the `ctx` object every mini-game receives (see docs/ADDING_A_MINIGAME.md).
 import { register, go, STEP } from '../engine/app.js';
-import { W, H, g as G } from '../engine/canvas.js';
+import { W, H, g as G, canvas } from '../engine/canvas.js';
 import { text, drawChar, panel, keyCap, symbol, tag, rrect, wrapText, INK } from '../engine/draw.js';
 import { t } from '../engine/i18n.js';
 import * as input from '../engine/input.js';
@@ -17,9 +17,21 @@ const CARD_TIME = 4.2, COUNT_TIME = 1.0, FINISH_TIME = 2.2;
 const CAT_COLORS = { sports: '#3d9bff', reaction: '#ff4d5e', survival: '#ff9330', team: '#a974ff', skill: '#34d27f', local: '#e63946' };
 let R = null;
 export const runnerState = () => R;
+// Instant replay: ring buffer of small snapshots of the last ~2.5 seconds before (and just after) FINISH.
+const REPLAY_N = 75, replay = { frames: [], n: 0, k: 0, skip: 0 };
+function capture() {
+  if (++replay.skip % 2) return;
+  let c = replay.frames[replay.k];
+  if (!c) { c = document.createElement('canvas'); c.width = 480; c.height = 270; replay.frames[replay.k] = c; }
+  c.getContext('2d').drawImage(canvas, 0, 0, 480, 270);
+  replay.k = (replay.k + 1) % REPLAY_N; replay.n = Math.min(REPLAY_N, replay.n + 1);
+}
+export function getReplay() { const out = []; for (let j = 0; j < replay.n; j++) out.push(replay.frames[(replay.k - replay.n + j + REPLAY_N) % REPLAY_N]); return out; }
+export function clearReplay() { replay.n = 0; }
 
-function buildPlayers() {
-  return state.players.map((p, i) => {
+function buildPlayers(subset) {
+  return (subset || state.players.map((p, k) => k)).map((k, i) => {
+    const p = state.players[k];
     const col = COLORS[p.color];
     p.stats = p.stats || {};
     return { i, id: p.id, ref: p, color: col.hex, dark: col.dark, symbol: col.symbol, char: CHARS[p.char], label: pLabel(p), isBot: p.isBot, source: p.source,
@@ -89,7 +101,8 @@ function crash(e) { console.error('[minigame ' + (R && R.game.id) + ']', e); if 
 register('runner', {
   enter(args) {
     resetFx();
-    const players = buildPlayers();
+    const players = buildPlayers(args.subset);
+    replay.n = 0; replay.k = 0; replay.skip = 0;
     const seed = args.seed ?? (Date.now() & 0xffffffff);
     R = { game: args.game, onDone: args.onDone, practice: !!args.practice, players, ctx: makeCtx(players, seed), phase: 'card', phaseT: 0, ready: new Set(), finishReq: false, paused: false, order: null, timeLeft: args.game.duration || 0, lastTick: 99 };
     if (args.mods) Object.assign(R.ctx.mods, args.mods);
@@ -160,6 +173,7 @@ register('runner', {
     const mk = Object.keys(R.ctx.mods).filter((k) => R.ctx.mods[k]);
     if (mk.length && R.phase === 'play') text(g, mk.map((k) => tl(MODS.find((m) => m.id === k).name)).join(' + '), 12, H - 14, { size: 16, align: 'left', color: '#ff73c6', strokeW: 4 });
     if (R.phase === 'play' && R.phaseT > 0.6 && R.phaseT < 4) text(g, t('runner.pause'), W - 12, H - 14, { size: 14, align: 'right', color: 'rgba(255,255,255,0.7)', strokeW: 3 });
+    if ((R.phase === 'play' || (R.phase === 'finish' && R.phaseT < 0.9)) && !R.paused && !R.noReplay) capture();
     if (R.paused) {
       g.fillStyle = 'rgba(20,12,40,0.75)'; g.fillRect(0, 0, W, H);
       text(g, t('runner.paused'), W / 2, 200, { size: 80, color: '#ffd43b', strokeW: 12 });

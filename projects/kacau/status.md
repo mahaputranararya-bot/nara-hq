@@ -19,8 +19,11 @@ Owner: Games CEO. Full brief: `docs/BRIEF.md`. Detailed engineering log: `PROGRE
   reversed controls...), coins you earn by playing to unlock 4 secret characters and 2 secret games,
   and save backup (export/import file) in Settings.
 
+- **Milestone 5 done:** Tournament bracket (1v1 knockout), Daily Chaos (same 5 crazy games for everyone each day),
+  instant replay of each round's last moments, funny awards (Most Falls, Button Masher, Biggest Clown), music.
+
 ## Next
-- Milestone 5: Tournament, Daily Chaos, instant replay, funny awards, music.
+- Milestone 6: 30+ mini-games, the full 17 Agustus pack, check the Bahasa Indonesia translation.
 
 ## How to play it
 - Double-click `projects/kacau/dist/index.html` (Chrome/Edge). Keys: P1 Q W, P2 C V, P3 N M, P4 arrow keys,

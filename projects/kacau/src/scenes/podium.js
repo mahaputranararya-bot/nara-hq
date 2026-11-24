@@ -23,7 +23,7 @@ register('podium', {
       { label: () => t('podium.again'), action: () => (args.again ? args.again() : startQuick()) },
       { label: () => t('podium.change'), action: () => go('join', { next: args.next || 'quick' }) },
       { label: () => t('podium.menu'), action: () => go('title') },
-    ], { y: 560, w: 330, h: 60, cols: 3, gap: 20, size: 24 });
+    ], { y: 548, w: 330, h: 56, cols: 3, gap: 20, size: 24 });
   },
   exit() { resetFx(); },
   update(dt) {
@@ -44,7 +44,7 @@ register('podium', {
       text(g, s.k + 1, s.x, baseY - s.h * a + 44, { size: 54, color: INK, stroke: false });
       const hop = s.k === 0 ? Math.abs(Math.sin(P.t * 5)) * 16 : Math.abs(Math.sin(P.t * 3 + s.k)) * 10;
       drawChar(g, { x: s.x, y: baseY - s.h * a - 70 - hop, r: s.k === 0 ? 62 : 48, color: col.hex, char: CHARS[p.char], symbol: col.symbol, t: P.t, mood: 'happy', sx: a, sy: a });
-      text(g, `${pLabel(p)}: ${P.label(P.idx[s.k])}`, s.x, baseY - s.h * a - (s.k === 0 ? 180 : 150) - hop, { size: 26, color: col.hex, strokeW: 6 });
+      text(g, P.label(P.idx[s.k]) ? `${pLabel(p)}: ${P.label(P.idx[s.k])}` : pLabel(p), s.x, baseY - s.h * a - (s.k === 0 ? 180 : 150) - hop, { size: 26, color: col.hex, strokeW: 6 });
     }
     // everyone else
     P.ranked.slice(3).forEach((p, i) => {
@@ -52,7 +52,23 @@ register('podium', {
       drawChar(g, { x: 90 + i * 80, y: 470, r: 26, color: col.hex, char: CHARS[p.char], symbol: col.symbol, t: P.t + i, mood: 'dizzy' });
       text(g, P.label(P.idx[i + 3]), 90 + i * 80, 512, { size: 16, color: '#fff' });
     });
+    drawAwards(g);
     drawParticles(g); drawPopups(g);
     if (P.t > 1.2) P.menu.draw(g);
   },
 });
+
+// Funny end-of-game awards from per-player stats collected by the runner and modes.
+function drawAwards(g) {
+  if (P.t < 2) return;
+  const list = [['falls', 'falls'], ['masher', 'presses'], ['clown', 'lasts']];
+  list.forEach(([k, stat], j) => {
+    let best = -1, bv = 0;
+    state.players.forEach((p, i) => { const v = (p.stats && p.stats[stat]) || 0; if (v > bv) { bv = v; best = i; } });
+    const x = 240 + j * 400, y = 668;
+    panel(g, x - 185, y - 26, 370, 52, { fill: '#fff6c7', r: 14, depth: 3, lineW: 3 });
+    text(g, t('awards.' + k) + ':', x - 170, y, { size: 18, color: INK, stroke: false, align: 'left' });
+    if (best >= 0) { const p = state.players[best]; drawChar(g, { x: x + 95, y, r: 16, color: COLORS[p.color].hex, char: CHARS[p.char], noHat: true, t: P.t, mood: 'dizzy' }); text(g, pLabel(p) + ' (' + bv + ')', x + 120, y, { size: 16, color: COLORS[p.color].hex, strokeW: 4, align: 'left' }); }
+    else text(g, t('awards.none'), x + 100, y, { size: 18, color: INK, stroke: false });
+  });
+}

@@ -56,8 +56,18 @@ Read this first in a new session. Also read `docs/BRIEF.md` (spec), `docs/DECISI
   skipped on the join screen and in playlists.
 - Settings: Export save (downloads kacau-save.json), Import save (file picker). localStorage key `kacau.save.v1`.
 
+### M5 — DONE
+- Tournament (`src/scenes/bracket.js`): single elimination 1v1 for all players (byes for odd counts), random
+  2-player mini-game per match (runner `subset` arg), champion podium.
+- Daily Chaos (`startDaily` in session.js): date-seeded playlist of 5 games, each with CHAOS modifiers; 5 rounds, podium.
+- Instant replay: runner keeps a ring buffer of 75 small snapshots (last ~2.5 s up to just after FINISH);
+  results screen plays it at half speed first (skippable).
+- Awards on the podium: Most Falls, Button Masher (presses), Biggest Clown (last places).
+- Music: `src/engine/music.js` sequencer, menu + game loops, Music volume setting.
+- Fixed: place labels on results (t() returns random element for arrays; use tArr()).
+
 ## In progress
-- M5.
+- Nothing half-done.
 
 ## Known bugs / rough edges
 - Noodle bots sometimes crash early in 2-player games (AI is simple ray probing).
@@ -65,7 +75,9 @@ Read this first in a new session. Also read `docs/BRIEF.md` (spec), `docs/DECISI
 - Same-tick finishes in Balap Karung can tie (broken by overshoot distance).
 - Gamepad support is untested on real hardware (headless tests can't plug in a pad).
 
-## Next (M4 and on, see docs/ROADMAP.md)
+## Next (M6 and on, see docs/ROADMAP.md)
+- M6: 30+ mini-games, full 17 Agustus pack (have Balap Karung, Makan Kerupuk, Tarik Tambang, Panjat Pinang; add e.g. kelereng/egg-spoon race, bakiak team walk), full ID translation check.
+- Tournament bracket only shows rounds played so far (future columns empty) — could pre-draw them.
 - Ideas queue for mini-games: panjat pinang (team pole climb), pancake flip, paper plane distance, rhythm drums,
   falling tiles, rising lava, balance stack, volleyball giant ball, wobbly football, 2v2 hoops, traitor co-op round.
 - Party Mode polish: board camera zoom on the current player, more boards in data/, mini-game choice by votes.

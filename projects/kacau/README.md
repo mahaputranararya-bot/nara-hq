@@ -7,7 +7,8 @@ bots to fill empty seats. Fully offline: all art is drawn in code and all sound 
 **Double-click `dist/index.html`** (Chrome or Edge). No internet, no install.
 
 1. Main menu: **Quick Play** (random mini-games, first to 10 points), **Party Mode** (board game: roll dice,
-   collect coins, buy stars, a mini-game every turn) or **Free Pick** (practise any game).
+   collect coins, buy stars, a mini-game every turn), **Tournament** (1v1 knockout bracket), **Daily Chaos**
+   (today's 5 games with crazy modifiers) or **Free Pick** (practise any game). Coins unlock secrets in **Unlocks**.
 2. Join screen: each player presses their key. Press your **first key** to change character,
    your **second key** to change colour, **hold both** to leave. `+` / `-` adds/removes bots.
 3. **SPACE / ENTER** starts. Before each mini-game a card shows the rules and *your* keys.

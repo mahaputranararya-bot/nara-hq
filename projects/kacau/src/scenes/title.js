@@ -31,10 +31,12 @@ register('title', {
     menu = makeMenu([
       { label: () => t('menu.quick'), action: () => go('join', { next: 'quick' }) },
       { label: () => t('menu.party'), action: () => go('join', { next: 'party' }) },
+      { label: () => t('menu.tourney'), action: () => go('join', { next: 'tourney' }) },
+      { label: () => t('menu.daily'), action: () => go('join', { next: 'daily' }) },
       { label: () => t('menu.free'), action: () => go('join', { next: 'free' }) },
       { label: () => t('menu.shop') + '  (' + (state.stats.coins || 0) + 'c)', action: () => go('shop') },
       { label: () => t('menu.settings'), action: () => go('settings') },
-    ], { y: 290, w: 440, h: 54, gap: 10 });
+    ], { y: 282, w: 400, h: 48, gap: 10, cols: 2, size: 24 });
   },
   update(dt) { time += dt; menu.update(dt); },
   draw(g) {
@@ -42,6 +44,7 @@ register('title', {
     drawLogo(g, W / 2, 150, 130, time);
     text(g, t('title.tagline'), W / 2, 260, { size: 26, color: '#ffd43b' });
     menu.draw(g);
+    text(g, t('menu.coins', { n: state.stats.coins || 0 }), W - 20, 24, { size: 20, align: 'right', color: '#ffd43b', strokeW: 5 });
     // parade of characters
     for (let i = 0; i < 10; i++) {
       const x = ((i * 150 + time * 90) % (W + 200)) - 100;

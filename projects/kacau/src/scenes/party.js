@@ -56,7 +56,7 @@ export function startParty(turns) {
     tokens: state.players.map(() => ({ pos: 0, coins: BOARD.startCoins, stars: 0, item: null, mgWins: 0, earned: 0, reds: 0 })),
     dice: 1, diceSpin: 0, double: false, steps: 0, hopT: 0, usedItem: false, lastTurnsShown: false, bonus: [], bonusK: 0,
   };
-  for (const p of state.players) p.stats = { wins: 0, presses: 0, falls: 0 };
+  for (const p of state.players) p.stats = { wins: 0, presses: 0, falls: 0, lasts: 0 };
   S.starAt = pickStar(0);
   go('party', { fresh: true });
 }
@@ -153,6 +153,7 @@ function launchMinigame() {
         for (const i of grp) { place[i] = p; coins[i] = order.length === 1 ? 3 : gi === order.length - 1 ? 0 : [10, 6, 3][p - 1] || 1; }
         p += grp.length;
       });
+      if (order.length > 1) order[order.length - 1].forEach((i) => { state.players[i].stats.lasts = (state.players[i].stats.lasts || 0) + 1; });
       order[0].forEach((i) => { if (order.length > 1) { tok(i).mgWins++; state.players[i].stats.wins = (state.players[i].stats.wins || 0) + 1; } });
       coins.forEach((c, i) => addCoins(i, c)); earn(3);
       go('results', { game, order, points: coins, place, before: null, scoreboard: false, unit: ' ' + t('party.coinsUnit'), after: afterMinigame });

@@ -35,6 +35,7 @@ register('settings', {
     menu = makeMenu([
       { label: () => t('settings.lang', { v: LANG_NAMES[lang()] }), ...lr((d) => { S().lang = cycle(LANG_LIST, S().lang, d); }) },
       { label: () => t('settings.volume', { v: Math.round(S().volume * 100) }), ...lr((d) => { S().volume = Math.max(0, Math.min(1, Math.round((S().volume + d * 0.1) * 10) / 10)); play('boing'); }) },
+      { label: () => t('settings.music', { v: Math.round(S().music * 100) }), ...lr((d) => { S().music = Math.max(0, Math.min(1, Math.round((S().music + d * 0.1) * 10) / 10)); }) },
       { label: () => t('settings.sfx', { v: onOff(S().sfx) }), ...lr(() => { S().sfx = !S().sfx; }) },
       { label: () => t('settings.target', { v: S().target }), ...lr((d) => { S().target = cycle(TARGETS, S().target, d); }) },
       { label: () => t('settings.partyTurns', { v: S().partyTurns }), ...lr((d) => { S().partyTurns = cycle(TURNS, S().partyTurns, d); }) },

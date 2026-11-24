@@ -19,3 +19,5 @@ export function t(key, vars) {
 }
 // pick a localized field from an object like {en:'..', id:'..'}
 export const tl = (obj) => (obj == null ? '' : typeof obj === 'string' ? obj : obj[cur] || obj.en || '');
+// whole array (t() picks a random element of arrays, which is right for commentator lines only)
+export function tArr(key) { const v = lookup(LANGS[cur], key) || lookup(en, key); return Array.isArray(v) ? v : []; }

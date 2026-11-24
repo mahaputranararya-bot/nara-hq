@@ -2,6 +2,7 @@
 import { g, beginFrame, mouse, W, H } from './canvas.js';
 import * as input from './input.js';
 import { updateFx, fx } from './fx.js';
+import { setMusic } from './music.js';
 
 export const STEP = 1 / 60;
 export const app = { scene: null, sceneName: '', time: 0, scenes: {}, frames: 0, errors: [] };
@@ -13,6 +14,7 @@ export function go(name, args) {
   if (app.scene && app.scene.exit) app.scene.exit();
   app.scene = s; app.sceneName = name;
   input.clearMenu();
+  setMusic(name === 'runner' || name === 'party' ? 'game' : 'menu');
   if (s.enter) s.enter(args || {});
 }
 

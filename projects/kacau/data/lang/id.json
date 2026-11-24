@@ -12,7 +12,9 @@
     "back": "KEMBALI",
     "soon": "segera!",
     "shop": "BUKA KUNCI",
-    "coins": "{n} koin"
+    "coins": "{n} koin",
+    "daily": "KACAU HARIAN",
+    "tourney": "TURNAMEN"
   },
   "join": {
     "title": "SIAPA YANG MAIN?",
@@ -50,7 +52,8 @@
     "export": "Ekspor simpanan (unduh)",
     "import": "Impor simpanan (file)",
     "imported": "Simpanan diimpor!",
-    "bad": "File itu bukan simpanan KACAU!"
+    "bad": "File itu bukan simpanan KACAU!",
+    "music": "Musik: {v}%"
   },
   "runner": {
     "ready": "SIAP?",
@@ -83,7 +86,8 @@
       "Ke-6",
       "Ke-7",
       "Ke-8"
-    ]
+    ],
+    "replay": "TAYANGAN ULANG"
   },
   "podium": {
     "winner": "{name} MENANG!",
@@ -283,5 +287,29 @@
     "game": "Game rahasia: {name}",
     "locked": "TERKUNCI",
     "need": "Koin kurang"
+  },
+  "daily": {
+    "title": "KACAU HARIAN {d}",
+    "info": "5 game hari ini, semuanya dengan modifier gila. Sama untuk semua orang hari ini!"
+  },
+  "tourney": {
+    "title": "TURNAMEN",
+    "next": "PERTANDINGAN: {a}  vs  {b}",
+    "bye": "{a} lolos otomatis!",
+    "champ": "{name} JUARA TURNAMEN!",
+    "round": {
+      "r0": "FINAL",
+      "r1": "SEMIFINAL",
+      "r2": "PEREMPAT FINAL"
+    },
+    "go": "SPASI / A = main",
+    "winsMatch": "{a} menang!",
+    "finalist": "FINALIS"
+  },
+  "awards": {
+    "falls": "Paling Sering Jatuh",
+    "masher": "Tukang Pencet",
+    "clown": "Badut Terbesar",
+    "none": "-"
   }
 }

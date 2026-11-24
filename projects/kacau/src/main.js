@@ -8,6 +8,8 @@ import './scenes/podium.js';
 import './scenes/freepick.js';
 import './scenes/party.js';
 import './scenes/shop.js';
+import './scenes/bracket.js';
+import { startDaily } from './modes/session.js';
 import { startParty } from './scenes/party.js';
 import { app, go, start, stepOnce, drawOnce } from './engine/app.js';
 import { state, loadSave, makePlayer } from './engine/state.js';
@@ -41,6 +43,8 @@ window.KACAU = {
   playGame(id, done, mods) { const g = getGame(id); go('runner', { game: g, mods, onDone: (order) => { window.KACAU.lastOrder = order; go('title'); if (done) done(order); } }); },
   quick(target) { startQuick({ target }); },
   party(turns) { startParty(turns); },
+  daily() { startDaily(); },
+  tourney() { go('bracket', { fresh: true }); },
   runner: () => runnerState(),
   go,
 };

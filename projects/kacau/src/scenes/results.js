@@ -2,12 +2,13 @@
 import { register, go } from '../engine/app.js';
 import { W, H, mouse } from '../engine/canvas.js';
 import { text, drawChar, panel, rrect, symbol, bgStripes, INK } from '../engine/draw.js';
-import { t } from '../engine/i18n.js';
+import { t, tArr } from '../engine/i18n.js';
 import * as input from '../engine/input.js';
 import { state, COLORS, CHARS, pLabel } from '../engine/state.js';
 import { play } from '../engine/audio.js';
 import { confetti, popup, updateFx, drawParticles, drawPopups, resetFx, announce } from '../engine/fx.js';
 import { easeOutBack, easeOutCubic, clamp } from '../engine/util.js';
+import { getReplay, clearReplay } from './runner.js';
 
 let A = null;
 const RESULTS_T = 3.2, BOARD_T = 4.8;
@@ -15,7 +16,9 @@ const RESULTS_T = 3.2, BOARD_T = 4.8;
 register('results', {
   enter(args) {
     resetFx();
-    A = { ...args, t: 0, phase: 'results', boardT: 0 };
+    A = { ...args, t: 0, phase: 'results', boardT: 0, frames: getReplay() };
+    clearReplay();
+    if (A.frames.length > 10) { A.phase = 'replay'; A.rt = 0; }
     const n = state.players.length;
     A.sorted = state.players.map((p, i) => i).sort((a, b) => A.place[a] - A.place[b]);
     const top = A.order[0] || [];
@@ -32,6 +35,7 @@ register('results', {
   update(dt) {
     A.t += dt;
     const skip = input.menu('start') || input.menu('ok') || mouse.clicked || state.players.some((p) => !p.isBot && input.readSource(p.source).aP);
+    if (A.phase === 'replay') { A.rt += dt; if ((skip && A.rt > 0.3) || A.rt > A.frames.length / 30 * 1.6) { A.phase = 'results'; A.t = 0; } return; }
     if (A.phase === 'results') {
       if ((skip && A.t > 0.6) || A.t > RESULTS_T + (A.scoreboard ? 0 : 3)) {
         if (A.scoreboard) { A.phase = 'board'; A.boardT = 0; play('drumroll'); }
@@ -45,6 +49,15 @@ register('results', {
   },
   draw(g) {
     bgStripes(g, '#3a2a7a', '#44318c', A.t, 70);
+    if (A.phase === 'replay') {
+      const f = A.frames[Math.min(A.frames.length - 1, Math.floor(A.rt * 30 / 1.6))];
+      g.drawImage(f, 0, 0, W, H); g.fillStyle = 'rgba(0,0,0,0.15)'; for (let y = 0; y < H; y += 6) g.fillRect(0, y, W, 2);
+      g.lineWidth = 12; g.strokeStyle = '#ff4d5e'; g.strokeRect(6, 6, W - 12, H - 12);
+      if (Math.sin(A.rt * 8) > 0) { g.beginPath(); g.arc(50, 50, 14, 0, Math.PI * 2); g.fillStyle = '#ff4d5e'; g.fill(); }
+      text(g, t('results.replay') + '  x0.5', 76, 52, { size: 32, align: 'left', color: '#fff', strokeW: 7 });
+      text(g, t('results.continue'), W / 2, H - 22, { size: 18, color: '#fff', strokeW: 4 });
+      return;
+    }
     if (A.phase === 'results') drawResults(g); else drawBoard(g);
     drawParticles(g); drawPopups(g);
     text(g, t('results.continue'), W / 2, H - 22, { size: 18, color: '#cfc6ff', strokeW: 4 });
@@ -69,7 +82,7 @@ function drawResults(g) {
       const jump = place === 1 ? Math.abs(Math.sin(A.t * 6)) * 24 : 0;
       const last = place === n && n > 1 && A.order.length > 1;
       drawChar(g, { x, y: baseY - blockH - 42 - jump, r: Math.min(38, colW * 0.3), color: col.hex, char: CHARS[p.char], symbol: col.symbol, t: A.t + k, mood: place === 1 ? 'happy' : last ? 'dizzy' : null, sx: easeOutBack(appear), sy: easeOutBack(appear) });
-      text(g, t('results.place')[place - 1] || place, x, baseY - blockH + 30, { size: 30, color: INK, stroke: false });
+      text(g, tArr('results.place')[place - 1] || place, x, baseY - blockH + 30, { size: 30, color: INK, stroke: false });
       text(g, pLabel(p), x, baseY + 30, { size: 24, color: col.hex, strokeW: 6 });
       const pts = A.points[pi];
       if (appear >= 1) { text(g, pts > 0 ? '+' + pts : '0', x, baseY - blockH + 66, { size: 34, color: pts > 0 ? '#1c8a50' : '#6b6390', stroke: false }); if (A.unit) text(g, A.unit.trim(), x, baseY - blockH + 94, { size: 16, color: '#6b6390', stroke: false }); }

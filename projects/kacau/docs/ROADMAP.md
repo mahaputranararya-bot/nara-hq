@@ -6,7 +6,7 @@
 | M2 | Party starter | 10 mini-games, 16 characters + 8 colours, results screen, Web Audio SFX, Free Pick | done |
 | M3 | Party Mode | board path, dice, coins/stars, events, items, steal-a-star, comeback bonuses | done (v1) |
 | M4 | Depth | 20 mini-games, modifiers, coins + unlocks, localStorage save, export/import | done |
-| M5 | Modes + juice | Tournament, Daily Chaos, instant replay, awards, music loops | planned |
+| M5 | Modes + juice | Tournament, Daily Chaos, instant replay, awards, music loops | done |
 | M6 | Content | 30+ mini-games, 17 Agustus pack, full Bahasa Indonesia | planned |
 | M7 | Polish | balancing, accessibility (colour-blind, text size), settings | planned |
 | M8 | LAN (optional) | `npm run lan` WebSocket host | planned |

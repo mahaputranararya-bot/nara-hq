@@ -51,7 +51,7 @@ const only = process.argv[2]; // optional: single mini-game id
   }
 
   // Every mini-game, with 4 and 8 bots
-  const ids = only ? (['party', 'mods'].includes(only) ? [] : [only]) : await page.evaluate(() => window.KACAU.games());
+  const ids = only ? (['party', 'mods', 'm5'].includes(only) ? [] : [only]) : await page.evaluate(() => window.KACAU.games());
   for (const id of ids) {
     for (const n of [4, 8, 2]) {
       await page.evaluate(([id, n]) => { window.KACAU.lastOrder = null; window.KACAU.setPlayers(Array(n).fill('bot')); window.KACAU.playGame(id); }, [id, n]);
@@ -97,6 +97,19 @@ const only = process.argv[2]; // optional: single mini-game id
     if (!(await page.evaluate(() => (window.KACAU.state.stats.unlocked || []).length))) fail('shop purchase failed');
     await page.evaluate(() => window.KACAU.go('settings')); await step(10); await shot('11-settings');
     await page.evaluate(() => window.KACAU.go('title')); await step(5);
+  }
+
+  if (!only || only === 'm5') {
+    for (const [mode, n] of [['tourney', 5], ['daily', 4]]) {
+      await page.evaluate(([mode, n]) => { window.KACAU.setPlayers(['kb0', ...Array(n - 1).fill('bot')]); window.KACAU[mode](); }, [mode, n]);
+      let t = 0, shots = 0;
+      while ((await scene()) !== 'podium' && t < 1500) {
+        await page.keyboard.press('Space'); await step(20); t++;
+        const s = await scene();
+        if (shots < 2 && ((mode === 'tourney' && s === 'bracket') || (s === 'results' && t % 3 === 0))) { shots++; await shot(`12-${mode}-${shots}`); }
+      }
+      if ((await scene()) !== 'podium') fail(mode + ' never reached podium'); else { await step(200); await shot(`13-${mode}-podium`); console.log('ok ' + mode + ' reached podium'); }
+    }
   }
 
   if (!only || only === 'party') {
