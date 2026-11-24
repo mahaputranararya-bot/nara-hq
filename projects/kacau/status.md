@@ -17,5 +17,11 @@ Owner: Games CEO. Full brief: `docs/BRIEF.md`. Detailed engineering log: `PROGRE
 ## Next
 - Milestone 4: 20 mini-games, modifiers (low gravity, reversed controls...), coins and unlocks, save backup.
 
+## How to play it
+- Double-click `projects/kacau/dist/index.html` (Chrome/Edge). Keys: P1 Q W, P2 C V, P3 N M, P4 arrow keys,
+  extra P5 O P, P6 G H, gamepads press A. `+` adds a bot.
+
 ## Open questions for Nara
-- None blocking. Keyboard layout chosen: P1 Q W, P2 C V, P3 N M, P4 arrows (see `docs/DECISIONS.md`).
+- None blocking. Worth trying on your real laptop: on the join screen, have 4 people hold their keys at once;
+  if a key doesn't light up, your keyboard has "ghosting" for that combo (tell us which, we can change layout).
+- Gamepads are untested on real hardware.
