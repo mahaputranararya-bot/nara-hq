@@ -30,8 +30,8 @@ register('title', {
     time = 0;
     menu = makeMenu([
       { label: () => t('menu.quick'), action: () => go('join', { next: 'quick' }) },
+      { label: () => t('menu.party'), action: () => go('join', { next: 'party' }) },
       { label: () => t('menu.free'), action: () => go('join', { next: 'free' }) },
-      { label: () => t('menu.party') + '  (' + t('menu.soon') + ')', disabled: () => true },
       { label: () => t('menu.settings'), action: () => go('settings') },
     ], { y: 300, w: 440, h: 62, gap: 12 });
   },

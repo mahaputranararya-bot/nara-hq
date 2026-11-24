@@ -4,11 +4,13 @@ import { state, save } from '../engine/state.js';
 import { MINIGAMES } from '../minigames/index.js';
 import { pointsFor } from '../engine/rank.js';
 import { rng } from '../engine/util.js';
+import { startParty } from '../scenes/party.js';
 
 export function playable(n) { return MINIGAMES.filter((m) => n >= (m.minPlayers || 2) && n <= (m.maxPlayers || 8)); }
 
 export function startMode(mode) {
   if (mode === 'free') { go('free'); return; }
+  if (mode === 'party') { startParty(state.settings.partyTurns || 8); return; }
   startQuick();
 }
 

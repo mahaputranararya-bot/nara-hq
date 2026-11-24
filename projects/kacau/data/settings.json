@@ -7,5 +7,6 @@
   "botSkill": 0.6,
   "shake": true,
   "flashes": true,
-  "bigText": false
+  "bigText": false,
+  "partyTurns": 8
 }

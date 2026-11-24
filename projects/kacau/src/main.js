@@ -6,6 +6,8 @@ import './scenes/runner.js';
 import './scenes/results.js';
 import './scenes/podium.js';
 import './scenes/freepick.js';
+import './scenes/party.js';
+import { startParty } from './scenes/party.js';
 import { app, go, start, stepOnce, drawOnce } from './engine/app.js';
 import { state, loadSave, makePlayer } from './engine/state.js';
 import { applySettings } from './scenes/settings.js';
@@ -37,6 +39,7 @@ window.KACAU = {
   },
   playGame(id, done) { const g = getGame(id); go('runner', { game: g, onDone: (order) => { window.KACAU.lastOrder = order; go('title'); if (done) done(order); } }); },
   quick(target) { startQuick({ target }); },
+  party(turns) { startParty(turns); },
   runner: () => runnerState(),
   go,
 };

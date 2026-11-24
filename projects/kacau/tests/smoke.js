@@ -51,7 +51,7 @@ const only = process.argv[2]; // optional: single mini-game id
   }
 
   // Every mini-game, with 4 and 8 bots
-  const ids = only ? [only] : await page.evaluate(() => window.KACAU.games());
+  const ids = only ? (only === 'party' ? [] : [only]) : await page.evaluate(() => window.KACAU.games());
   for (const id of ids) {
     for (const n of [4, 8, 2]) {
       await page.evaluate(([id, n]) => { window.KACAU.lastOrder = null; window.KACAU.setPlayers(Array(n).fill('bot')); window.KACAU.playGame(id); }, [id, n]);
@@ -82,6 +82,22 @@ const only = process.argv[2]; // optional: single mini-game id
     }
     if ((await scene()) !== 'podium') fail('Quick Play never reached podium');
     else { await step(120); await shot('07-podium'); console.log('ok quick play reached podium'); }
+  }
+
+  if (!only || only === 'party') {
+    // Party Mode with 1 keyboard human + 3 bots, 3 turns, to the podium
+    await page.evaluate(() => { window.KACAU.setPlayers(['kb0', 'bot', 'bot', 'bot']); window.KACAU.party(3); });
+    let t = 0, shots = 0, lastScene = '';
+    while ((await scene()) !== 'podium' && t < 1500) {
+      // the human (P1, keys Q/W) uses an item if they have one, then hits the dice
+      await page.keyboard.press('w'); await page.keyboard.press('q');
+      await step(20); t++;
+      const s = await scene();
+      if (s === 'party' && shots < 3 && t % 9 === 0) { shots++; await shot('08-party-' + shots); }
+      if (s !== lastScene) { lastScene = s; }
+    }
+    if ((await scene()) !== 'podium') fail('Party Mode never reached podium (scene ' + (await scene()) + ')');
+    else { await step(90); await shot('09-party-podium'); console.log('ok party mode reached podium'); }
   }
 
   const inPage = await page.evaluate(() => window.KACAU.errors);

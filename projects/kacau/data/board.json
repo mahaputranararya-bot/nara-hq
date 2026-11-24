@@ -1,0 +1,19 @@
+{
+  "id": "kacau-island",
+  "name": { "en": "Kacau Island", "id": "Pulau Kacau" },
+  "note": "Space codes: B blue (+3 coins), R red (-3 coins), E event (?), I item, L lucky (comeback bonus). The path is a loop.",
+  "pattern": "BBRBEBIBBRLBEBBRBIBEBBRBLBEBRI",
+  "startCoins": 10,
+  "starCost": 20,
+  "items": ["double", "rocket", "swap"],
+  "events": [
+    { "id": "rain", "weight": 3 },
+    { "id": "chicken", "weight": 3 },
+    { "id": "thief", "weight": 1 },
+    { "id": "swap", "weight": 2 },
+    { "id": "clown", "weight": 2 },
+    { "id": "gift", "weight": 2 },
+    { "id": "teleport", "weight": 2 },
+    { "id": "charity", "weight": 2 }
+  ]
+}

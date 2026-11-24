@@ -36,3 +36,9 @@ Short notes on choices made without Nara (he asked for autonomous work). Newest 
     (no emoji/font dependency).
 14. **Strings in `data/lang/en.json` and `id.json`** from day one (Bahasa Indonesia translated as we go),
     mini-game text under `mg.<id>`. Missing keys fall back to English.
+15. **Party Mode stars are bought automatically** when you pass the star with 20 coins (no yes/no menu):
+    fewer buttons, faster turns, and nobody has to explain a shop to a crowd.
+16. **Comeback mechanics** chosen so last place always has hope without making the game random:
+    underdog dice (1-12), lucky-space bonus for last place, a chicken that robs the richest, a rare star thief
+    that targets the leader, a Clown Star bonus for the unluckiest player, doubled coins in the final stretch.
+17. **Party Mode mini-game coins:** 10 / 6 / 3 / 1, last place 0 (everyone tied = 3 each).

@@ -39,7 +39,8 @@
     "off": "MATI",
     "easy": "Ngantuk",
     "normal": "Biasa",
-    "hard": "Pedas"
+    "hard": "Pedas",
+    "partyTurns": "Giliran Mode Pesta: {v}"
   },
   "runner": {
     "ready": "SIAP?",
@@ -165,6 +166,49 @@
       "name": "Basket Lembek",
       "desc": "Tekan untuk lompat ke arah bola. Pegang bola? Tekan lagi di udara untuk MENEMBAK. Paling akurat di puncak lompatan!",
       "a": "Lompat / Tembak"
+    }
+  },
+  "party": {
+    "title": "MODE PESTA",
+    "intro": "Kocok dadu, kumpulkan koin, beli BINTANG ({cost} koin). Bintang terbanyak setelah {n} giliran menang!",
+    "turn": "GILIRAN {k} / {n}",
+    "lastTurns": "BABAK AKHIR! Koin papan DUA KALI LIPAT!",
+    "roll": "{key} = pukul dadu",
+    "item": "{key} = pakai {item}",
+    "botThinking": "mikir dulu...",
+    "mgTime": "WAKTUNYA MINI-GAME!",
+    "starGet": "DAPAT BINTANG!",
+    "needCoins": "Butuh {cost} koin untuk bintang!",
+    "blue": "+{n} koin",
+    "red": "-{n} koin",
+    "lucky": "HOKI! +{n} koin",
+    "comeback": "BONUS BANGKIT!",
+    "gotItem": "Dapat {item}!",
+    "underdog": "DADU UNDERDOG 1-12",
+    "coinsUnit": "koin",
+    "final": "BINTANG BONUS!",
+    "winner": "{name} BINTANG PESTA!",
+    "bonus": {
+      "mg": "Bintang Mini-game (menang terbanyak)",
+      "coins": "Bintang Koin (koin terbanyak)",
+      "clown": "Bintang Badut (paling sering kotak merah)"
+    },
+    "items": {
+      "double": "Dadu Ganda",
+      "rocket": "Roket Bintang",
+      "swap": "Sepatu Tukar"
+    },
+    "events": {
+      "rain": "HUJAN KOIN! Semua +5",
+      "chicken": "Ayam mencuri 10 koin dari yang terkaya dan memberikannya ke {name}!",
+      "chickenSelf": "Ayam mencuri 10 koin dari {name} (kebanyakan!) dan memberikannya ke yang termiskin!",
+      "thief": "MALING BINTANG! {name} mencuri bintang dari {victim}!",
+      "thiefNone": "Maling tidak menemukan bintang... +10 koin saja",
+      "swap": "TUKAR! {name} bertukar tempat dengan {victim}!",
+      "clown": "TET TOT! {name} menjatuhkan setengah koinnya!",
+      "gift": "Item gratis!",
+      "teleport": "WUSSS! Pindah ke tempat acak!",
+      "charity": "Hari amal! {name} memberi 2 koin ke semua"
     }
   }
 }

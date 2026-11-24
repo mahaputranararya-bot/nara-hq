@@ -39,7 +39,8 @@
     "off": "OFF",
     "easy": "Sleepy",
     "normal": "Normal",
-    "hard": "Spicy"
+    "hard": "Spicy",
+    "partyTurns": "Party Mode turns: {v}"
   },
   "runner": {
     "ready": "READY?",
@@ -165,6 +166,49 @@
       "name": "Floppy Hoops",
       "desc": "Press to jump toward the ball. Holding it? Press again in the air to SHOOT. Best at the top of your jump!",
       "a": "Jump / Shoot"
+    }
+  },
+  "party": {
+    "title": "PARTY MODE",
+    "intro": "Roll, collect coins, buy STARS ({cost} coins). Most stars after {n} turns wins!",
+    "turn": "TURN {k} / {n}",
+    "lastTurns": "FINAL STRETCH! Board coins are DOUBLED!",
+    "roll": "{key} = hit the dice",
+    "item": "{key} = use {item}",
+    "botThinking": "thinking...",
+    "mgTime": "MINI-GAME TIME!",
+    "starGet": "STAR GET!",
+    "needCoins": "Need {cost} coins for a star!",
+    "blue": "+{n} coins",
+    "red": "-{n} coins",
+    "lucky": "LUCKY! +{n} coins",
+    "comeback": "COMEBACK BONUS!",
+    "gotItem": "Got {item}!",
+    "underdog": "UNDERDOG DICE 1-12",
+    "coinsUnit": "coins",
+    "final": "BONUS STARS!",
+    "winner": "{name} IS THE PARTY STAR!",
+    "bonus": {
+      "mg": "Mini-game Star (most wins)",
+      "coins": "Coin Star (most coins earned)",
+      "clown": "Clown Star (most red spaces)"
+    },
+    "items": {
+      "double": "Double Dice",
+      "rocket": "Star Rocket",
+      "swap": "Swap Shoes"
+    },
+    "events": {
+      "rain": "COIN RAIN! Everyone +5",
+      "chicken": "A chicken steals 10 coins from the richest player and gives them to {name}!",
+      "chickenSelf": "The chicken steals 10 coins from {name} (too rich!) and gives them to the poorest!",
+      "thief": "STAR THIEF! {name} steals a star from {victim}!",
+      "thiefNone": "Star thief found no stars... +10 coins instead",
+      "swap": "SWAP! {name} swaps places with {victim}!",
+      "clown": "HONK HONK! {name} drops half their coins!",
+      "gift": "Free item!",
+      "teleport": "WHOOSH! Teleported somewhere random!",
+      "charity": "Charity day! {name} gives 2 coins to everyone"
     }
   }
 }

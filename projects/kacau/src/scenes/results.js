@@ -72,7 +72,7 @@ function drawResults(g) {
       text(g, t('results.place')[place - 1] || place, x, baseY - blockH + 30, { size: 30, color: INK, stroke: false });
       text(g, pLabel(p), x, baseY + 30, { size: 24, color: col.hex, strokeW: 6 });
       const pts = A.points[pi];
-      if (appear >= 1) text(g, pts > 0 ? '+' + pts : '0', x, baseY - blockH + 66, { size: 34, color: pts > 0 ? '#1c8a50' : '#6b6390', stroke: false });
+      if (appear >= 1) { text(g, pts > 0 ? '+' + pts : '0', x, baseY - blockH + 66, { size: 34, color: pts > 0 ? '#1c8a50' : '#6b6390', stroke: false }); if (A.unit) text(g, A.unit.trim(), x, baseY - blockH + 94, { size: 16, color: '#6b6390', stroke: false }); }
     }
   });
 }

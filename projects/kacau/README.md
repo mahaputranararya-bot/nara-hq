@@ -6,7 +6,8 @@ bots to fill empty seats. Fully offline: all art is drawn in code and all sound 
 ## Play
 **Double-click `dist/index.html`** (Chrome or Edge). No internet, no install.
 
-1. Main menu: **Quick Play** (random mini-games, first to 10 points) or **Free Pick** (practise any game).
+1. Main menu: **Quick Play** (random mini-games, first to 10 points), **Party Mode** (board game: roll dice,
+   collect coins, buy stars, a mini-game every turn) or **Free Pick** (practise any game).
 2. Join screen: each player presses their key. Press your **first key** to change character,
    your **second key** to change colour, **hold both** to leave. `+` / `-` adds/removes bots.
 3. **SPACE / ENTER** starts. Before each mini-game a card shows the rules and *your* keys.
@@ -27,8 +28,14 @@ Most games use only button A. Steering games use A = left, B = right. Gamepads h
 If someone's key doesn't light up on the join screen while everyone holds their keys, that laptop keyboard
 can't handle the combo ("ghosting"); give that player a gamepad.
 
-## Mini-games
-See the in-game Free Pick list. Current list and status: `PROGRESS.md`.
+## Mini-games (10 so far)
+Belly Bump Sumo, Wait For It..., Tangled Noodles, Balap Karung, Makan Kerupuk, Hot Potato Bomb, Colour Snap,
+Tarik Tambang (teams), Spin Sweeper, Floppy Hoops. Details: `PROGRESS.md`.
+
+## Party Mode in 20 seconds
+On your turn press **A** to hit the dice (press **B** first to use an item). Blue space +3 coins, red -3,
+`?` = random event, `!` = item, `$` = lucky (big bonus if you're last). Walk past the star with 20 coins to buy it.
+After everyone moves, everybody plays a mini-game for coins. Most stars after the last turn wins.
 
 ## Rebuild
 ```
