@@ -23,11 +23,21 @@ Read this first in a new session. Also read `docs/BRIEF.md` (spec), `docs/DECISI
 - Quick Play (random bag, first to N), round results + scoreboard, podium, Free Pick, Settings, pause menu.
 - Web Audio SFX (~30 synthesised sounds), EN + ID strings.
 
+### M2 (party starter) — DONE
+- 10 mini-games total (ids): `sumo` Belly Bump Sumo, `quickdraw` Wait For It..., `noodle` Tangled Noodles,
+  `sack` Balap Karung (alternate A/B to hop), `kerupuk` Makan Kerupuk (bite timing), `potato` Hot Potato Bomb
+  (throw left/right), `colorsnap` Colour Snap (press on your colour), `tug` Tarik Tambang (teams, beat bonus),
+  `sweeper` Spin Sweeper (jump the beam), `hoops` Floppy Hoops (1-button basketball).
+- 16 characters + 8 colours with symbols (data/), results screen + scoreboard + podium, ~30 Web Audio SFX.
+- All 10 auto-played by bots at 2, 4 and 8 players in the smoke test, 0 console errors.
+
 ## In progress
-- M2: 10 mini-games, results polish, more SFX.
+- M3: Party Mode board.
 
 ## Known bugs / rough edges
 - Noodle bots sometimes crash early in 2-player games (AI is simple ray probing).
+- Tug of war between equal bot teams usually ends on time, not at the line (humans mash harder, fine).
+- Same-tick finishes in Balap Karung can tie (broken by overshoot distance).
 - Gamepad support is untested on real hardware (headless tests can't plug in a pad).
 
 ## Next

@@ -1,6 +1,17 @@
 {
-  "title": { "tagline": "Party chaos for 2-8 friends on one laptop", "press": "Press ENTER or SPACE", "hint": "Arrows + ENTER to choose   |   ESC = back" },
-  "menu": { "quick": "QUICK PLAY", "free": "FREE PICK", "party": "PARTY MODE", "settings": "SETTINGS", "back": "BACK", "soon": "soon!" },
+  "title": {
+    "tagline": "Party chaos for 2-8 friends on one laptop",
+    "press": "Press ENTER or SPACE",
+    "hint": "Arrows + ENTER to choose   |   ESC = back"
+  },
+  "menu": {
+    "quick": "QUICK PLAY",
+    "free": "FREE PICK",
+    "party": "PARTY MODE",
+    "settings": "SETTINGS",
+    "back": "BACK",
+    "soon": "soon!"
+  },
   "join": {
     "title": "WHO'S PLAYING?",
     "pressKey": "Press your key to join!",
@@ -24,29 +35,136 @@
     "bots": "Bot skill: {v}",
     "shake": "Screen shake: {v}",
     "flashes": "Screen flashes: {v}",
-    "on": "ON", "off": "OFF",
-    "easy": "Sleepy", "normal": "Normal", "hard": "Spicy"
+    "on": "ON",
+    "off": "OFF",
+    "easy": "Sleepy",
+    "normal": "Normal",
+    "hard": "Spicy"
   },
   "runner": {
-    "ready": "READY?", "go": "GO!", "finish": "FINISH!", "timeUp": "TIME!",
-    "paused": "PAUSED", "resume": "RESUME", "skip": "SKIP THIS GAME", "quit": "QUIT TO MENU",
+    "ready": "READY?",
+    "go": "GO!",
+    "finish": "FINISH!",
+    "timeUp": "TIME!",
+    "paused": "PAUSED",
+    "resume": "RESUME",
+    "skip": "SKIP THIS GAME",
+    "quit": "QUIT TO MENU",
     "pressReady": "press your key when ready",
     "pause": "ESC = pause",
-    "only1": "1 BUTTON", "two": "2 BUTTONS", "team": "TEAMS"
+    "only1": "1 BUTTON",
+    "two": "2 BUTTONS",
+    "team": "TEAMS"
   },
-  "results": { "title": "ROUND RESULTS", "score": "SCOREBOARD", "firstTo": "FIRST TO {n}", "continue": "SPACE / ENTER / A = continue", "draw": "DRAW!", "place": ["1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th"] },
-  "podium": { "winner": "{name} WINS!", "again": "PLAY AGAIN", "menu": "MAIN MENU", "change": "CHANGE PLAYERS" },
-  "free": { "title": "FREE PICK", "hint": "Pick any mini-game to practise. ESC = back" },
+  "results": {
+    "title": "ROUND RESULTS",
+    "score": "SCOREBOARD",
+    "firstTo": "FIRST TO {n}",
+    "continue": "SPACE / ENTER / A = continue",
+    "draw": "DRAW!",
+    "place": [
+      "1st",
+      "2nd",
+      "3rd",
+      "4th",
+      "5th",
+      "6th",
+      "7th",
+      "8th"
+    ]
+  },
+  "podium": {
+    "winner": "{name} WINS!",
+    "again": "PLAY AGAIN",
+    "menu": "MAIN MENU",
+    "change": "CHANGE PLAYERS"
+  },
+  "free": {
+    "title": "FREE PICK",
+    "hint": "Pick any mini-game to practise. ESC = back"
+  },
   "comment": {
-    "bonk": ["BONK!", "OOF!", "KAPOW!", "WHAM!"],
-    "out": ["BYE!", "SEE YA!", "OOPS!", "GONE!"],
-    "close": ["SO CLOSE!", "PHOTO FINISH!", "BY A NOSE!"],
-    "win": ["WHAT A LEGEND!", "UNSTOPPABLE!", "TOO EASY!", "CHAMPION!"],
-    "comeback": ["WHAT A COMEBACK!", "FROM ZERO TO HERO!"]
+    "bonk": [
+      "BONK!",
+      "OOF!",
+      "KAPOW!",
+      "WHAM!"
+    ],
+    "out": [
+      "BYE!",
+      "SEE YA!",
+      "OOPS!",
+      "GONE!"
+    ],
+    "close": [
+      "SO CLOSE!",
+      "PHOTO FINISH!",
+      "BY A NOSE!"
+    ],
+    "win": [
+      "WHAT A LEGEND!",
+      "UNSTOPPABLE!",
+      "TOO EASY!",
+      "CHAMPION!"
+    ],
+    "comeback": [
+      "WHAT A COMEBACK!",
+      "FROM ZERO TO HERO!"
+    ]
   },
   "mg": {
-    "sumo": { "name": "Belly Bump Sumo", "desc": "Your arrow spins. Press to DASH. Bump everyone out of the ring!", "a": "Dash" },
-    "quickdraw": { "name": "Wait For It...", "desc": "Slam your button when it says GO! Too early = OOPS. Watch for fakes!", "a": "Slam" },
-    "noodle": { "name": "Tangled Noodles", "desc": "Steer your noodle. Don't crash into any noodle or the wall!", "a": "Turn left", "b": "Turn right" }
+    "sumo": {
+      "name": "Belly Bump Sumo",
+      "desc": "Your arrow spins. Press to DASH. Bump everyone out of the ring!",
+      "a": "Dash"
+    },
+    "quickdraw": {
+      "name": "Wait For It...",
+      "desc": "Slam your button when it says GO! Too early = OOPS. Watch for fakes!",
+      "a": "Slam"
+    },
+    "noodle": {
+      "name": "Tangled Noodles",
+      "desc": "Steer your noodle. Don't crash into any noodle or the wall!",
+      "a": "Turn left",
+      "b": "Turn right"
+    },
+    "sack": {
+      "name": "Balap Karung",
+      "desc": "Sack race! Press your two keys one after the other (A, B, A, B) to hop. Same key twice = faceplant!",
+      "a": "Hop (left foot)",
+      "b": "Hop (right foot)"
+    },
+    "kerupuk": {
+      "name": "Makan Kerupuk",
+      "desc": "Hands behind your back! Bite your swinging cracker when it's right at your mouth. Miss = CHOMP air.",
+      "a": "Bite"
+    },
+    "potato": {
+      "name": "Hot Potato Bomb",
+      "desc": "Got the bomb? Throw it LEFT or RIGHT before it goes BOOM. Last one standing wins!",
+      "a": "Throw left",
+      "b": "Throw right"
+    },
+    "colorsnap": {
+      "name": "Colour Snap",
+      "desc": "Press ONLY when the big blob shows YOUR colour and shape. Gold star = everyone! Wrong press = -1.",
+      "a": "Snap!"
+    },
+    "tug": {
+      "name": "Tarik Tambang",
+      "desc": "Tug of war, two teams! Mash to pull. Pull on the drum beat for DOUBLE power.",
+      "a": "Pull"
+    },
+    "sweeper": {
+      "name": "Spin Sweeper",
+      "desc": "A giant beam spins around. Press to JUMP over it. Get swept = out!",
+      "a": "Jump"
+    },
+    "hoops": {
+      "name": "Floppy Hoops",
+      "desc": "Press to jump toward the ball. Holding it? Press again in the air to SHOOT. Best at the top of your jump!",
+      "a": "Jump / Shoot"
+    }
   }
 }

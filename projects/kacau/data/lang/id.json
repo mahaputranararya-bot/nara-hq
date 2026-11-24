@@ -1,6 +1,17 @@
 {
-  "title": { "tagline": "Pesta kacau untuk 2-8 teman di satu laptop", "press": "Tekan ENTER atau SPASI", "hint": "Panah + ENTER untuk memilih   |   ESC = kembali" },
-  "menu": { "quick": "MAIN CEPAT", "free": "PILIH BEBAS", "party": "MODE PESTA", "settings": "PENGATURAN", "back": "KEMBALI", "soon": "segera!" },
+  "title": {
+    "tagline": "Pesta kacau untuk 2-8 teman di satu laptop",
+    "press": "Tekan ENTER atau SPASI",
+    "hint": "Panah + ENTER untuk memilih   |   ESC = kembali"
+  },
+  "menu": {
+    "quick": "MAIN CEPAT",
+    "free": "PILIH BEBAS",
+    "party": "MODE PESTA",
+    "settings": "PENGATURAN",
+    "back": "KEMBALI",
+    "soon": "segera!"
+  },
   "join": {
     "title": "SIAPA YANG MAIN?",
     "pressKey": "Tekan tombolmu untuk ikut!",
@@ -24,29 +35,136 @@
     "bots": "Kemampuan bot: {v}",
     "shake": "Layar goyang: {v}",
     "flashes": "Kilatan layar: {v}",
-    "on": "NYALA", "off": "MATI",
-    "easy": "Ngantuk", "normal": "Biasa", "hard": "Pedas"
+    "on": "NYALA",
+    "off": "MATI",
+    "easy": "Ngantuk",
+    "normal": "Biasa",
+    "hard": "Pedas"
   },
   "runner": {
-    "ready": "SIAP?", "go": "MULAI!", "finish": "SELESAI!", "timeUp": "WAKTU HABIS!",
-    "paused": "JEDA", "resume": "LANJUT", "skip": "LEWATI GAME INI", "quit": "KELUAR KE MENU",
+    "ready": "SIAP?",
+    "go": "MULAI!",
+    "finish": "SELESAI!",
+    "timeUp": "WAKTU HABIS!",
+    "paused": "JEDA",
+    "resume": "LANJUT",
+    "skip": "LEWATI GAME INI",
+    "quit": "KELUAR KE MENU",
     "pressReady": "tekan tombolmu kalau siap",
     "pause": "ESC = jeda",
-    "only1": "1 TOMBOL", "two": "2 TOMBOL", "team": "TIM"
+    "only1": "1 TOMBOL",
+    "two": "2 TOMBOL",
+    "team": "TIM"
   },
-  "results": { "title": "HASIL RONDE", "score": "PAPAN SKOR", "firstTo": "PERTAMA KE {n}", "continue": "SPASI / ENTER / A = lanjut", "draw": "SERI!", "place": ["Ke-1", "Ke-2", "Ke-3", "Ke-4", "Ke-5", "Ke-6", "Ke-7", "Ke-8"] },
-  "podium": { "winner": "{name} MENANG!", "again": "MAIN LAGI", "menu": "MENU UTAMA", "change": "GANTI PEMAIN" },
-  "free": { "title": "PILIH BEBAS", "hint": "Pilih mini-game untuk latihan. ESC = kembali" },
+  "results": {
+    "title": "HASIL RONDE",
+    "score": "PAPAN SKOR",
+    "firstTo": "PERTAMA KE {n}",
+    "continue": "SPASI / ENTER / A = lanjut",
+    "draw": "SERI!",
+    "place": [
+      "Ke-1",
+      "Ke-2",
+      "Ke-3",
+      "Ke-4",
+      "Ke-5",
+      "Ke-6",
+      "Ke-7",
+      "Ke-8"
+    ]
+  },
+  "podium": {
+    "winner": "{name} MENANG!",
+    "again": "MAIN LAGI",
+    "menu": "MENU UTAMA",
+    "change": "GANTI PEMAIN"
+  },
+  "free": {
+    "title": "PILIH BEBAS",
+    "hint": "Pilih mini-game untuk latihan. ESC = kembali"
+  },
   "comment": {
-    "bonk": ["DUAK!", "ADUH!", "GEDEBUK!", "BLETAK!"],
-    "out": ["DADAH!", "WASSALAM!", "UPS!", "HILANG!"],
-    "close": ["TIPIS BANGET!", "BEDA SEHIDUNG!", "NYARIS!"],
-    "win": ["JAGOAN!", "TAK TERHENTIKAN!", "GAMPANG!", "JUARA!"],
-    "comeback": ["BANGKIT LAGI!", "DARI NOL JADI JAGOAN!"]
+    "bonk": [
+      "DUAK!",
+      "ADUH!",
+      "GEDEBUK!",
+      "BLETAK!"
+    ],
+    "out": [
+      "DADAH!",
+      "WASSALAM!",
+      "UPS!",
+      "HILANG!"
+    ],
+    "close": [
+      "TIPIS BANGET!",
+      "BEDA SEHIDUNG!",
+      "NYARIS!"
+    ],
+    "win": [
+      "JAGOAN!",
+      "TAK TERHENTIKAN!",
+      "GAMPANG!",
+      "JUARA!"
+    ],
+    "comeback": [
+      "BANGKIT LAGI!",
+      "DARI NOL JADI JAGOAN!"
+    ]
   },
   "mg": {
-    "sumo": { "name": "Sumo Adu Perut", "desc": "Panahmu berputar. Tekan untuk MELUNCUR. Dorong semua keluar arena!", "a": "Meluncur" },
-    "quickdraw": { "name": "Tunggu Dulu...", "desc": "Tekan tombolmu saat tulisan MULAI! Terlalu cepat = UPS. Awas tipuan!", "a": "Tekan" },
-    "noodle": { "name": "Mie Kusut", "desc": "Kendalikan mie-mu. Jangan tabrak mie lain atau dinding!", "a": "Belok kiri", "b": "Belok kanan" }
+    "sumo": {
+      "name": "Sumo Adu Perut",
+      "desc": "Panahmu berputar. Tekan untuk MELUNCUR. Dorong semua keluar arena!",
+      "a": "Meluncur"
+    },
+    "quickdraw": {
+      "name": "Tunggu Dulu...",
+      "desc": "Tekan tombolmu saat tulisan MULAI! Terlalu cepat = UPS. Awas tipuan!",
+      "a": "Tekan"
+    },
+    "noodle": {
+      "name": "Mie Kusut",
+      "desc": "Kendalikan mie-mu. Jangan tabrak mie lain atau dinding!",
+      "a": "Belok kiri",
+      "b": "Belok kanan"
+    },
+    "sack": {
+      "name": "Balap Karung",
+      "desc": "Tekan dua tombolmu bergantian (A, B, A, B) untuk melompat. Tombol sama dua kali = jatuh nyungsep!",
+      "a": "Lompat (kaki kiri)",
+      "b": "Lompat (kaki kanan)"
+    },
+    "kerupuk": {
+      "name": "Makan Kerupuk",
+      "desc": "Tangan di belakang! Gigit kerupukmu saat pas di depan mulut. Meleset = gigit angin.",
+      "a": "Gigit"
+    },
+    "potato": {
+      "name": "Bom Kentang",
+      "desc": "Pegang bom? Lempar ke KIRI atau KANAN sebelum DUAR! Yang bertahan terakhir menang!",
+      "a": "Lempar kiri",
+      "b": "Lempar kanan"
+    },
+    "colorsnap": {
+      "name": "Tebak Warna",
+      "desc": "Tekan HANYA saat gumpalan besar berwarna & berbentuk sepertimu. Bintang emas = semua boleh! Salah = -1.",
+      "a": "Tekan!"
+    },
+    "tug": {
+      "name": "Tarik Tambang",
+      "desc": "Dua tim adu tarik! Tekan terus untuk menarik. Tarik pas ketukan drum = tenaga DUA KALI.",
+      "a": "Tarik"
+    },
+    "sweeper": {
+      "name": "Baling-Baling Maut",
+      "desc": "Palang raksasa berputar. Tekan untuk LOMPAT. Kena sapu = keluar!",
+      "a": "Lompat"
+    },
+    "hoops": {
+      "name": "Basket Lembek",
+      "desc": "Tekan untuk lompat ke arah bola. Pegang bola? Tekan lagi di udara untuk MENEMBAK. Paling akurat di puncak lompatan!",
+      "a": "Lompat / Tembak"
+    }
   }
 }
