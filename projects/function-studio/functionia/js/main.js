@@ -53,7 +53,7 @@
     if (F.Dialogue.key(e)) return;
     if (Game.transitioning) return;
     var typing = e.target && e.target.tagName === 'INPUT' && e.target.type === 'text';
-    if (!typing && (e.key === 'j' || e.key === 'J') && Game.data && Game.screen && Game.screen.allowJournal) { Game.openOverlay('journal'); return; }
+    if (!typing && (e.key === 'j' || e.key === 'J') && Game.data && Game.screen && Game.screen.allowJournal) { e.preventDefault(); Game.openOverlay('journal'); return; }
     if (Game.screen && Game.screen.key && Game.screen.key(e)) return;
     if (e.key === 'Escape' && Game.screen && Game.screen.allowPause) { e.preventDefault(); Game.openOverlay('pause'); }
   }

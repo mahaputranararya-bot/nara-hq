@@ -19,6 +19,7 @@
     if (!next) throw new Error('No screen ' + name);
     function swap() {
       if (Game.screen && Game.screen.exit) Game.screen.exit();
+      if (F.Dialogue.active) { F.Dialogue.onEnd = null; F.Dialogue.end(); } // never carry a scene onto a new screen
       F.clear(document.getElementById('ui'));
       F.tweens.list = [];
       Game.screen = next; Game.screenName = name;
@@ -121,9 +122,12 @@
       if (u.shards && Game.shards().length >= u.shards) ok = true;
       if (ok) { d.cosmetics.owned.push(it.id); d.cosmetics.fresh.push(it.id); fresh.push(it); }
     });
-    fresh.forEach(function (it, i) {
-      setTimeout(function () { F.toast('New look unlocked: ' + it.name + '! Try it in the Wardrobe.', { icon: '✨', type: 'gold' }); }, 600 + i * 900);
-    });
+    if (fresh.length) {
+      var names = fresh.map(function (it) { return it.name; });
+      var msg = fresh.length === 1 ? 'New look unlocked: ' + names[0] + '! Try it in the Wardrobe.'
+        : fresh.length + ' new looks unlocked: ' + names.slice(0, 3).join(', ') + (names.length > 3 ? '…' : '') + ' (Wardrobe)';
+      setTimeout(function () { F.toast(msg, { icon: '✨', type: 'gold', dur: 4200 }); }, 700);
+    }
     if (fresh.length) Game.saveNow();
     return fresh;
   };

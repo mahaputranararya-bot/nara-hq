@@ -138,7 +138,14 @@
         b.addEventListener('click', function () { F.Audio.sfx('page'); show(i); });
         tabs.appendChild(b);
       });
-      var print = F.btn('Print notes', function () { document.body.classList.add('printing'); window.print(); setTimeout(function () { document.body.classList.remove('printing'); }, 500); }, { cls: 'small ghost noprint' });
+      // Print every unlocked page as a set of Term 3 revision notes
+      var print = F.btn('Print all notes', function () {
+        F.clear(holder);
+        var ks = F.realm.order.filter(function (k) { return G.data.kingdoms[k].restored || (G.dev && G.devUnlockAll); });
+        if (!ks.length) holder.appendChild(h('p', { text: 'Restore a kingdom to add your first page.' }));
+        ks.forEach(function (k) { holder.appendChild(page(k)); });
+        setTimeout(function () { window.print(); show(0); }, 120);
+      }, { cls: 'small ghost noprint' });
       body.appendChild(h('div', { class: 'jtop' }, [tabs, print]));
       body.appendChild(holder);
       show(0);

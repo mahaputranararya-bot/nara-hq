@@ -209,6 +209,9 @@
       var r = this.rect, phase = G.data.boss.phase, total = this.list.length;
       var x = r.x + r.w - 70, y = r.y + 70 + Math.sin(t * 2) * 8;
       var hurt = this.bossHit > 0;
+      var glow = ctx.createRadialGradient(x, y, 10, x, y, 90);
+      glow.addColorStop(0, 'rgba(255,77,109,0.45)'); glow.addColorStop(1, 'rgba(255,77,109,0)');
+      ctx.fillStyle = glow; ctx.beginPath(); ctx.arc(x, y, 90, 0, 7); ctx.fill();
       F.Portraits.drawGlitch(ctx, x + (hurt ? Math.sin(t * 60) * 6 : 0), y, 38 * (1 - phase / total * 0.4), t, hurt ? 'hurt' : 'angry');
       // power meter
       var w = 140, frac = 1 - phase / total;

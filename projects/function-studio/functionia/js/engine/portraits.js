@@ -21,9 +21,18 @@
   P.queen = function (ctx, S, t, o) {
     var b = Math.sin(t * 1.5) * S * 0.01;
     ctx.translate(0, b);
-    // gown
-    ctx.fillStyle = '#B59CF2'; ctx.beginPath(); ctx.moveTo(-S * 0.36, S * 0.5); ctx.quadraticCurveTo(0, S * 0.05, S * 0.36, S * 0.5); ctx.closePath(); ctx.fill();
-    ctx.fillStyle = '#8EC5FF'; ctx.beginPath(); ctx.moveTo(-S * 0.12, S * 0.18); ctx.lineTo(0, S * 0.5); ctx.lineTo(S * 0.12, S * 0.18); ctx.fill();
+    // gown: bell skirt, bodice, puffed sleeves, crystal collar
+    ctx.fillStyle = '#B59CF2'; ctx.strokeStyle = '#8a76c8'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(-S * 0.11, S * 0.2); ctx.bezierCurveTo(-S * 0.2, S * 0.34, -S * 0.36, S * 0.42, -S * 0.38, S * 0.52);
+    ctx.lineTo(S * 0.38, S * 0.52); ctx.bezierCurveTo(S * 0.36, S * 0.42, S * 0.2, S * 0.34, S * 0.11, S * 0.2); ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = 'rgba(255,255,255,0.35)';
+    for (var f = -2; f <= 2; f++) { ctx.beginPath(); ctx.moveTo(f * S * 0.03, S * 0.26); ctx.lineTo(f * S * 0.11, S * 0.52); ctx.lineTo(f * S * 0.11 + S * 0.015, S * 0.52); ctx.closePath(); ctx.fill(); }
+    ctx.fillStyle = '#8EC5FF'; F.roundRect(ctx, -S * 0.11, S * 0.12, S * 0.22, S * 0.14, S * 0.04); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#C9B8FF';
+    ctx.beginPath(); ctx.arc(-S * 0.14, S * 0.15, S * 0.06, 0, 7); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.arc(S * 0.14, S * 0.15, S * 0.06, 0, 7); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#F3E4FF'; ctx.fillRect(-S * 0.035, S * 0.08, S * 0.07, S * 0.06);
+    ctx.fillStyle = '#EAF6FF'; ctx.beginPath(); ctx.moveTo(-S * 0.1, S * 0.12); ctx.lineTo(0, S * 0.19); ctx.lineTo(S * 0.1, S * 0.12); ctx.closePath(); ctx.fill();
     // head
     ctx.fillStyle = '#F3E4FF'; ctx.beginPath(); ctx.arc(0, -S * 0.02, S * 0.2, 0, Math.PI * 2); ctx.fill();
     ctx.strokeStyle = '#8a76c8'; ctx.lineWidth = 2; ctx.stroke();
@@ -97,9 +106,11 @@
   };
   P.witch = function (ctx, S, t) {
     ctx.fillStyle = '#1E4A22'; ctx.beginPath(); ctx.moveTo(-S * 0.3, S * 0.5); ctx.lineTo(0, S * 0.1); ctx.lineTo(S * 0.3, S * 0.5); ctx.fill();
+    // hair behind the face, falling to the shoulders
+    ctx.fillStyle = '#D6409F'; ctx.beginPath(); ctx.ellipse(0, S * 0.04, S * 0.23, S * 0.25, 0, 0, Math.PI * 2); ctx.fill();
     ctx.fillStyle = '#FFE1C9'; ctx.beginPath(); ctx.arc(0, -S * 0.02, S * 0.17, 0, Math.PI * 2); ctx.fill();
     ctx.strokeStyle = '#c08a6a'; ctx.lineWidth = 2; ctx.stroke();
-    ctx.fillStyle = '#D6409F'; ctx.beginPath(); ctx.arc(0, S * 0.02, S * 0.2, 0.1 * Math.PI, 0.9 * Math.PI, true); ctx.fill(); // hair
+    ctx.fillStyle = '#D6409F'; ctx.beginPath(); ctx.ellipse(-S * 0.08, -S * 0.15, S * 0.1, S * 0.05, -0.3, 0, Math.PI * 2); ctx.ellipse(S * 0.08, -S * 0.15, S * 0.1, S * 0.05, 0.3, 0, Math.PI * 2); ctx.fill(); // fringe
     // hat with flowers
     ctx.fillStyle = '#5B2A6E'; ctx.beginPath(); ctx.moveTo(-S * 0.3, -S * 0.14); ctx.lineTo(S * 0.3, -S * 0.14); ctx.lineTo(S * 0.06 + Math.sin(t * 2) * S * 0.03, -S * 0.52); ctx.closePath(); ctx.fill();
     var cols = ['#9BE15D', '#FFD24A', '#D6409F'];

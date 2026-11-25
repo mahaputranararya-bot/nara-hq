@@ -48,6 +48,7 @@
     this.trailColor = o.trailColor || F.Game.trailColorFor(this.p.kingdom);
     this.offeredHint = false;
     this.viz = F.Viz.get(this.p);
+    this.ori.clearTrail(); this.ori.dizzy = 0;
     this.build();
     this.viz.setup(this);
     if (this.p.golden && (this.mode === 'practice' || this.mode === 'free')) {
@@ -203,6 +204,7 @@
     }
     this.tries++;
     F.Game.data.stats.tries++;
+    if (this.G.anim) { this.G.view = this.G.anim.to; this.G.anim = null; } // finish any camera move first
     this.lastValues = vals; this.lastResult = res;
     this.clearMiss();
     this.drawn = [];
@@ -400,6 +402,8 @@
     else this.ori.setPos(this.G.X(this.oriW.x), this.G.Y(this.oriW.y));
     if (this.viz.badge === false || this.oriScreen) this.ori.setCoord(null);
     else this.ori.setCoord(this.oriW.x, this.oriW.y);
+    // Ori watches the cursor while you think, and looks where it is going while it rides
+    this.ori.lookAt = this.phase === 'anim' ? null : { x: F.Game.mouse.x, y: F.Game.mouse.y };
     // Delta hovers at the top-left of the graph, or near Ori while talking
     var r = this.G.rect;
     var dx = this.delta.talk > 0 ? F.clamp(this.ori.px - 60, r.x + 30, r.x + r.w - 30) : r.x + 40;
@@ -436,11 +440,14 @@
   // keyboard: Space launches (when not typing), R retries, H hints
   PuzzleView.prototype.key = function (e) {
     var typing = e.target && (e.target.tagName === 'INPUT' && e.target.type === 'text');
+    // "h" never appears in a number answer, so H asks Delta for a hint even while typing
+    if (typing && (e.key === 'h' || e.key === 'H') && !e.ctrlKey && !e.metaKey) { e.preventDefault(); this.hint(); return true; }
     if (typing) return false;
     if (e.key === ' ' && !(e.target && e.target.tagName === 'BUTTON')) { e.preventDefault(); this.launch(); return true; }
     if (e.key === 'Enter' && !(e.target && (e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT'))) { e.preventDefault(); this.launch(); return true; }
-    if (e.key === 'r' || e.key === 'R') { this.retry(); return true; }
-    if (e.key === 'h' || e.key === 'H') { this.hint(); return true; }
+    // preventDefault: retry moves focus into an answer box, and the letter must not be typed into it
+    if (e.key === 'r' || e.key === 'R') { e.preventDefault(); this.retry(); return true; }
+    if (e.key === 'h' || e.key === 'H') { e.preventDefault(); this.hint(); return true; }
     return false;
   };
   PuzzleView.prototype.pointer = function (type, x, y) {

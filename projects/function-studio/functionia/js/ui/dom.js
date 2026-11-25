@@ -58,6 +58,8 @@
     if (!box) return;
     var t = h('div', { class: 'toast ' + (o.type || ''), role: 'status' }, [o.icon ? h('span', { class: 'ico', text: o.icon }) : null, h('span', { text: text })]);
     box.appendChild(t);
+    // never pile up: keep at most 2 messages on screen
+    while (box.children.length > 2) box.removeChild(box.firstChild);
     requestAnimationFrame(function () { t.classList.add('in'); });
     setTimeout(function () { t.classList.remove('in'); setTimeout(function () { t.remove(); }, 400); }, o.dur || 3200);
   }

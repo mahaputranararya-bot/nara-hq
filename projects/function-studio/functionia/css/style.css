@@ -46,6 +46,8 @@ kbd { display: inline-block; font: 700 0.62rem/1 var(--font); padding: 3px 5px; 
 .crumb .cs { font-size: 0.72rem; color: var(--muted); }
 .pill { display: flex; gap: 5px; align-items: center; font-weight: 800; padding: 2px 10px; border-radius: 999px; background: rgba(255,255,255,0.08); }
 .pill .star { color: var(--gold); } .pill .shard { color: var(--glitch); }
+.pill.bump { animation: bump 0.3s ease-out; }
+@keyframes bump { 40% { transform: scale(1.25); background: rgba(255,201,74,0.35); } }
 
 /* ---------------------------------------------------------------- puzzle panel */
 .ppanel { position: fixed; top: 74px; right: 16px; bottom: 16px; width: var(--panel-w); background: var(--panel); border-radius: 20px; padding: 18px 18px 14px; overflow-y: auto;

@@ -308,7 +308,7 @@
   };
 
   Viz.inverse = {
-    setup: function (pv) { var v = pv.G.view; pv.oriW = { x: v.xmin + 1, y: v.ymin + 1 }; },
+    setup: function (pv) { var v = pv.p.view; pv.oriW = { x: v.xmin + 1, y: v.ymin + 1 }; },
     fSpec: function (pv) { return { type: 'linear', m: pv.p.viz.m, b: pv.p.viz.c }; },
     pSpec: function (n) { if (n.p === null || n.q === null || n.q === 0) return null; return { type: 'linear', m: 1 / n.q, b: -n.p / n.q }; },
     draw: function (ctx, pv, G, t) {
@@ -441,7 +441,7 @@
 
   // ================================================================= Parabolis
   Viz.vertex = {
-    setup: function (pv) { var v = pv.G.view; pv.oriW = { x: v.xmin + 0.5, y: 0 }; },
+    setup: function (pv) { var v = pv.p.view; pv.oriW = { x: v.xmin + 0.5, y: 0 }; },
     draw: function (ctx, pv, G) {
       var V = pv.p.viz;
       if (pv.reveal) drawGiven(ctx, pv, V.curve, { width: 3.5 });
@@ -470,7 +470,7 @@
   };
 
   Viz.roots = {
-    setup: function (pv) { var v = pv.G.view; pv.oriW = { x: v.xmin + 0.5, y: 0 }; },
+    setup: function (pv) { var v = pv.p.view; pv.oriW = { x: v.xmin + 0.5, y: 0 }; },
     keys: function (pv) { return (pv.p.fields || []).map(function (f) { return f.key; }); },
     draw: function (ctx, pv, G) {
       var V = pv.p.viz, n = pv.nums(), self = this;
@@ -490,7 +490,7 @@
     }
   };
   Viz.cubicroots = {
-    setup: function (pv) { var v = pv.G.view; pv.oriW = { x: v.xmin + 0.5, y: v.ymin + 1 }; },
+    setup: function (pv) { var v = pv.p.view; pv.oriW = { x: v.xmin + 0.5, y: v.ymin + 1 }; },
     draw: Viz.roots.draw, keys: Viz.roots.keys,
     launch: function (pv, n, res) {
       var c = curveOf(pv.p.viz.curve), v = pv.G.view, keys = this.keys(pv);
@@ -569,7 +569,7 @@
     }
   };
   Viz.ends = {
-    setup: function (pv) { var v = pv.G.view; pv.oriW = { x: v.xmin + 0.4, y: 0 }; },
+    setup: function (pv) { var v = pv.p.view; pv.oriW = { x: v.xmin + 0.4, y: 0 }; },
     draw: function (ctx, pv, G, t) {
       var V = pv.p.viz;
       if (pv.reveal) drawGiven(ctx, pv, V.curve, { width: 4 });
@@ -589,7 +589,7 @@
     }
   };
   Viz.yint = {
-    setup: function (pv) { var v = pv.G.view; pv.oriW = { x: v.xmin + 0.4, y: v.ymin + 1 }; },
+    setup: function (pv) { var v = pv.p.view; pv.oriW = { x: v.xmin + 0.4, y: v.ymin + 1 }; },
     draw: function (ctx, pv, G) {
       var V = pv.p.viz, n = pv.nums();
       if (pv.reveal) drawGiven(ctx, pv, V.curve, { width: 3.5 });
@@ -601,7 +601,7 @@
     }
   };
   Viz.canyon = {
-    setup: function (pv) { var v = pv.G.view; pv.oriW = { x: v.xmin + 0.4, y: 0 }; },
+    setup: function (pv) { var v = pv.p.view; pv.oriW = { x: v.xmin + 0.4, y: 0 }; },
     draw: function (ctx, pv, G) {
       var V = pv.p.viz;
       V.gates.forEach(function (g, i) { icon(ctx, pv, 'rivergate', N(g[0]), N(g[1]), 13, 'g' + i); G.label(ctx, F.fmt.coord(g[0], g[1]), N(g[0]), N(g[1]), { align: 'center', dy: 26, size: 12, bg: true }); });
@@ -747,7 +747,7 @@
     };
   }
   Viz.walls = {
-    setup: function (pv) { var v = pv.G.view; pv.oriW = { x: v.xmax - 0.6, y: N(pv.p.viz.curve.k) + 0.6 }; },
+    setup: function (pv) { var v = pv.p.view; pv.oriW = { x: v.xmax - 0.6, y: N(pv.p.viz.curve.k) + 0.6 }; },
     draw: function (ctx, pv, G, t) {
       var V = pv.p.viz, spec = V.curve;
       ratDraw(ctx, pv, G, t, spec, pv.solved);
@@ -770,7 +770,7 @@
     }
   };
   Viz.doors = {
-    setup: function (pv) { var v = pv.G.view; pv.oriW = { x: v.xmin + 0.6, y: 0.5 }; },
+    setup: function (pv) { var v = pv.p.view; pv.oriW = { x: v.xmin + 0.6, y: 0.5 }; },
     draw: function (ctx, pv, G, t) {
       var V = pv.p.viz;
       ratDraw(ctx, pv, G, t, V.curve, pv.solved);
@@ -786,7 +786,7 @@
     }
   };
   Viz.ratvalue = {
-    setup: function (pv) { var v = pv.G.view; pv.oriW = { x: v.xmin + 0.6, y: v.ymin + 0.6 }; },
+    setup: function (pv) { var v = pv.p.view; pv.oriW = { x: v.xmin + 0.6, y: v.ymin + 0.6 }; },
     draw: function (ctx, pv, G, t) {
       var V = pv.p.viz, n = pv.nums();
       ratDraw(ctx, pv, G, t, V.curve, true);
@@ -808,7 +808,7 @@
     }
   };
   Viz.hole = {
-    setup: function (pv) { var v = pv.G.view; var p = N(pv.p.viz.p); pv.oriW = { x: v.xmin + 0.5, y: v.xmin + 0.5 + p }; pv.fell = false; },
+    setup: function (pv) { var v = pv.p.view; var p = N(pv.p.viz.p); pv.oriW = { x: v.xmin + 0.5, y: v.xmin + 0.5 + p }; pv.fell = false; },
     draw: function (ctx, pv, G) {
       var V = pv.p.viz, p = N(V.p), n = pv.nums();
       G.plot(ctx, V.curve, { color: given(pv), width: 3.5, hideHoles: !(pv.solved || pv.fell) });
@@ -835,7 +835,7 @@
     }
   };
   Viz.range = {
-    setup: function (pv) { var v = pv.G.view; pv.oriW = { x: v.xmax - 0.6, y: N(pv.p.viz.curve.k) + 0.8 }; },
+    setup: function (pv) { var v = pv.p.view; pv.oriW = { x: v.xmax - 0.6, y: N(pv.p.viz.curve.k) + 0.8 }; },
     draw: function (ctx, pv, G, t) {
       var spec = pv.p.viz.curve;
       if (pv.reveal) drawGiven(ctx, pv, spec, { width: 3.5 });

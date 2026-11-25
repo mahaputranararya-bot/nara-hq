@@ -24,9 +24,19 @@
     HUD.el = bar; HUD.starsEl = stars.lastChild; HUD.shardsEl = shards.lastChild;
     return bar;
   };
+  /** Update the counters; the star count ticks up one by one with a little bump. */
   HUD.refresh = function () {
     if (!HUD.el || !HUD.el.isConnected) return;
-    HUD.starsEl.textContent = String(F.Game.stars());
+    var target = F.Game.stars(), el = HUD.starsEl;
+    var cur = parseInt(el.textContent, 10) || 0;
+    clearInterval(HUD._tick);
+    if (target > cur) {
+      HUD._tick = setInterval(function () {
+        cur++; el.textContent = String(cur);
+        el.parentNode.classList.remove('bump'); void el.offsetWidth; el.parentNode.classList.add('bump');
+        if (cur >= target) clearInterval(HUD._tick);
+      }, 140);
+    } else el.textContent = String(target);
     HUD.shardsEl.textContent = F.Game.shards().length + '/6';
   };
   F.HUD = HUD;
