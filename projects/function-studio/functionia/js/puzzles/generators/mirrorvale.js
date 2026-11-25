@@ -183,21 +183,29 @@
   // ---------------------------------------------------------------- 5. Domain Fences
   var DOMAIN_POOL = [
     { id: 'sqrt', spec: { type: 'sqrt' }, label: 'f(x) = √x', dom: 'x ≥ 0', ran: 'y ≥ 0',
-      why: 'Square roots of negative numbers have no real answer, so x must be 0 or more. The outputs start at 0 and go up.' },
+      why: 'Square roots of negative numbers have no real answer, so x must be 0 or more. The outputs start at 0 and go up.',
+      ask: 'Try x = −4: does √(−4) have a real answer? And can a square root ever come out negative?' },
     { id: 'square', spec: { type: 'vertex', a: 1, h: 0, k: 0 }, label: 'f(x) = x²', dom: 'All real numbers', ran: 'y ≥ 0',
-      why: 'You can square any number, so every x is allowed. But a square is never negative, so y ≥ 0.' },
+      why: 'You can square any number, so every x is allowed. But a square is never negative, so y ≥ 0.',
+      ask: 'Can you square ANY number, even a negative one? And can a square ever be negative?' },
     { id: 'line', spec: { type: 'linear', m: 2, b: 1 }, label: 'f(x) = 2x + 1', dom: 'All real numbers', ran: 'All real numbers',
-      why: 'A sloped line goes on forever in both directions, so every x and every y is reached.' },
+      why: 'A sloped line goes on forever in both directions, so every x and every y is reached.',
+      ask: 'Does a sloped straight line ever stop, to the left or right, or up or down?' },
     { id: 'recip', spec: { type: 'rational', a: 1, h: 0, k: 0 }, label: 'f(x) = 1/x', dom: 'x ≠ 0', ran: 'y ≠ 0',
-      why: 'You can’t divide by zero, so x = 0 is not allowed. And 1 ÷ x is never exactly 0, so y ≠ 0.' },
+      why: 'You can’t divide by zero, so x = 0 is not allowed. And 1 ÷ x is never exactly 0, so y ≠ 0.',
+      ask: 'What happens if you put in x = 0? And can 1 ÷ x ever be exactly 0?' },
     { id: 'sqrt2', spec: { type: 'sqrt', h: 2 }, label: 'f(x) = √(x ' + MINUS + ' 2)', dom: 'x ≥ 2', ran: 'y ≥ 0',
-      why: 'x ' + MINUS + ' 2 must not be negative, so x ≥ 2. The outputs start at 0 and go up.' },
+      why: 'x ' + MINUS + ' 2 must not be negative, so x ≥ 2. The outputs start at 0 and go up.',
+      ask: 'Try x = 1: is √(1 ' + MINUS + ' 2) a real number? What is the smallest output you can get?' },
     { id: 'hill', spec: { type: 'vertex', a: -1, h: 0, k: 4 }, label: 'f(x) = ' + MINUS + 'x² + 4', dom: 'All real numbers', ran: 'y ≤ 4',
-      why: 'Any x can be squared. The hill’s top is at y = 4, so the outputs are 4 or less.' },
+      why: 'Any x can be squared. The hill’s top is at y = 4, so the outputs are 4 or less.',
+      ask: 'Can any x be put in? Then look at the graph: where is the top of the hill?' },
     { id: 'bowl', spec: { type: 'vertex', a: 1, h: 0, k: -3 }, label: 'f(x) = x² ' + MINUS + ' 3', dom: 'All real numbers', ran: 'y ≥ ' + MINUS + '3',
-      why: 'Any x can be squared. The bowl’s lowest point is y = ' + MINUS + '3, so y ≥ ' + MINUS + '3.' },
+      why: 'Any x can be squared. The bowl’s lowest point is y = ' + MINUS + '3, so y ≥ ' + MINUS + '3.',
+      ask: 'Can any x be put in? Then look at the graph: where is the bottom of the bowl?' },
     { id: 'sqrtUp', spec: { type: 'sqrt', k: 1 }, label: 'f(x) = √x + 1', dom: 'x ≥ 0', ran: 'y ≥ 1',
-      why: 'Only x ≥ 0 works under the square root. The outputs start at 0 + 1 = 1.' }
+      why: 'Only x ≥ 0 works under the square root. The outputs start at 0 + 1 = 1.',
+      ask: 'Which x can go under the square root? What is the output when x = 0?' }
   ];
   var DOMS = ['All real numbers', 'x ≥ 0', 'x ≥ 2', 'x ≠ 0', 'x ≤ 0', 'x > 0'];
   var RANS = ['All real numbers', 'y ≥ 0', 'y ≤ 4', 'y ≠ 0', 'y ≥ ' + MINUS + '3', 'y ≥ 1', 'y ≤ 0'];
@@ -223,8 +231,8 @@
         prompt: 'Fences mark where ' + g.label + ' is allowed to live. Choose its domain (the inputs x it accepts) and its range (the outputs y it can reach).',
         formula: g.label,
         rows: [
-          { key: 'dom', label: 'Domain:', options: doms.map(function (d) { return C.opt(d, d, d === g.dom ? '' : 'Not this fence. ' + g.why); }) },
-          { key: 'ran', label: 'Range:', options: rans.map(function (r) { return C.opt(r, r, r === g.ran ? '' : 'Not this fence. ' + g.why); }) }
+          { key: 'dom', label: 'Domain:', options: doms.map(function (d) { return C.opt(d, d, d === g.dom ? '' : 'Not this fence. ' + g.ask); }) },
+          { key: 'ran', label: 'Range:', options: rans.map(function (r) { return C.opt(r, r, r === g.ran ? '' : 'Not this fence. ' + g.ask); }) }
         ],
         answer: { dom: g.dom, ran: g.ran },
         view: C.sym(6),
