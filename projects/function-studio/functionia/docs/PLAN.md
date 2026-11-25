@@ -15,7 +15,7 @@ Source brief: `../FUNCTIONIA_MASTER_PROMPT.md`. Tick each box when done.
 - [x] M9 — Polish (music, juice, transitions, accessibility, performance, text, balance)
 - [x] M10 — Testing (unit + generator tests, Playwright smoke + screenshots)
 - [x] M11 — Documentation and handover
-- [ ] M12 — Independent review by a separate subagent, fixes, re-score
+- [x] M12 — Independent review by a separate subagent, fixes, re-score
 
 ## Architecture (quick reference for anyone continuing the build)
 

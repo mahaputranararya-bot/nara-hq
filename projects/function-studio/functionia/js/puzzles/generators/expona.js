@@ -64,8 +64,8 @@
       return C.over(C.puzzle({
         gen: 'value', kind: 'value', title: grow ? 'Slime Surge' : 'Fading Torch',
         prompt: grow
-          ? 'The slime starts at size ' + S(a) + ' and multiplies by ' + S(b) + ' every hour. How big is it after ' + xs.join(' and ') + ' hours?'
-          : 'The torch starts at brightness ' + S(a) + ' and keeps only ' + S(b) + ' of its light each hour. How bright is it after ' + xs.join(' and ') + ' hours?',
+          ? 'The slime starts at size ' + S(a) + ' and multiplies by ' + S(b) + ' every hour. How big is it after ' + xs.join(' and ') + (xs.length === 1 && xs[0] === 1 ? ' hour?' : ' hours?')
+          : 'The torch starts at brightness ' + S(a) + ' and keeps only ' + S(b) + ' of its light each hour. How bright is it after ' + xs.join(' and ') + (xs.length === 1 && xs[0] === 1 ? ' hour?' : ' hours?'),
         formula: formula,
         fields: fields,
         answer: answer,
@@ -200,6 +200,7 @@
         answer: { b: canonical },
         accept: { type: 'expBound', key: 'b', a: a, x: x, limit: L, strict: strict, bound: bstar },
         rules: [
+          { key: 'b', rule: 'nonzero', msg: 'b = 0 makes the slime vanish at once (0ˣ = 0 for x > 0), and 0⁻¹ = 1 ÷ 0 has no answer. Exponential bases need b > 0 and b ≠ 1.' },
           { key: 'b', rule: 'positive', msg: 'b must be more than 0! With a negative b, values like x = ½ have no real answer: (' + MINUS + '2)^½ = √' + MINUS + '2.' },
           { key: 'b', rule: 'notEqual', value: q(1), msg: 'With b = 1, y = ' + S(a) + '·1ˣ = ' + S(a) + ' forever. Nothing grows or decays!' }
         ],
@@ -256,7 +257,7 @@
           'Start: put x = 0 in. Since b⁰ = 1, y = a. Asymptote: multiplying by b again and again makes y tiny, but it never becomes 0.',
           'Worked example: y = 6·(½)ˣ starts at 6, then 3, 1.5, 0.75, … closer and closer to y = 0, but never 0.'
         ],
-        explain: 'At x = 0, ' + S(b) + '⁰ = 1 so y = ' + S(a) + '. Each step multiplies by ' + S(b) + ', so y shrinks toward 0 but never reaches it: the horizontal asymptote is y = 0.',
+        explain: 'At x = 0, ' + fmt.base(b) + '⁰ = 1 so y = ' + S(a) + '. Each step multiplies by ' + S(b) + ', so y shrinks toward 0 but never reaches it: the horizontal asymptote is y = 0.',
         success: 'Exactly! It starts at ' + S(a) + ' and glides toward the floor y = 0, never touching it.'
       }), o);
     }

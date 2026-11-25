@@ -73,7 +73,7 @@ Rule: f(x) = mx + c with m in {2, 3, 4, 5}, c in −9…9 (not 0) → f⁻¹(x) 
 
 - ☐ **MIR-4-0035** — f(x) = 5x − 8 builds one half of the bridge. Build the other half with the inverse f⁻¹, which undoes f. Fill in the two boxes. (f(x) = 5x − 8)
   - Answer: **first box = −8, second box = 5**
-  - Working: f multiplies by 5 then subtracts 8. Undo it backwards: add 8, then divide by 5. So f⁻¹(x) = (x + 8) ÷ 5. Check: f(2) = 2 and f⁻¹(2) = 2.
+  - Working: f multiplies by 5 then subtracts 8. Undo it backwards: add 8, then divide by 5. So f⁻¹(x) = (x + 8) ÷ 5. Check: f(3) = 7 and f⁻¹(7) = 3.
 - ☐ **MIR-4-006A** — f(x) = 5x + 5 builds one half of the bridge. Build the other half with the inverse f⁻¹, which undoes f. Fill in the two boxes. (f(x) = 5x + 5)
   - Answer: **first box = 5, second box = 5**
   - Working: f multiplies by 5 then adds 5. Undo it backwards: subtract 5, then divide by 5. So f⁻¹(x) = (x − 5) ÷ 5. Check: f(2) = 15 and f⁻¹(15) = 2.
@@ -361,7 +361,7 @@ Rule: y = a·bˣ, a in {1, 2, 3, 5, 10}, b in {2, 3, ½, ⅓}, x 0…6; answers 
 - ☐ **EXP-1-0035** — The torch starts at brightness 5 and keeps only 1/2 of its light each hour. How bright is it after 5 hours? (y = 5·(½)ˣ)
   - Answer: **y at x = 5 = 5/32**
   - Working: At x = 5: (½)⁵ = 1/32, then 5 × 1/32 = 5/32. It keeps shrinking but never reaches 0.
-- ☐ **EXP-1-006A** — The slime starts at size 5 and multiplies by 3 every hour. How big is it after 1 hours? (y = 5·3ˣ)
+- ☐ **EXP-1-006A** — The slime starts at size 5 and multiplies by 3 every hour. How big is it after 1 hour? (y = 5·3ˣ)
   - Answer: **y at x = 1 = 15**
   - Working: At x = 1: 3¹ = 3, then 5 × 3 = 15.
 
@@ -404,10 +404,10 @@ Rule: y = a·bˣ (decay) starts at a and has the horizontal asymptote y = 0.
 
 - ☐ **EXP-5-0035** — The torch y = 2·(¼)ˣ fades but never goes out. Predict: where does it start, and which line does it get closer and closer to (its asymptote)? (y = 2·(¼)ˣ)
   - Answer: **At x = 0, y = 2; Asymptote: y = 0**
-  - Working: At x = 0, 1/4⁰ = 1 so y = 2. Each step multiplies by 1/4, so y shrinks toward 0 but never reaches it: the horizontal asymptote is y = 0.
+  - Working: At x = 0, (¼)⁰ = 1 so y = 2. Each step multiplies by 1/4, so y shrinks toward 0 but never reaches it: the horizontal asymptote is y = 0.
 - ☐ **EXP-5-006A** — The torch y = 6·(⅓)ˣ fades but never goes out. Predict: where does it start, and which line does it get closer and closer to (its asymptote)? (y = 6·(⅓)ˣ)
   - Answer: **At x = 0, y = 6; Asymptote: y = 0**
-  - Working: At x = 0, 1/3⁰ = 1 so y = 6. Each step multiplies by 1/3, so y shrinks toward 0 but never reaches it: the horizontal asymptote is y = 0.
+  - Working: At x = 0, (⅓)⁰ = 1 so y = 6. Each step multiplies by 1/3, so y shrinks toward 0 but never reaches it: the horizontal asymptote is y = 0.
 
 ### Glitch Shard: Shard of the Stuck Seed
 
@@ -421,14 +421,14 @@ Rule: y = a·bˣ (decay) starts at a and has the horizontal asymptote y = 0.
 |---|---|---|---|---|---|
 | ☐ | rat-L1 | Asymptote Walls | Place the two invisible walls (asymptotes) of this function. The curve gets closer and closer to them, but never touches them.  **y = 1/x** | **vertical wall = 0, horizontal wall = 0** | The bottom x is zero at x = 0, so the vertical asymptote is x = 0. The fraction 1/(x) is never 0, so y never equals 0: the horizontal asymptote is y = 0. |
 | ☐ | rat-L2 | Asymptote Walls | Place the two invisible walls (asymptotes) of this function. The curve gets closer and closer to them, but never touches them.  **y = 2/(x − 3) + 1** | **vertical wall = 3, horizontal wall = 1** | The bottom x − 3 is zero at x = 3, so the vertical asymptote is x = 3. The fraction 2/(x − 3) is never 0, so y never equals 1: the horizontal asymptote is y = 1. |
-| ☐ | rat-L3 | Domain Doors | Only inputs in the domain may pass. One of these doors is locked forever: which x-value is NOT allowed in y = 2/(x − 3) + 1?  **y = 2/(x − 3) + 1** | **x = 3** | At x = 3 the bottom is 3 − 3 = 0, and you can’t divide by zero. So the domain is x ≠ 3. |
+| ☐ | rat-L3 | Domain Doors | Only inputs in the domain may pass. One of these doors is locked forever: which x-value is NOT allowed in y = 2/(x − 3) + 1?  **y = 2/(x − 3) + 1** | **x = 3** | At x = 3 the bottom x − 3 becomes 0, and you can’t divide by zero. So the domain is x ≠ 3. |
 | ☐ | rat-L4 | Trapdoor Hole | This rule looks scary, but it simplifies! It hides one trapdoor: a single missing point (a hole). Mark the hole so Ori can jump over it.  **y = (x² − 1)/(x − 1)** | **hole x = 1, hole y = 2** | x² − 1 = (x − 1)(x + 1). Cancelling gives y = x + 1 for x ≠ 1. At x = 1 it would be 2, so the hole is at (1, 2). It is a hole, not an asymptote. |
 
 ### Ruler's Trial
 
 | ✓ | ID | Puzzle | Question | Answer | Worked solution |
 |---|---|---|---|---|---|
-| ☐ | rat-T1 | Fortress Signals | The fortress signals glow along the curve. Find its height at both places. Work out the bottom of the fraction first.  **y = 2/(x − 3) + 1** | **y at x = 1 = 0, y at x = 4 = 3** | x = 1: 2 ÷ (1 − 3) + 1 = 0; x = 4: 2 ÷ (4 − 3) + 1 = 3. |
+| ☐ | rat-T1 | Fortress Signals | The fortress signals glow along the curve. Find its height at both places. Work out the bottom of the fraction first.  **y = 2/(x − 3) + 1** | **y at x = 1 = 0, y at x = 4 = 3** | x = 1: the bottom is −2, so 2 ÷ (−2) + 1 = 0; x = 4: the bottom is 1, so 2 ÷ 1 + 1 = 3. |
 | ☐ | rat-T2 | Asymptote Walls | Place the two invisible walls (asymptotes) of this function. The curve gets closer and closer to them, but never touches them.  **y = −3/(x + 2) − 1** | **vertical wall = −2, horizontal wall = −1** | The bottom x + 2 is zero at x = −2, so the vertical asymptote is x = −2. The fraction −3/(x + 2) is never 0, so y never equals −1: the horizontal asymptote is y = −1. |
 | ☐ | rat-T3 | Trapdoor Hole | This rule looks scary, but it simplifies! It hides one trapdoor: a single missing point (a hole). Mark the hole so Ori can jump over it.  **y = (x² − 9)/(x − 3)** | **hole x = 3, hole y = 6** | x² − 9 = (x − 3)(x + 3). Cancelling gives y = x + 3 for x ≠ 3. At x = 3 it would be 6, so the hole is at (3, 6). It is a hole, not an asymptote. |
 
@@ -462,10 +462,10 @@ Rule: The x not in the domain is x = h.
 
 - ☐ **RAT-2-0035** — Only inputs in the domain may pass. One of these doors is locked forever: which x-value is NOT allowed in y = −2/x + 3? (y = −2/x + 3)
   - Answer: **x = 0**
-  - Working: At x = 0 the bottom is 0 − 0 = 0, and you can’t divide by zero. So the domain is x ≠ 0.
+  - Working: At x = 0 the bottom x becomes 0, and you can’t divide by zero. So the domain is x ≠ 0.
 - ☐ **RAT-2-006A** — Only inputs in the domain may pass. One of these doors is locked forever: which x-value is NOT allowed in y = −1/(x − 2) − 2? (y = −1/(x − 2) − 2)
   - Answer: **x = 2**
-  - Working: At x = 2 the bottom is 2 − 2 = 0, and you can’t divide by zero. So the domain is x ≠ 2.
+  - Working: At x = 2 the bottom x − 2 becomes 0, and you can’t divide by zero. So the domain is x ≠ 2.
 
 #### Fortress Signals (`RAT-3-…`)
 
@@ -473,10 +473,10 @@ Rule: y at two x-values where x − h divides a (whole answers).
 
 - ☐ **RAT-3-0035** — The fortress signals glow along the curve. Find its height at both places. Work out the bottom of the fraction first. (y = −4/(x − 1) − 1)
   - Answer: **y at x = −1 = 1, y at x = 2 = −5**
-  - Working: x = −1: −4 ÷ (−1 − 1) + −1 = 1; x = 2: −4 ÷ (2 − 1) + −1 = −5.
+  - Working: x = −1: the bottom is −2, so −4 ÷ (−2) − 1 = 1; x = 2: the bottom is 1, so −4 ÷ 1 − 1 = −5.
 - ☐ **RAT-3-006A** — The fortress signals glow along the curve. Find its height at both places. Work out the bottom of the fraction first. (y = −1/(x + 5))
   - Answer: **y at x = −6 = 1, y at x = −4 = −1**
-  - Working: x = −6: −1 ÷ (−6 − −5) + 0 = 1; x = −4: −1 ÷ (−4 − −5) + 0 = −1.
+  - Working: x = −6: the bottom is −1, so −1 ÷ (−1) = 1; x = −4: the bottom is 1, so −1 ÷ 1 = −1.
 
 #### Trapdoor Hole (`RAT-4-…`)
 
@@ -495,10 +495,10 @@ Rule: The y-value never reached is y = k.
 
 - ☐ **RAT-5-0035** — The Warden says one height is forbidden: the curve y = 4/(x + 3) − 4 can never reach it. Which y-value is NOT in the range? (y = 4/(x + 3) − 4)
   - Answer: **y = −4**
-  - Working: 4/(x + 3) is never 0, so y = (that fraction) + −4 is never −4. The range is y ≠ −4, matching the horizontal asymptote.
+  - Working: 4/(x + 3) is never 0, so y = (that fraction) − 4 is never −4. The range is y ≠ −4, matching the horizontal asymptote.
 - ☐ **RAT-5-006A** — The Warden says one height is forbidden: the curve y = 4/x − 3 can never reach it. Which y-value is NOT in the range? (y = 4/x − 3)
   - Answer: **y = −3**
-  - Working: 4/(x) is never 0, so y = (that fraction) + −3 is never −3. The range is y ≠ −3, matching the horizontal asymptote.
+  - Working: 4/(x) is never 0, so y = (that fraction) − 3 is never −3. The range is y ≠ −3, matching the horizontal asymptote.
 
 ### Glitch Shard: Shard of the First Hole
 
@@ -519,9 +519,9 @@ Rule: The y-value never reached is y = k.
 | ☐ | A Slope of 1 | A line with slope m = 1 rises at exactly 45°, because rise ÷ run = 1 means the rise and run are equal. Road signs show slope as a percent: 10% means m = 0.1. | computed 1.00000 ≈ 1 |
 | ☐ | Linear Fares | Many ride fares are linear: a fixed start fee plus a price per kilometre. That is just C = mx + b, with b the start fee. | not a calculation |
 | ☐ | Satellite Dishes | Satellite dishes are parabola-shaped. Signals hitting the dish all bounce to one spot, the focus, where the receiver sits. | not a calculation |
-| ☐ | Every Throw Is a Parabola | Ignoring air resistance, anything you throw follows a parabola. A ball thrown straight up at 10 m/s reaches about 5 m high. | computed 5.10204 ≈ 5.1 |
-| ☐ | Double the Side | A cube’s volume is s³. Double the side and the volume becomes 2³ = 8 times bigger. Triple it, and it is 27 times bigger! | computed 35.0000 ≈ 35 |
+| ☐ | Every Throw Is a Parabola | Ignoring air resistance, anything thrown at an angle follows a parabola. Even a ball thrown straight up has a parabola for its height over time: at 10 m/s it rises about 5 m. | computed 5.10204 ≈ 5.1 |
+| ☐ | Double the Side | A cube’s volume is s³. Double the side and the volume becomes 2³ = 8 times bigger. Triple it, and it is 27 times bigger! | computed 8.00000 ≈ 8; computed 27.0000 ≈ 27 |
 | ☐ | Always Crosses | Every cubic crosses the x-axis at least once. It must go from one infinity to the other, so it can’t avoid y = 0. | not a calculation |
-| ☐ | Twice as Fast, Half the Time | Time = distance ÷ speed is a rational function. 120 km at 60 km/h takes 2 hours, but at 120 km/h it takes 1 hour. | computed 3.00000 ≈ 3 |
+| ☐ | Twice as Fast, Half the Time | Time = distance ÷ speed is a rational function. 120 km at 60 km/h takes 2 hours, but at 120 km/h it takes 1 hour. | computed 2.00000 ≈ 2; computed 1.00000 ≈ 1 |
 | ☐ | Never Falling Together | The word “asymptote” comes from Greek for “not falling together”: the curve and the line never meet. | not a calculation |
 | ☐ | Who Drew the First Graph? | The x–y coordinate plane is called Cartesian after René Descartes, who published his ideas in La Géométrie in 1637. | not a calculation |

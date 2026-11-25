@@ -118,9 +118,10 @@ test('fun facts: at least 12 cards, and every number checks out', () => {
   assert.equal(new Set(facts.facts.map((f) => f.id)).size, facts.facts.length);
   for (const f of facts.facts) {
     if (!f.check) continue;
-    const c = f.check;
-    assert.ok(Math.abs(c.value - c.approx) <= c.tol + 1e-9, `${f.id}: ${c.value} vs ${c.approx}`);
-    if (c.greaterThan) assert.ok(c.value > c.greaterThan, f.id);
+    for (const c of [].concat(f.check)) {
+      assert.ok(Math.abs(c.value - c.approx) <= c.tol + 1e-9, `${f.id}: ${c.value} vs ${c.approx}`);
+      if (c.greaterThan) assert.ok(c.value > c.greaterThan, f.id);
+    }
   }
   // the folding-paper fact from the brief: 0.1 mm × 2^42 ≈ 440,000 km > 384,400 km
   const km = 0.1 * Math.pow(2, 42) / 1e6;

@@ -36,7 +36,7 @@
       if (!Fr.isZero(h)) common.push({ match: { vx: Fr.neg(h), vy: k }, msg: 'Sign trap! ' + fmt.shift('(x', h) + ')² means the vertex is at x = ' + S(h) + '.' });
       if (!Fr.eq(h, k)) common.push({ match: { vx: k, vy: h }, msg: 'Swapped! The vertex is (h, k): the x-value first, then the y-value.' });
       return C.over(C.puzzle({
-        gen: 'vertex', kind: 'value', title: 'Find the Peak',
+        gen: 'vertex', kind: 'value', title: up ? 'Find the Valley' : 'Find the Peak',
         prompt: 'Where is the ' + (up ? 'lowest' : 'highest') + ' point of this path? Read the vertex (the turning point of the parabola) straight from the equation.',
         formula: fmt.vertex(a, h, k),
         fields: [C.field('vx', 'vertex x =', { name: 'vertex x' }), C.field('vy', 'vertex y =', { name: 'vertex y' })],
@@ -51,7 +51,7 @@
           'Worked example: y = ' + MINUS + '(x + 2)² + 5 has its vertex at (' + MINUS + '2, 5).'
         ],
         explain: 'In vertex form y = a(x ' + MINUS + ' h)² + k the vertex is (h, k). Here that is ' + P(h, k) + ', and the axis of symmetry is x = ' + S(h) + '.',
-        success: 'Peak found at ' + P(h, k) + '!'
+        success: (up ? 'Lowest point' : 'Peak') + ' found at ' + P(h, k) + '!'
       }), o);
     }
   };

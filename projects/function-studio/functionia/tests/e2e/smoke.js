@@ -84,6 +84,14 @@ async function playStage(p, label) {
   await p.click('.after .btn.primary');
   await p.waitForTimeout(400);
   await skipDialogue(p, 2);
+  // quitting inside the opening resumes at the same beat (no replayed cinematic)
+  await p.waitForSelector('text=Let Ori try it');
+  await p.reload();
+  await p.waitForTimeout(500);
+  await p.click('.title-screen .menu .btn');
+  await p.waitForTimeout(800);
+  assert.equal(await p.evaluate(() => F.Game.screenName + ':' + F.Game.screen.beat), 'opening:tile', 'resumes at the 0 ÷ 0 tile');
+  await skipDialogue(p, 2);
   await p.click('text=Let Ori try it');
   await p.waitForTimeout(2600);
   await skipDialogue(p, 2);

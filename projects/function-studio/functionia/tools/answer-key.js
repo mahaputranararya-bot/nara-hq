@@ -102,7 +102,7 @@ w('');
 w('| ✓ | Card | Text | Check |');
 w('|---|---|---|---|');
 for (const f of facts.facts) {
-  const c = f.check ? `computed ${Number(f.check.value).toPrecision(6)} ≈ ${f.check.approx}` : 'not a calculation';
+  const c = f.check ? [].concat(f.check).map((k) => `computed ${Number(k.value).toPrecision(6)} ≈ ${k.approx}`).join('; ') : 'not a calculation';
   w(`| ☐ | ${esc(f.title)} | ${esc(f.text)} | ${esc(c)} |`);
 }
 w('');

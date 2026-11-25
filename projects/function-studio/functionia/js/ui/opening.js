@@ -8,6 +8,8 @@
   var Op = {
     allowPause: true,
     enter: function () {
+      var saved = G.data && G.data.story.openingBeat;
+      if (saved === 'bridge' || saved === 'tile' || saved === 'glimpse') { this.resume(saved); return; }
       this.beat = 'cinematic'; this.t = 0; this.cap = 0; this.capT = 0; this.wakeT = 0; this.pieces = null;
       F.Audio.music('night');
       G.ori.ring = []; G.ori.sleeping = false; G.ori.trail = [];
@@ -29,6 +31,18 @@
         this.pieces.push({ dx: 0, dy: 0, rot: 0, alpha: 1, vx: Math.cos(a) * 160, vy: Math.sin(a) * 110, vr: (i % 2 ? 1 : -1) * 0.6 });
       }
     },
+    resume: function (beat) {
+      this.t = 0; this.cap = 4; this.capT = 0; this.pieces = null; this.shatter();
+      G.ori.ring = []; G.ori.sleeping = false; G.ori.trail = [];
+      var ui = document.getElementById('ui');
+      this.skipAll = F.btn('Skip the intro', function () { Op.finishAll(); }, { cls: 'ghost small skipall' });
+      ui.appendChild(this.skipAll);
+      F.toast('Welcome back! Picking up where you left off.', { icon: '\u25B6' });
+      if (beat === 'bridge') this.toBridge();
+      else if (beat === 'tile') { F.Audio.music('night'); this.toTile(); }
+      else this.toGlimpse();
+    },
+    saveBeat: function (b) { if (G.data) { G.data.story.openingBeat = b; G.saveNow(); } },
     // ---------------- 0:40 wake up
     toWake: function () {
       var self = this;
@@ -48,6 +62,7 @@
     toBridge: function () {
       var self = this;
       this.beat = 'bridge';
+      this.saveBeat('bridge');
       G.delta.visible = true;
       F.Audio.music('mir');
       var ui = document.getElementById('ui');
@@ -81,6 +96,8 @@
       if (this.view) { this.view.destroy(); this.view = null; }
       if (this.panel) this.panel.remove();
       this.beat = 'tile'; this.tileT = 0; this.hopK = 0; this.hopping = false;
+      this.saveBeat('tile');
+      G.delta.visible = true;
       F.Dialogue.play('tileBefore', {
         onEnd: function () {
           var ui = document.getElementById('ui');
@@ -109,7 +126,7 @@
       });
     },
     // ---------------- 3:30 glimpse of the fortress (on the map)
-    toGlimpse: function () { G.go('map', { intro: true }); },
+    toGlimpse: function () { this.saveBeat('glimpse'); G.go('map', { intro: true }); },
     finishAll: function () {
       if (F.Dialogue.active) { F.Dialogue.onEnd = null; F.Dialogue.end(); }
       G.ori.flicker = 0; G.ori.sleeping = false;

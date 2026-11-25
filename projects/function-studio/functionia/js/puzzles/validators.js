@@ -178,7 +178,8 @@
         var land = roots && roots.length ? roots[roots.length - 1] : null;
         var target = Fr.num(M.q(d.land));
         if (land === null) return 'Your peak is right! Now fix a so the arrow lands at x = ' + fmt.num(target) + '.';
-        return 'Your peak is right! But your arrow lands at x = ' + fmt.num(land) + ', not x = ' + fmt.num(target) + '. ' +
+        var landTxt = fmt.num(land) === fmt.num(target) ? '≈ ' + fmt.num(land, 2) + ', just ' + (land > target ? 'past' : 'short of') + ' x = ' + fmt.num(target) : fmt.num(land) + ', not x = ' + fmt.num(target);
+        return 'Your peak is right! But your arrow lands at x = ' + landTxt + '. ' +
           (land > target ? 'Make the curve narrower: move a further from 0.' : 'Make the curve wider: move a closer to 0.');
       }
       case 'inverse': {

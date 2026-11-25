@@ -153,6 +153,7 @@
       var m = pr.m, c = pr.c;
       var fx = fmt.linear(m, c, 'f(x)');
       var x0 = 2, y0 = m * x0 + c;
+      if (y0 === x0) { x0 = 3; y0 = m * x0 + c; } // a fixed point would make the check prove nothing
       var m2 = m === 4 ? 3 : 4, c2 = c === 1 ? 2 : 1;
       var p2 = m2 * 2 + c2;
       return C.over(C.puzzle({

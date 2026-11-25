@@ -131,7 +131,8 @@
       }
       return;
     }
-    var wrap = h('div', { class: 'fields' + ((p.fields || []).length > 2 ? ' three' : '') });
+    var longLabels = (p.fields || []).some(function (f) { return (f.label || '').length > 12; });
+    var wrap = h('div', { class: 'fields' + (longLabels ? ' stack' : ((p.fields || []).length > 2 ? ' three' : '')) });
     (p.fields || []).forEach(function (f, i) {
       var inp = h('input', { type: 'text', inputmode: 'text', autocomplete: 'off', spellcheck: 'false', class: 'num', 'aria-label': f.name || f.label, id: 'in-' + f.key, maxlength: '24' });
       inp.addEventListener('input', function () { self.raw[f.key] = inp.value; self.syncSlider(f.key); self.onInputChange(); });
@@ -154,6 +155,7 @@
       wrap.appendChild(cell);
     });
     this.inputsEl.appendChild(wrap);
+    if (p.kind === 'inverse') { this.echoEl = h('div', { class: 'echo', 'aria-live': 'polite' }); this.inputsEl.appendChild(this.echoEl); }
   };
 
   PuzzleView.prototype.syncSlider = function (key) {
@@ -170,6 +172,11 @@
   };
 
   PuzzleView.prototype.onInputChange = function () {
+    if (this.echoEl) {
+      var n = this.nums();
+      this.echoEl.innerHTML = '';
+      if (n.p !== null && n.q !== null) this.echoEl.appendChild(F.h('span', {}, ['You wrote: ', F.h('b', { text: 'f\u207B\u00B9(x) = (' + F.fmt.shift('x', F.frac.fromNumber(n.p)) + ') \u00F7 ' + F.fmt.num(n.q, 2) })]));
+    }
     if (this.phase === 'result' && !this.solved) { this.phase = 'input'; this.clearMiss(); }
   };
 
@@ -231,6 +238,7 @@
 
   PuzzleView.prototype.win = function (res) {
     this.solved = true; this.phase = 'done';
+    if (this.hintLevel === 0 && !this.revealed) this.hintBox.hidden = true;
     var stars = computeStars(this.tries, this.hints, this.revealed);
     this.stars = stars;
     F.Audio.sfx('chime');
@@ -251,10 +259,12 @@
     F.Audio.sfx('bonk');
     this.ori.bonk();
     this.delta.think();
-    var kind = this.misses >= 3 ? 'Close! Let’s look at it together. ' : '';
+    var kind = this.misses >= 3 ? 'Let’s look at it together. ' : '';
     this.say(res.feedback, 'miss', kind);
     F.announce('Not yet. ' + res.feedback);
     if (this.viz.onMiss) this.viz.onMiss(this, this.nums(), res);
+    // predict-first stages: hide the true curve again, so the next try is not just reading the graph
+    if (!this.info.preview && this.p.viz && this.p.viz.reveal === 'launch') { this.reveal = false; this.drawn = []; }
     this.updateHintButton();
     if (this.misses >= 3 && !this.offeredHint && this.hintLevel < 3) this.offerHint();
   };
@@ -318,7 +328,7 @@
   PuzzleView.prototype.offerHint = function () {
     this.offeredHint = true;
     var self = this;
-    this.renderHintBox(F.h('p', { text: 'Close! Let’s look at it together. Want a hint? It’s always okay to ask.' }), [
+    this.renderHintBox(F.h('p', { text: 'Let’s look at it together. Want a hint? It’s always okay to ask.' }), [
       F.btn('Yes, show a hint', function () { self.hint(); }, { cls: 'small primary' }),
       F.btn('Not now', function () { self.hintBox.hidden = true; }, { cls: 'small ghost' })
     ]);
@@ -334,7 +344,7 @@
     var self = this;
     var body = F.h('div', {}, []);
     for (var i = 0; i < this.hintLevel; i++) {
-      body.appendChild(F.h('p', { class: 'hint h' + i }, [F.h('strong', { text: names[i] + ': ' }), document.createTextNode(this.p.hints[i] || '')]));
+      body.appendChild(F.h('p', { class: 'hint h' + i }, [F.h('strong', { text: names[i] + ': ' }), document.createTextNode((this.p.hints[i] || '').replace(/^Worked example:\s*/, '') || '')]));
     }
     var btns = [];
     if (this.hintLevel < 3) btns.push(F.btn('Next hint', function () { self.hint(); }, { cls: 'small ghost' }));
@@ -376,7 +386,7 @@
     var starRow = h('div', { class: 'stars', 'aria-label': stars + ' out of 3 stars' });
     for (var i = 0; i < 3; i++) starRow.appendChild(h('span', { class: 'star' + (i < stars ? ' on' : ''), text: '★', style: 'animation-delay:' + (i * 0.15) + 's' }));
     var why = this.revealed ? 'You asked to see the answer. That’s smart: now you know how it works.'
-      : (stars === 3 ? 'No hints and only ' + this.tries + ' tr' + (this.tries === 1 ? 'y' : 'ies') + '. Masterful!' : (stars === 2 ? 'Nice work! Try it with no hints for 3 stars.' : 'Solved! Every solve makes you stronger.'));
+      : (stars === 3 ? 'No hints and only ' + this.tries + ' tr' + (this.tries === 1 ? 'y' : 'ies') + '. Masterful!' : (stars === 2 ? (this.hints > 0 ? 'Nice work! Try it with no hints for 3 stars.' : 'Nice work! Solve it within 2 tries for 3 stars.') : 'Solved! Every solve makes you stronger.'));
     this.after.appendChild(starRow);
     this.after.appendChild(h('p', { class: 'starwhy', text: why }));
     if (this.revealed) this.after.appendChild(h('p', { class: 'explain', text: this.p.explain }));
@@ -398,8 +408,9 @@
     if (this.anim) this.anim.update(dt);
     for (var k in this.pop) { this.pop[k] = Math.min(1, this.pop[k] + dt * 2.5); }
     if (this.viz.update) this.viz.update(this, dt);
+    var gr = this.G.rect;
     if (this.oriScreen) this.ori.setPos(this.oriScreen.x, this.oriScreen.y);
-    else this.ori.setPos(this.G.X(this.oriW.x), this.G.Y(this.oriW.y));
+    else this.ori.setPos(F.clamp(this.G.X(this.oriW.x), gr.x + 4, gr.x + gr.w - 4), F.clamp(this.G.Y(this.oriW.y), gr.y + 50, gr.y + gr.h - 6)); // stay visible; the badge still shows the true point
     if (this.viz.badge === false || this.oriScreen) this.ori.setCoord(null);
     else this.ori.setCoord(this.oriW.x, this.oriW.y);
     // Ori watches the cursor while you think, and looks where it is going while it rides

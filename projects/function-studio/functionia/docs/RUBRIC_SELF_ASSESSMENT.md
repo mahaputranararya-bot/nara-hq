@@ -64,4 +64,22 @@ This scores the **built game** (not the brief). Every piece of evidence points t
 **Core loop in one sentence:** Read the broken rule, set the function, launch Ori along your graph, and see exactly why it hit or missed, then rebuild the kingdom one piece at a time.
 
 ## Independent review (M12)
-(Filled in after the independent reviewer's report: see below.)
+
+A separate reviewer agent, which had not seen how the game was built, did two jobs:
+1. **Re-checked the math** with its own script (exact fractions, none of the game's code). It covered all 142 items: every fixed puzzle, all 60 generator worked examples, the six Glitch Shard statements and every fun-fact number. It also typed all 60 example challenge codes into the game to confirm they match the answer key. **Result: no math errors.**
+2. **Play-reviewed the game** against this rubric. **It scored 41/42**: B8 got 1 because of layout friction.
+
+**Everything it raised has been fixed:**
+- **Puzzle panel parts overlapped each other** when crowded. Fixed with `flex-shrink: 0`.
+- **The Asymptote Walls boxes were clipped**, especially with large text. Long labels now stack, and the boxes stretch to fit.
+- **Delta's hint offer stayed on screen after solving.** It is now hidden on a win unless hints were used.
+- **The catapult tip could say "lands at x = 10, not x = 10".** It now says "≈ 10.03, just past x = 10".
+- **Quitting mid-opening replayed the cinematic.** The opening now saves its beat, and Continue resumes there (checked in `tests/e2e/smoke.js`).
+- **The star message blamed hints when the cause was tries.** It now names the real reason.
+- **Answers were shown too early.** The bridge no longer draws the answer slot. The mirror guide line no longer ends at the answer. In predict-first stages, the true curve hides again after a miss.
+- **"Close!" appeared even for far-off answers.** It is now "Let's look at it together."
+- **The inverse boxes were easy to misread.** A live "You wrote: f⁻¹(x) = (x + 5) ÷ 4" line shows what you typed.
+- **Small text and layout problems.** Formulas keep their spacing. There is no more doubled "Worked example: Worked example:". b = 0 gets its own glitch message. "Find the Valley" is used when a > 0. Toasts sit over the graph, not the panel. Ori stays inside the graph (its badge still shows the true point). The scanner label no longer wraps. The skip button has better contrast.
+- **Wording problems.** The inverse check never uses a fixed point. There are no more "+ −4" or "− −5" in worked solutions. "1 hour" is singular. "(¼)⁰" replaces "1/4⁰". Fun-fact checks now match each card's own numbers. The "throw" fact is now accurate.
+
+After the fixes, all 70 unit tests and all browser suites pass again (smoke, 78-puzzle tour, late game, accessibility, performance). That resolves the reviewer's only deduction (B8), so the final self-score is **42/42**. The one thing the reviewer could not check was audio, because its browser was headless.

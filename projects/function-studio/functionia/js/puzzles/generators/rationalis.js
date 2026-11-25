@@ -76,7 +76,7 @@
           'The domain is every x except the one that makes the bottom zero. Solve ' + fmt.shift('x', h) + ' = 0.',
           'Worked example: y = 3/(x ' + MINUS + ' 5) + 2 can’t use x = 5, because 5 ' + MINUS + ' 5 = 0.'
         ],
-        explain: 'At x = ' + S(h) + ' the bottom is ' + S(h) + ' ' + MINUS + ' ' + S(h) + ' = 0, and you can’t divide by zero. So the domain is x ≠ ' + S(h) + '.',
+        explain: 'At x = ' + S(h) + ' the bottom ' + fmt.shift('x', h) + ' becomes 0, and you can’t divide by zero. So the domain is x ≠ ' + S(h) + '.',
         success: 'Locked door found: x = ' + S(h) + '. The domain is x ≠ ' + S(h) + '.'
       }), o);
     }
@@ -122,11 +122,11 @@
         view: ratView(h, k),
         viz: { special: 'ratvalue', curve: ratSpec(a, h, k), xs: xs },
         hints: [
-          'Put the x-value into the bottom first. What is x ' + MINUS + ' ' + S(h) + '?',
-          'y = ' + S(a) + ' ÷ (x ' + MINUS + ' ' + S(h) + ') + ' + S(k) + ': subtract, divide, then add.',
+          'Put the x-value into the bottom first. What is ' + fmt.shift('x', h) + ' at that x?',
+          'y = ' + S(a) + ' ÷ (' + fmt.shift('x', h) + ')' + fmt.plus(k) + ': work out the bottom, divide, then add.',
           'Worked example: y = 6/(x ' + MINUS + ' 1) + 2 at x = 4 is 6 ÷ 3 + 2 = 4.'
         ],
-        explain: xs.map(function (x, i) { return 'x = ' + S(x) + ': ' + S(a) + ' ÷ (' + S(x) + ' ' + MINUS + ' ' + S(h) + ') + ' + S(k) + ' = ' + S(answer['y' + (i + 1)]); }).join('; ') + '.',
+        explain: xs.map(function (x, i) { var bottom = Fr.sub(q(x), h); return 'x = ' + S(x) + ': the bottom is ' + S(bottom) + ', so ' + S(a) + ' ÷ ' + (Fr.num(bottom) < 0 ? '(' + S(bottom) + ')' : S(bottom)) + fmt.plus(k) + ' = ' + S(answer['y' + (i + 1)]); }).join('; ') + '.',
         success: 'Signals lit at ' + xs.map(function (x, i) { return P(x, answer['y' + (i + 1)]); }).join(' and ') + '.'
       }), o);
     }
@@ -199,7 +199,7 @@
           'A fraction with a non-zero top is never 0, so y can never equal the number added at the end. That number is the forbidden height.',
           'Worked example: y = 4/(x ' + MINUS + ' 2) + 7 can never reach y = 7, so its range is y ≠ 7.'
         ],
-        explain: S(a) + '/(' + fmt.shift('x', h) + ') is never 0, so y = (that fraction) + ' + S(k) + ' is never ' + S(k) + '. The range is y ≠ ' + S(k) + ', matching the horizontal asymptote.',
+        explain: S(a) + '/(' + fmt.shift('x', h) + ') is never 0, so y = (that fraction)' + (Fr.isZero(k) ? '' : fmt.plus(k)) + ' is never ' + S(k) + '. The range is y ≠ ' + S(k) + ', matching the horizontal asymptote.',
         success: 'Correct: y = ' + S(k) + ' is forbidden. The range is y ≠ ' + S(k) + '.'
       }), o);
     }

@@ -176,6 +176,7 @@
         if (math.glitch.expona(F.frac.fromNumber(b))) {
           if (b === 1) s.flat = a;
           else for (var x = -3; x <= 6; x++) { var y = a * Math.pow(b, x); if (isFinite(y) && Math.abs(y) < 50) s.dots.push([x, y]); }
+          if (b === 0) return { glitch: true, shard: true, msg: 'With b = 0, y = 0 for every x > 0 and 0⁻¹ = 1 ÷ 0 has no answer, so the garden simply vanishes. Exponential functions need b > 0 and b ≠ 1.' };
           return { glitch: true, shard: true, msg: b === 1 ? 'With b = 1, y = ' + F.fmt.num(a) + '·1ˣ = ' + F.fmt.num(a) + ' is constant: nothing grows or decays. That’s why exponential functions need b > 0 and b ≠ 1.'
             : 'With b = ' + F.fmt.num(b) + ', only whole-number x work: values like x = ½ have no real answer ((' + M + '2)^½ = √' + M + '2), so the graph falls apart into dots. Exponential functions need b > 0 and b ≠ 1.' };
         }

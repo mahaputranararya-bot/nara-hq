@@ -109,16 +109,15 @@
         // planks across the gap, from the crystal to its reflection; the last one is missing until solved
         for (var i = 0; i <= 4; i++) {
           var k = i / 4, x = s[0] + (ans[0] - s[0]) * k, y = s[1] + (ans[1] - s[1]) * k;
-          if (i === 4 && !pv.lit.gate) { G.dot(ctx, x, y, { r: 9, fill: 'rgba(0,0,0,0.05)', stroke: 'rgba(120,90,60,0.5)', shape: 'square' }); continue; }
-          var sc = i === 4 && pv.pop.gate < 1 ? F.ease.outBack(pv.pop.gate) : 1;
+          if (i >= 2 && !pv.lit.gate) continue; // the far half of the bridge is missing until you solve it
+          var sc = i >= 2 && pv.pop.gate < 1 ? F.ease.outBack(pv.pop.gate) : 1;
           ctx.save(); ctx.translate(G.X(x), G.Y(y)); ctx.rotate(Math.PI / 4); ctx.scale(sc, sc);
           ctx.fillStyle = '#b07a46'; ctx.strokeStyle = '#6a4a2a'; ctx.lineWidth = 2;
           ctx.fillRect(-24, -8, 48, 16); ctx.strokeRect(-24, -8, 48, 16); ctx.restore();
         }
       }
-      if (pv.marks.perp || pv.lit.gate) {
-        G.segment(ctx, s[0], s[1], ans[0], ans[1], { color: '#8a76c8', width: 2, dash: [4, 6], alpha: pv.lit.gate ? 0.9 : 0.6 });
-      }
+      if (pv.lit.gate) G.segment(ctx, s[0], s[1], ans[0], ans[1], { color: '#8a76c8', width: 2, dash: [4, 6], alpha: 0.9 });
+      else if (pv.marks.perp) { var L = 40; G.segment(ctx, s[0] - L, s[1] + L, s[0] + L, s[1] - L, { color: '#8a76c8', width: 2, dash: [4, 6], alpha: 0.5 }); } // the reflection lies somewhere on this line
       icon(ctx, pv, 'crystal', s[0], s[1], 13, null, { lit: true });
       G.label(ctx, F.fmt.coord(s[0], s[1]), s[0], s[1], { dx: 14, dy: -18, bg: true, size: 13 });
       var n = pv.nums();

@@ -26,8 +26,8 @@ Music per kingdom ducked under dialogue; the full juice checklist; 240 ms fades;
 ## M11: documentation ✅
 README, HOW_TO_PLAY, printable one-page how-to-play card (checked: exactly 1 A4 page), ANSWER_KEY (generated from the game data with `node tools/answer-key.js`), DECISIONS, PLAYTEST_CHECKLIST, RUBRIC_SELF_ASSESSMENT.
 
-## M12: independent review
-See the "Independent review" section in `RUBRIC_SELF_ASSESSMENT.md`.
+## M12: independent review ✅
+No math errors in 142 independently checked items. Reviewer score 41/42; all of its findings are fixed and all tests pass again. Details are in the "Independent review" section of `RUBRIC_SELF_ASSESSMENT.md`.
 
 ## Known issues
 - Art is simple code-drawn shapes (planned: Kayyira may replace it).
