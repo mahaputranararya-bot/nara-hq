@@ -1,0 +1,61 @@
+/* Functionia — fun fact cards (pure). Every number is checked in tests/content.test.js. */
+(function (root, factory) {
+  if (typeof module === 'object' && module.exports) module.exports = factory();
+  else { root.F = root.F || {}; root.F.funfacts = factory(); }
+})(typeof self !== 'undefined' ? self : this, function () {
+  'use strict';
+  var facts = [
+    { id: 'paper', k: 'exp', title: 'Folding Paper to the Moon',
+      text: 'A sheet of paper 0.1 mm thick, folded 42 times, would be 0.1 mm × 2⁴² ≈ 440,000 km thick: farther than the Moon (about 384,400 km)!',
+      check: { value: 0.1 * Math.pow(2, 42) / 1e6, approx: 440000, tol: 1000, greaterThan: 384400 } },
+    { id: 'rice', k: 'exp', title: 'Rice on a Chessboard',
+      text: 'Put 1 grain of rice on the first square, 2 on the next, then 4, 8… All 64 squares hold 2⁶⁴ − 1, about 18 billion billion grains.',
+      check: { value: Math.pow(2, 64) - 1, approx: 1.8e19, tol: 0.1e19 } },
+    { id: 'bacteria', k: 'exp', title: 'Doubling Bacteria',
+      text: 'Some bacteria can divide every 20 minutes. In 3 hours that is 9 doublings, so 1 cell becomes 2⁹ = 512 cells.',
+      check: { value: Math.pow(2, 180 / 20), approx: 512, tol: 0 } },
+    { id: 'carbon', k: 'exp', title: 'Carbon Dating',
+      text: 'Carbon-14 has a half-life of about 5,730 years. After 11,460 years (two half-lives), only ½ × ½ = ¼ of it is left.',
+      check: { value: Math.pow(0.5, 11460 / 5730), approx: 0.25, tol: 0 } },
+    { id: 'rule72', k: 'exp', title: 'The Rule of 72',
+      text: 'Money growing 8% a year doubles in about 72 ÷ 8 = 9 years. Check: 1.08⁹ ≈ 2.00.',
+      check: { value: Math.pow(1.08, 9), approx: 2.0, tol: 0.01 } },
+    { id: 'thousand', k: 'exp', title: 'Ten Doublings',
+      text: 'Double something 10 times and it becomes 2¹⁰ = 1,024 times bigger. That’s why computers say 1 kilobyte is 1,024 bytes.',
+      check: { value: Math.pow(2, 10), approx: 1024, tol: 0 } },
+    { id: 'celsius', k: 'mir', title: 'Where °C Meets °F',
+      text: 'F = 1.8C + 32 and its inverse C = (F − 32) ÷ 1.8. They meet on the line y = x at −40: −40 °C is exactly −40 °F.',
+      check: { value: 1.8 * -40 + 32, approx: -40, tol: 0 } },
+    { id: 'ambulance', k: 'mir', title: 'Mirror Writing',
+      text: 'Many ambulances have AMBULANCE written backwards on the front, so drivers ahead read it the right way in their mirrors.',
+      check: null },
+    { id: 'slope45', k: 'lin', title: 'A Slope of 1',
+      text: 'A line with slope m = 1 rises at exactly 45°, because rise ÷ run = 1 means the rise and run are equal. Road signs show slope as a percent: 10% means m = 0.1.',
+      check: { value: Math.tan(Math.PI / 4), approx: 1, tol: 1e-9 } },
+    { id: 'ojek', k: 'lin', title: 'Linear Fares',
+      text: 'Many ride fares are linear: a fixed start fee plus a price per kilometre. That is just C = mx + b, with b the start fee.',
+      check: null },
+    { id: 'dish', k: 'par', title: 'Satellite Dishes',
+      text: 'Satellite dishes are parabola-shaped. Signals hitting the dish all bounce to one spot, the focus, where the receiver sits.',
+      check: null },
+    { id: 'throw', k: 'par', title: 'Every Throw Is a Parabola',
+      text: 'Ignoring air resistance, anything you throw follows a parabola. A ball thrown straight up at 10 m/s reaches about 5 m high.',
+      check: { value: 10 * 10 / (2 * 9.8), approx: 5.1, tol: 0.05 } },
+    { id: 'cube8', k: 'cub', title: 'Double the Side',
+      text: 'A cube’s volume is s³. Double the side and the volume becomes 2³ = 8 times bigger. Triple it, and it is 27 times bigger!',
+      check: { value: Math.pow(2, 3) + Math.pow(3, 3), approx: 35, tol: 0 } },
+    { id: 'oddroot', k: 'cub', title: 'Always Crosses',
+      text: 'Every cubic crosses the x-axis at least once. It must go from one infinity to the other, so it can’t avoid y = 0.',
+      check: null },
+    { id: 'speed', k: 'rat', title: 'Twice as Fast, Half the Time',
+      text: 'Time = distance ÷ speed is a rational function. 120 km at 60 km/h takes 2 hours, but at 120 km/h it takes 1 hour.',
+      check: { value: 120 / 60 + 120 / 120, approx: 3, tol: 0 } },
+    { id: 'asymptote', k: 'rat', title: 'Never Falling Together',
+      text: 'The word “asymptote” comes from Greek for “not falling together”: the curve and the line never meet.',
+      check: null },
+    { id: 'descartes', k: 'mir', title: 'Who Drew the First Graph?',
+      text: 'The x–y coordinate plane is called Cartesian after René Descartes, who published his ideas in La Géométrie in 1637.',
+      check: null }
+  ];
+  return { facts: facts };
+});

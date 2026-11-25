@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Functionia</title>
+  <meta name="description" content="Functionia: a story math game about functions for Grade 10 (Term 3 Function Studio). Works offline.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <canvas id="world" aria-label="Functionia game world. All important text also appears in the panels."></canvas>
+  <div id="ui"></div>
+  <div id="overlay"></div>
+  <div id="toasts" aria-live="polite"></div>
+  <div id="glitchbanner" aria-hidden="true"><div class="big">You broke the model!</div><div class="giggle"></div></div>
+  <div id="fade"></div>
+  <div id="sr-live" class="sr-only" aria-live="polite"></div>
+  <noscript><p class="noscript">Functionia needs JavaScript. Please open this file in Chrome or Edge.</p></noscript>
+
+  <!-- Classic scripts in a fixed order (ES modules don't load over file://). One namespace: window.F -->
+  <!-- core (pure math, also used by the Node tests) -->
+  <script src="js/core/rng.js"></script>
+  <script src="js/core/frac.js"></script>
+  <script src="js/core/numfmt.js"></script>
+  <script src="js/core/mathparse.js"></script>
+  <script src="js/core/curves.js"></script>
+  <script src="js/core/mathlib.js"></script>
+  <script src="js/core/save.js"></script>
+  <script src="js/core/audio.js"></script>
+  <!-- puzzles: answer checking + generators -->
+  <script src="js/puzzles/validators.js"></script>
+  <script src="js/puzzles/generators/common.js"></script>
+  <script src="js/puzzles/generators/mirrorvale.js"></script>
+  <script src="js/puzzles/generators/lineara.js"></script>
+  <script src="js/puzzles/generators/parabolis.js"></script>
+  <script src="js/puzzles/generators/cubrion.js"></script>
+  <script src="js/puzzles/generators/expona.js"></script>
+  <script src="js/puzzles/generators/rationalis.js"></script>
+  <script src="js/puzzles/registry.js"></script>
+  <!-- content -->
+  <script src="js/kingdoms/mirrorvale.js"></script>
+  <script src="js/kingdoms/lineara.js"></script>
+  <script src="js/kingdoms/parabolis.js"></script>
+  <script src="js/kingdoms/cubrion.js"></script>
+  <script src="js/kingdoms/expona.js"></script>
+  <script src="js/kingdoms/rationalis.js"></script>
+  <script src="js/data/realm.js"></script>
+  <script src="js/data/story.js"></script>
+  <script src="js/data/funfacts.js"></script>
+  <script src="js/data/cosmetics.js"></script>
+  <script src="js/data/shorts.js"></script>
+  <!-- engine (canvas drawing; art is separated so it can be swapped) -->
+  <script src="js/engine/tween.js"></script>
+  <script src="js/engine/graph.js"></script>
+  <script src="js/engine/effects.js"></script>
+  <script src="js/engine/ori.js"></script>
+  <script src="js/engine/delta.js"></script>
+  <script src="js/engine/portraits.js"></script>
+  <script src="js/engine/art.js"></script>
+  <script src="js/core/game.js"></script>
+  <!-- UI -->
+  <script src="js/ui/dom.js"></script>
+  <script src="js/ui/dialogue.js"></script>
+  <script src="js/ui/hud.js"></script>
+  <script src="js/puzzles/viz.js"></script>
+  <script src="js/puzzles/framework.js"></script>
+  <script src="js/ui/overlays.js"></script>
+  <script src="js/ui/journal.js"></script>
+  <script src="js/ui/challenge.js"></script>
+  <script src="js/ui/screens.js"></script>
+  <script src="js/ui/puzzlescreen.js"></script>
+  <script src="js/ui/opening.js"></script>
+  <script src="js/ui/map.js"></script>
+  <script src="js/ui/kingdom.js"></script>
+  <script src="js/ui/glitchzone.js"></script>
+  <script src="js/ui/ending.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
