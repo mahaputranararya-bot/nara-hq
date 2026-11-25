@@ -3,18 +3,18 @@
 Source brief: `../FUNCTIONIA_MASTER_PROMPT.md`. Tick each box when done.
 
 ## Milestones
-- [ ] M0 — Plan and skeleton (PLAN.md, folders, index.html with title screen, game loop, screen manager)
-- [ ] M1 — Core engine (graph, camera, Ori, Delta, tween, particles, glitch FX, audio, input, parser, RNG, save, dialogue, hint ladder, puzzle framework) + unit tests
-- [ ] M2 — Opening + Realm Map + Mirrorvale (vertical slice, polished)
-- [ ] M3 — Lineara
-- [ ] M4 — Parabolis (playable core of 3 kingdoms is showcase-ready)
-- [ ] M5 — Expona
-- [ ] M6 — Cubrion
-- [ ] M7 — Rationalis, final boss, ending, credits, post-game
-- [ ] M8 — Meta systems (Puzzle of the Day, challenge codes, Class Challenge, Practice Mode, cosmetics, golden puzzles, fun facts, day/night, seed, callbacks)
-- [ ] M9 — Polish (music, juice, transitions, accessibility, performance, text, balance)
-- [ ] M10 — Testing (unit + generator tests, Playwright smoke + screenshots)
-- [ ] M11 — Documentation and handover
+- [x] M0 — Plan and skeleton (PLAN.md, folders, index.html with title screen, game loop, screen manager)
+- [x] M1 — Core engine (graph, camera, Ori, Delta, tween, particles, glitch FX, audio, input, parser, RNG, save, dialogue, hint ladder, puzzle framework) + unit tests
+- [x] M2 — Opening + Realm Map + Mirrorvale (vertical slice, polished)
+- [x] M3 — Lineara
+- [x] M4 — Parabolis (playable core of 3 kingdoms is showcase-ready)
+- [x] M5 — Expona
+- [x] M6 — Cubrion
+- [x] M7 — Rationalis, final boss, ending, credits, post-game
+- [x] M8 — Meta systems (Puzzle of the Day, challenge codes, Class Challenge, Practice Mode, cosmetics, golden puzzles, fun facts, day/night, seed, callbacks)
+- [x] M9 — Polish (music, juice, transitions, accessibility, performance, text, balance)
+- [x] M10 — Testing (unit + generator tests, Playwright smoke + screenshots)
+- [x] M11 — Documentation and handover
 - [ ] M12 — Independent review by a separate subagent, fixes, re-score
 
 ## Architecture (quick reference for anyone continuing the build)

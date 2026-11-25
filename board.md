@@ -1,6 +1,6 @@
 # Nara HQ — Main Board
 
-Kept up to date by Azalea. Last updated: 21 Nov 2026.
+Kept up to date by Azalea. Last updated: 25 Nov 2026.
 
 **AI use** column (school projects): **Full** = teacher allows AI to do the work; **Support** = AI helps plan,
 research and give feedback only, Nara writes the submitted work. Unknown → treat as Support and ask Nara.
@@ -14,7 +14,7 @@ research and give feedback only, Nara writes the submitted work. Unknown → tre
 ## School CEO
 | Project | Status | AI use |
 |---|---|---|
-| Function Studio math project (math Shorts channel + story game, with Kayyira and Uno) | In progress | Full |
+| Function Studio math project (math Shorts channel + story game, with Kayyira and Uno). Game **Functionia v1.0 built and tested** (`projects/function-studio/functionia/`); next: Uno's answer-key sign-off + peer play-test — see `projects/function-studio/status.md` | In progress | Full |
 | Global Inquiry Passion Project (civic/SDG product for the pameran) | In progress | Full |
 | Study tool app / study buddy AI for Nara | Idea | — (own project) |
 | History summative: Pearl Harbor (with Mike) | Nearly done, writing with Mike | Support |

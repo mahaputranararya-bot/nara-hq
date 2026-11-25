@@ -1,0 +1,22 @@
+# Function Studio (Mr. Darwin, Grade 10 Math, Term 3) — status
+
+**CEO:** School CEO (built directly by Azalea, because building and testing a game needs shell access)
+**AI use:** Full (the teacher allows AI to build the work). Nara, Kayyira and Uno should still understand how it works so they can present it.
+**Group 5:** Nara (Code / Play-Test Engineer & Crew Lead), Kayyira (Creative & UX Designer), Uno (Math Anchor & Showcase Host)
+**Parts:** (1) the f(x)plained YouTube Shorts channel, (2) the story game **Functionia**
+
+## Functionia — DONE (v1.0), ready for the peer play-test
+- Folder: `projects/function-studio/functionia/` → double-click `index.html` (works offline, Chrome/Edge).
+- Built from `FUNCTIONIA_MASTER_PROMPT.md` (all 13 milestones, M0–M12).
+- Tests: `node --test` (70 pass, including 15,000 generated puzzles); browser tests in `tests/e2e/` all pass.
+- Docs in `functionia/docs/`: README (handover), HOW_TO_PLAY + a printable one-page card, ANSWER_KEY (for Uno's sign-off),
+  DECISIONS, PLAYTEST_CHECKLIST, RUBRIC_SELF_ASSESSMENT, PROGRESS.
+
+## Next steps (for the crew)
+1. **Uno:** check `docs/ANSWER_KEY.md` and tick each box (final math sign-off).
+2. **Kayyira:** play it, then decide which art to replace (all drawing is in `js/engine/art.js`, `portraits.js`, and the `drawBody` functions in `ori.js` and `delta.js`).
+3. **Nara:** run the peer play-test with 2+ crews using `docs/PLAYTEST_CHECKLIST.md`, then fix the top 3 stuck points.
+4. Paste the f(x)plained Shorts links into `js/data/shorts.js` once the videos are up.
+
+## Deadlines
+- Not given yet. Ask Nara for the play-test and showcase dates.
