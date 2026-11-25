@@ -29,14 +29,16 @@
       }, this.a.justRestored ? 1900 : 500);
     },
     layout: function (W, H) {
-      this.cx = W / 2; this.cy = H / 2 + 26;
+      this.cx = W / 2; this.cy = H / 2;
       this.sx = Math.min(W, H * 1.65) * 0.92;
       this.size = Math.max(34, Math.min(W, H * 1.5) * 0.055);
+      // keep the lowest island (and its label) above the bottom toolbar
+      this.vk = Math.max(0.36, Math.min(0.62, (H / 2 - 175) / (0.36 * this.sx)));
       this.placeButtons();
     },
     pos: function (k) {
       var m = F.realm.kingdoms[k].map;
-      return { x: this.cx + m.x * this.sx, y: this.cy + m.y * this.sx * 0.62 };
+      return { x: this.cx + m.x * this.sx, y: this.cy + m.y * this.sx * this.vk };
     },
     status: function (k) {
       if (G.isRestored(k)) return 'restored';

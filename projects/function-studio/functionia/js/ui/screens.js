@@ -162,7 +162,7 @@
       var learned = h('ul', {}); J.learned.forEach(function (l) { learned.appendChild(h('li', { text: l })); });
       var fact = a.fact ? h('div', { class: 'fact small' }, [h('h4', { text: '🃏 New fun fact card: ' + a.fact.title }), h('p', { text: a.fact.text })]) : null;
       var ui = document.getElementById('ui');
-      var card = h('main', { class: 'restored', style: '--k:' + K.color }, [
+      var card = h('main', { class: 'restored-card', style: '--k:' + K.color }, [
         h('div', { class: 'rhead' }, [ring, h('div', {}, [h('p', { class: 'kicker', text: 'Kingdom restored' }), h('h1', { text: K.name + ' shines again!' }), h('p', { text: 'A new segment of Ori’s orbit ring lights up. ' + (K.gift || '') })])]),
         h('div', { class: 'rgrid' }, [
           h('section', {}, [h('h2', { text: 'Today you learned' }), learned]),

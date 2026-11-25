@@ -1,0 +1,12 @@
+{
+  "name": "functionia",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Functionia: a story-driven browser math game about functions (Grade 10, Term 3). The game itself has zero dependencies; open index.html.",
+  "scripts": {
+    "test": "node --test",
+    "e2e": "node tests/e2e/smoke.js && node tests/e2e/tour.js",
+    "answer-key": "node tools/answer-key.js"
+  },
+  "license": "UNLICENSED"
+}

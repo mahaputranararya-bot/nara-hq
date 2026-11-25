@@ -60,7 +60,7 @@
       var a2 = Fr.eq(a, q(2)) ? q(3) : q(2), b2 = grow ? q(3) : [1, 2];
       var x2 = 3, y2 = M.expAt(a2, b2, x2);
       var lastX = xs[xs.length - 1];
-      var valueText = xs.map(function (x, i) { return 'x = ' + x + ': ' + S(a) + '·' + S(Fr.pow(b, x)) + ' = ' + S(answer['y' + (i + 1)]); }).join('; ');
+      var valueText = xs.map(function (x, i) { return 'At x = ' + x + ': ' + fmt.base(b) + fmt.sup(x) + ' = ' + S(Fr.pow(b, x)) + ', then ' + S(a) + ' × ' + S(Fr.pow(b, x)) + ' = ' + S(answer['y' + (i + 1)]); }).join('. ');
       return C.over(C.puzzle({
         gen: 'value', kind: 'value', title: grow ? 'Slime Surge' : 'Fading Torch',
         prompt: grow

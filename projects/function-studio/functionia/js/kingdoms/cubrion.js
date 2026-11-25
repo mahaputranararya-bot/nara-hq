@@ -10,7 +10,7 @@
 
   var learn = [
     B('cub-L1', 'echo', { a: 1, ks: [1, 2, 3] }, {
-      intro: ['y = x³ is an S-shaped river. It has origin symmetry: spin any point half a turn around (0, 0) and it lands on the curve again.'],
+      intro: ['y = x³ is an S-shaped river. Spin any point half a turn around (0, 0), and it lands on the river again!'],
       demo: { gen: 'echo', params: { a: 1, ks: [1, 2, 3] }, line: 'f(2) = 8, so its echo is f(' + M + '2) = ' + M + '8. Same distance from the origin, opposite side.' },
       hints: [
         'Is (' + M + '2)³ = (' + M + '2)(' + M + '2)(' + M + '2) positive or negative?',

@@ -51,7 +51,7 @@
   var trial = [
     B('exp-T1', 'value', { a: 5, b: 3, xs: [3] }, {
       hints: [
-        'What is 3³?',
+        'What is 3³? Multiply 3 by itself three times.',
         '3³ = 3·3·3 = 27. Then multiply by the start, 5.',
         'Worked example: y = 2·3ˣ at x = 4 is 2·81 = 162.'
       ]
