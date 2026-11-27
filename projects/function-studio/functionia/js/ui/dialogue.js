@@ -76,7 +76,7 @@
     var n = Math.floor(D.shown);
     if (n !== before) {
       D.text.textContent = Array.from(D.full).slice(0, n).join('');
-      if (n % 3 === 0 && F.Audio && D.who !== 'narrator') F.Audio.sfx('type');
+      if (n % 3 === 0 && F.Audio) F.Audio.voice(D.who);
     }
     if (n >= Array.from(D.full).length) { D.typing = false; D.text.textContent = D.full; }
   };

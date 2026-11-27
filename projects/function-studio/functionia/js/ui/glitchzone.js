@@ -222,7 +222,7 @@
       this.k = a.k; this.cfg = ZONES[this.k]; this.s = {}; this.cfg.init(this.s);
       this.anim = null; this.tries = 0;
       this.K = F.realm.kingdoms[this.k];
-      F.Audio.music(this.k === 'rat' ? 'rat' : 'night');
+      F.Audio.music('zone');
       this.G = new F.Graph(); this.G.theme = 'dark'; this.G.contrast = !!G.settings.highContrast;
       this.oriW = { x: 0, y: 0 };
       var ui = document.getElementById('ui');
