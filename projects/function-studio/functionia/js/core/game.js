@@ -31,7 +31,7 @@
     }
     if (o.instant || !Game.screen) { swap(); return; }
     Game.transitioning = true;
-    fade.style.background = o.color || '#0b0a1e';
+    fade.style.background = o.color || '';
     fade.classList.add('on');
     setTimeout(swap, 240);
   };

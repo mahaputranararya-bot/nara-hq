@@ -35,6 +35,14 @@ No math errors in 142 independently checked items. Reviewer score 41/42; all of 
 - New music and sound engine with 12 composed themes, crossfades, reverb, character voices, and an offline audio check.
 - All 70 unit tests and all browser suites pass. 59–61 fps. Size about 660 KB.
 
+## v1.3: Mirrorvale showcase ✅ (27 Nov 2026)
+Painted Mirrorvale scene, new Mirror Queen and Ori, GPU glow pass, the Mirror Waltz. Nara's group play-tested it and liked it.
+
+## v1.4: a movie-like first impression ✅ (27 Nov 2026)
+- Taller Mirror Queen; painted title screen with a gold logo and the new main theme; the opening as a five-shot film with subtitles and its own score; a painted Realm Map whose sky follows progress; the frosted-glass GUI.
+- Tests: 70/70 unit tests. Smoke, tour (78 puzzles), full game, accessibility and the layout audit (2,064 panel states, 0 overlaps) all pass with no console errors. Audio check: every theme is audible and none clips.
+- Performance: the game's own work per frame is under 1 ms on every screen. The browser's drawing cost depends on the graphics card, and the glow switches off by itself on slow machines.
+
 ## Known issues
-- Art is code-drawn (richer since v1.2). Kayyira may still replace any piece.
+- Only Mirrorvale has the new painted scene so far; the other five kingdoms are next. Kayyira may still replace any piece.
 - Sound starts only after the first click or key press (browser rule).

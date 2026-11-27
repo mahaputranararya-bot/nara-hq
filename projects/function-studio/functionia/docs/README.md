@@ -83,5 +83,12 @@ Everything is made in code in `js/core/audio.js`, with no audio files:
 
 To hear every theme without playing, run `node tests/e2e/audio.js`. It saves WAV files and checks levels.
 
+## Where the new (v1.3–v1.4) visuals live
+- `js/engine/scenekit.js`: shared painting tools (noise, faceted mountains, crystals, glows, cached layers).
+- `js/engine/scenes/`: `mirrorvale.js` (kingdom scene), `islands.js` (the six floating islands), `title.js` (title screen and logo), `realm.js` (skies and the world seen from above: map and opening film).
+- `js/engine/characters/queen.js`: the Mirror Queen. Ori's look is `drawBody` in `js/engine/ori.js`.
+- `js/engine/glfx.js`: the GPU glow. It can be switched off in Settings. Add `?glow=force` to the address to test it on a computer without a graphics card.
+- The opening film's shots are in `js/ui/opening.js` (`film`, `card`, `hole`). The music arrangements are `custom` themes in `js/core/audio.js`.
+
 ## Replacing the art (for Kayyira)
 Shared shading/eye/mouth helpers are in `js/engine/paint.js`. Open the **Art gallery** in the Dev panel (`?dev=1`) to see every character in every mood. All drawing is code in `js/engine/art.js` (backgrounds, map islands, icons), `js/engine/portraits.js` (rulers, The Glitch) and the `drawBody` functions in `js/engine/ori.js` and `js/engine/delta.js`. Each is a separate function, so one picture can be swapped at a time. Keep Ori's colours (#FFC94A fill, #C98A12 outline) and Delta's coral (#E8604C), or update `docs/DECISIONS.md`.
