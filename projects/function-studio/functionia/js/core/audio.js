@@ -328,6 +328,29 @@
   }
   THEMES.title = { bpm: 76, root: 62, scale: 'major', custom: titleTheme, wet: 0.32 };
 
+  /* The opening film's score. "prologue": warm strings, choir and harp under the first two shots (the realm before).
+   * "omen": a low drone with a slow heartbeat while The Glitch escapes. Then silence, and the spark (an SFX). */
+  function prologue(r, th, step, t, out) {
+    var spb = 60 / th.bpm, s16 = spb / 4, barAbs = Math.floor(step / 16), bar = barAbs % 4, pos = step % 16, C = TITLEV.chords[bar];
+    if (pos === 0) {
+      C.v.forEach(function (m) { play(r, 'strings', m, t, spb * 4, 0.9, out); });
+      C.v.forEach(function (m, i) { if (i) play(r, 'choir', m, t, spb * 4, 0.35, out); });
+      play(r, 'softbass', C.b, t, spb * 3, 0.8, out);
+    }
+    if (pos % 4 === 0) play(r, 'harp', C.v[[0, 1, 2, 3][pos / 4]] + 12, t, s16 * 4, 0.55, out);
+    if (barAbs % 8 < 4) TITLEV.mel[bar].forEach(function (n) { if (n[0] * 2 === pos) play(r, 'musicbox', n[1], t, n[2] * s16 * 2, 0.7, out); });
+  }
+  function omen(r, th, step, t, out) {
+    var spb = 60 / th.bpm, bar = Math.floor(step / 16) % 2, pos = step % 16;
+    if (pos === 0) {
+      play(r, 'softbass', 26, t, spb * 4, 1.1, out);
+      (bar ? [49, 52, 56] : [50, 53, 57]).forEach(function (m) { play(r, 'strings', m, t, spb * 4, 1.1, out); play(r, 'choir', m - 12, t, spb * 4, 0.45, out); });
+    }
+    if (pos === 0 || pos === 3) play(r, 'kick', null, t, 0.1, pos ? 0.35 : 0.6, out); // heartbeat
+  }
+  THEMES.prologue = { bpm: 66, root: 62, scale: 'major', custom: prologue, wet: 0.4 };
+  THEMES.omen = { bpm: 60, root: 50, scale: 'minor', custom: omen, wet: 0.45 };
+
   var DRUMS = { // 16 sixteenth-steps per bar: k = kick, s = snare, h = hat, t = shaker
     none: [],
     soft: [['k', 0], ['t', 4], ['h', 8], ['t', 12]],
@@ -476,6 +499,11 @@
     },
     page: function (r, t) { var b = noiseHit(r, t, 0.2, 0.07, 'bandpass', 2500, 0.7); b.frequency.exponentialRampToValueAtTime(5000, t + 0.18); },
     whoosh: function (r, t) { var b = noiseHit(r, t, 0.45, 0.13, 'bandpass', 300, 0.9); b.frequency.exponentialRampToValueAtTime(2400, t + 0.4); },
+    rumble: function (r, t) {
+      var b = noiseHit(r, t, 2.6, 0.35, 'lowpass', 140, 0.7); b.frequency.linearRampToValueAtTime(320, t + 2.2);
+      tone(r, 'sine', 42, t, 2.6, 0.3, { att: 0.8 });
+    },
+    spark: function (r, t) { [[74, 0], [78, 0.42], [81, 0.62], [86, 1.04], [81, 1.25]].forEach(function (n) { play(r, 'musicbox', n[0], t + n[1], 0.4, 1, r.sfx); }); },
     coin: function (r, t) { tone(r, 'square', mtof(88), t, 0.07, 0.05, { lp: 4000 }); tone(r, 'square', mtof(95), t + 0.07, 0.2, 0.05, { lp: 4000 }); },
     wall: function (r, t) { tone(r, 'sine', 110, t, 0.35, 0.22); noiseHit(r, t, 0.12, 0.05, 'lowpass', 500); play(r, 'bell', 50, t, 0.4, 0.4, r.sfx); }
   };

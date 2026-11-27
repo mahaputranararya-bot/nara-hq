@@ -5,7 +5,7 @@
 (function () {
   'use strict';
   var F = window.F = window.F || {};
-  var X = { on: false, ok: false, failed: false, slow: 0, frames: 0 };
+  var X = { on: false, ok: false, failed: false, slow: 0, frames: 0, allowSoftware: /[?&]glow=force/.test(location.search) };
   var gl, cv, prog = {}, tex = {}, fbo = {}, buf, sw = 0, sh = 0, bw = 0, bh = 0;
 
   var VS = 'attribute vec2 p; varying vec2 uv; void main(){ uv = p * 0.5 + 0.5; gl_Position = vec4(p, 0.0, 1.0); }';
@@ -82,6 +82,9 @@
       cv = document.createElement('canvas'); cv.id = 'glfx'; cv.setAttribute('aria-hidden', 'true');
       gl = cv.getContext('webgl', { alpha: false, antialias: false, depth: false, stencil: false, premultipliedAlpha: false, preserveDrawingBuffer: false, powerPreference: 'default' });
       if (!gl) throw new Error('WebGL not available');
+      // a software-only graphics driver would make every frame slow: skip the effect there
+      var dbg = gl.getExtension('WEBGL_debug_renderer_info'), name = dbg ? String(gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL)) : '';
+      if (/swiftshader|llvmpipe|software|microsoft basic render/i.test(name) && !X.allowSoftware) throw new Error('software renderer (' + name + ')');
       prog.bright = program(FS_BRIGHT); prog.blur = program(FS_BLUR); prog.final = program(FS_FINAL);
       buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
       gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
@@ -159,7 +162,7 @@
     var ms = performance.now() - t0;
     X.frames++;
     X.slow = X.slow * 0.97 + (o.dt > 0.03 ? 1 : 0) * 0.03;
-    if (X.frames > 180 && X.slow > 0.6) X.fail('frame rate too low (' + ms.toFixed(1) + ' ms per pass)');
+    if (X.frames > 75 && X.slow > 0.5) X.fail('frame rate too low (' + ms.toFixed(1) + ' ms per pass)');
   };
   X.setEnabled = function (want, world) {
     if (want && !X.ok && !X.failed && world) X.init(world);

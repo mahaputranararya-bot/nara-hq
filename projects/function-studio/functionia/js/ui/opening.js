@@ -4,6 +4,7 @@
 (function () {
   'use strict';
   var F = window.F, G = F.Game, h = F.h;
+  function clamp01(x) { return x < 0 ? 0 : (x > 1 ? 1 : x); }
 
   var Op = {
     allowPause: true,
@@ -11,7 +12,7 @@
       var saved = G.data && G.data.story.openingBeat;
       if (saved === 'bridge' || saved === 'tile' || saved === 'glimpse') { this.resume(saved); return; }
       this.beat = 'cinematic'; this.t = 0; this.cap = 0; this.capT = 0; this.wakeT = 0; this.pieces = null;
-      F.Audio.music('night');
+      F.Audio.music('prologue');
       G.ori.ring = []; G.ori.sleeping = false; G.ori.trail = [];
       G.delta.visible = false;
       var ui = document.getElementById('ui');
@@ -19,8 +20,13 @@
       ui.appendChild(this.skipAll);
       var self = this;
       F.Dialogue.play('opening', {
-        side: 'full',
-        onLine: function (i) { self.cap = i; self.capT = 0; if (i === 3) { G.breakTheModel('', { title: 'The Graph shatters!', giggle: 'NaN ERR ÷0' }); self.shatter(); } },
+        side: 'full', cinema: true,
+        onLine: function (i) {
+          self.cap = i; self.capT = 0;
+          if (i === 2) { F.Audio.music('omen'); F.Audio.sfx('rumble'); }
+          if (i === 3) { F.Audio.music(null); F.FX.glitch(1.0); F.FX.shake(10); F.Audio.sfx('glitch'); setTimeout(function () { F.Audio.sfx('giggle'); }, 450); self.shatter(); }
+          if (i === 4) setTimeout(function () { if (G.screen === Op && Op.cap === 4) F.Audio.sfx('spark'); }, 900);
+        },
         onEnd: function () { self.toWake(); }
       });
     },
@@ -47,6 +53,7 @@
     toWake: function () {
       var self = this;
       this.beat = 'wake'; this.wakeT = 0;
+      F.Audio.music('night');
       if (!this.pieces) this.shatter();
       G.ori.sleeping = true; G.ori.flicker = 99;
       G.delta.visible = false; G.delta.place(G.W + 80, G.H * 0.3);
@@ -139,7 +146,7 @@
     },
     update: function (dt) {
       this.t += dt; this.capT += dt;
-      if (this.beat === 'cinematic' && F.Dialogue.active && !F.Dialogue.typing && this.capT > 4.2) { this.capT = -99; F.Dialogue.advance(); this.capT = 0; }
+      if (this.beat === 'cinematic' && F.Dialogue.active && !F.Dialogue.typing && this.capT > 5.4) { this.capT = -99; F.Dialogue.advance(); this.capT = 0; }
       if (this.pieces) this.pieces.forEach(function (p) { p.dx += p.vx * dt; p.dy += p.vy * dt; p.rot += p.vr * dt; p.vx *= 0.985; p.vy *= 0.985; p.alpha = Math.max(0.25, p.alpha - dt * 0.15); });
       if (this.view) this.view.update(dt);
       if (this.beat === 'wake' || this.beat === 'tile') {
@@ -156,34 +163,24 @@
       var W = G.W, H = G.H, t = this.t;
       F.Art.kingdom(ctx, this.beat === 'bridge' ? 'mir' : 'void', W, H, t, { rest: this.beat === 'bridge' ? (this.view && this.view.solved ? 0.6 : 0.15) : 1 });
       if (this.beat === 'bridge' && this.rect) G.glMask = [this.rect];
-      if (this.beat === 'cinematic') {
-        var prog = this.cap === 0 ? Math.min(1, this.capT / 3.5) : 1;
-        if (this.cap <= 3) F.drawGrandGraph(ctx, W, H, t, { progress: prog, pieces: this.pieces, glow: this.cap >= 3 ? 0.6 : 1 });
-        if (this.cap >= 2 && this.cap <= 3) {
-          // the dark fortress and The Glitch tearing out of it
-          var fx = W * 0.8, fy = H * 0.24;
-          F.Art.island(ctx, 'fortress', fx, fy, 60, t, '#2E2A6E', false, '#FF4D6D');
-          var out = this.cap === 3 ? Math.min(1, this.capT / 1.2) : 0;
-          F.Portraits.drawGlitch(ctx, fx - out * W * 0.3, fy + out * H * 0.2, 30 + out * 30, t, 'angry');
-        }
-        if (this.cap === 4) {
-          var a = Math.min(1, this.capT / 2);
-          ctx.save(); ctx.globalAlpha = a; ctx.fillStyle = '#FFE7A0'; ctx.shadowColor = '#FFC94A'; ctx.shadowBlur = 30 + Math.sin(t * 4) * 10;
-          ctx.beginPath(); ctx.arc(W / 2, H * 0.5, 6 + a * 4, 0, 7); ctx.fill(); ctx.restore();
-        }
-        return;
-      }
+      if (this.beat === 'cinematic') { this.film(ctx, W, H, t); return; }
       if (this.beat === 'wake' || this.beat === 'tile') {
+        F.RealmScene.sky(ctx, W, H, t, 0.4);
         F.drawGrandGraph(ctx, W, H, t, { pieces: this.pieces, grey: true, glow: 0.3, dy: H * 0.05 });
-        // broken grid tiles under Ori
+        // Ori's floating shard of glowing graph paper, made of tiles
         var cx = W / 2, cy = H * 0.55 + 24;
         ctx.save();
+        var sg = ctx.createRadialGradient(cx, cy, 10, cx, cy, 300); sg.addColorStop(0, 'rgba(255,214,120,0.25)'); sg.addColorStop(1, 'rgba(255,214,120,0)');
+        ctx.fillStyle = sg; ctx.fillRect(cx - 300, cy - 300, 600, 600);
         for (var i = -3; i <= 4; i++) {
-          var gx = cx + i * 54 - 27;
-          ctx.fillStyle = i === 3 && this.beat === 'tile' ? 'rgba(255,77,109,0.35)' : 'rgba(140,150,255,0.18)';
-          ctx.strokeStyle = 'rgba(180,190,255,0.5)'; ctx.lineWidth = 1.5;
-          ctx.save(); ctx.translate(gx + 27, cy); ctx.rotate((i % 2) * 0.03);
-          ctx.fillRect(-25, 0, 50, 16); ctx.strokeRect(-25, 0, 50, 16); ctx.restore();
+          var gx = cx + i * 54 - 27, bad = i === 3 && this.beat === 'tile';
+          ctx.save(); ctx.translate(gx + 27, cy + Math.sin(t * 1.4 + i) * 2); ctx.rotate((i % 2) * 0.03);
+          var tg = ctx.createLinearGradient(0, 0, 0, 18);
+          tg.addColorStop(0, bad ? 'rgba(255,90,130,0.55)' : 'rgba(200,210,255,0.5)'); tg.addColorStop(1, bad ? 'rgba(120,20,60,0.5)' : 'rgba(70,70,160,0.45)');
+          ctx.fillStyle = tg; ctx.fillRect(-25, 0, 50, 18);
+          ctx.strokeStyle = bad ? (Math.floor(t * 3) % 2 ? '#FF4D6D' : '#3FE0FF') : 'rgba(225,230,255,0.75)'; ctx.lineWidth = 1.5; ctx.strokeRect(-25, 0, 50, 18);
+          ctx.strokeStyle = 'rgba(225,230,255,0.25)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, 18); ctx.moveTo(-25, 9); ctx.lineTo(25, 9); ctx.stroke();
+          ctx.restore();
         }
         if (this.beat === 'tile') {
           var step = Math.floor(t * 3);
@@ -196,6 +193,103 @@
         return;
       }
       if (this.view) this.view.render(ctx);
+    },
+    // ---------------- the opening film: one shot per narration line
+    film: function (ctx, W, H, t) {
+      var i = this.cap, k = clamp01(this.capT / 5.4), e = k * k * (3 - 2 * k), R = F.RealmScene, L = R.layout(W, H), self = this;
+      if (i === 0) { // Long ago… the whole realm at golden hour
+        R.sky(ctx, W, H, t, 4.6);
+        R.world(ctx, W, H, t, { layout: L, cam: { x: F.lerp(-W * 0.12, 0, e), y: F.lerp(-H * 0.05, 0, e), z: F.lerp(1.45, 1.05, e) } });
+        this.birds(ctx, W, H, t); this.rays(ctx, W, H, t);
+      } else if (i === 1) { // six kingdoms, six rules: a montage
+        var f = k * 6, sub = Math.min(5, Math.floor(f)), loc = f - sub, ids = F.realm.order;
+        this.card(ctx, W, H, t, ids[sub], loc);
+        if (loc < 0.22 && sub > 0) { ctx.save(); ctx.globalAlpha = 1 - loc / 0.22; this.card(ctx, W, H, t, ids[sub - 1], 1, true); ctx.restore(); }
+      } else if (i === 2) { // something escaped from the hole at x = 0
+        R.sky(ctx, W, H, t, 2.6 * (1 - e));
+        var rp = R.pos(L, 'rat');
+        R.world(ctx, W, H, t, { layout: L, cam: { x: (rp.x - L.cx) * e, y: (rp.y - L.cy) * e + 30 * e, z: 1 + 1.5 * e },
+          wash: function (kk) { return kk === 'rat' ? 1 : 1 - 0.4 * e; }, after: function (c, LL) { self.hole(c, rp, LL.size, t, k); } });
+        ctx.fillStyle = 'rgba(5,3,20,' + 0.35 * e + ')'; ctx.fillRect(0, 0, W, H);
+      } else if (i === 3) { // The Glitch shatters the Grand Graph
+        R.sky(ctx, W, H, t, 0);
+        R.world(ctx, W, H, t, { layout: L, cam: { x: 0, y: 0, z: 1.1 }, spread: 1 + 0.7 * e,
+          wash: function () { return Math.max(0, 1 - k * 1.8); }, bridge: function () { return { alpha: Math.max(0, 1 - k * 2.6), style: 'light' }; } });
+        F.drawGrandGraph(ctx, W, H, t, { pieces: this.pieces, glow: 1 - k * 0.5 });
+        var gr = ctx.createRadialGradient(W / 2, H * 0.45, 10, W / 2, H * 0.45, 260); gr.addColorStop(0, 'rgba(255,60,110,0.35)'); gr.addColorStop(1, 'rgba(255,60,110,0)');
+        ctx.fillStyle = gr; ctx.fillRect(0, 0, W, H);
+        F.Portraits.drawGlitch(ctx, W / 2 + Math.sin(t * 3) * 8, H * 0.45, 30 + e * 75, t, 'angry');
+      } else { // in the dark, a tiny spark
+        ctx.fillStyle = '#020108'; ctx.fillRect(0, 0, W, H);
+        var a = clamp01((this.capT - 0.8) / 1.6), r = (2 + 7 * a) * (1 + 0.1 * Math.sin(t * 4));
+        if (a > 0) {
+          ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = a;
+          ctx.drawImage(F.SceneKit.glow('#ffcf6a', 0.15), W / 2 - r * 9, H / 2 - r * 9, r * 18, r * 18); ctx.restore();
+          F.SceneKit.twinkle(ctx, W / 2, H / 2, r * 2.2, a, '#fff4cc');
+        }
+        var oa = clamp01((this.capT - 3) / 1.4);
+        if (oa > 0) { G.ori.sleeping = true; G.ori.setPos(W / 2, H / 2); G.ori.setCoord(null); G.ori.alpha = oa; G.ori.draw(ctx, { ring: false, trail: false }); G.ori.alpha = 1; }
+      }
+      // letterbox bars, the opening fade and a dip to black between shots
+      var lb = H * 0.12 * clamp01(this.t / 1.2);
+      ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, lb); ctx.fillRect(0, H - lb, W, lb);
+      var dark = Math.max(1 - this.t / 1.8, i > 0 && i !== 1 ? 1 - this.capT / 0.45 : 0);
+      if (dark > 0) { ctx.fillStyle = 'rgba(0,0,0,' + Math.min(1, dark) + ')'; ctx.fillRect(0, 0, W, H); }
+    },
+    card: function (ctx, W, H, t, id, loc, noText) {
+      F.Art.kingdom(ctx, id, W, H, t, { rest: 1, parallax: { x: (loc - 0.5) * 0.8, y: 0 } });
+      F.drawGrandGraph(ctx, W, H, t, { only: [id], glow: 1.2, scale: 1.1 });
+      var K = F.realm.kingdoms[id], rule = { mir: 'y = x', lin: 'y = mx + b', par: 'y = a(x − h)² + k', cub: 'y = ax³ + bx² + cx + d', exp: 'y = a · bˣ', rat: 'y = a ⁄ (x − h) + k' }[id];
+      if (noText) return;
+      var a = Math.min(1, loc * 5, (1 - loc) * 6 + 0.2);
+      ctx.save(); ctx.globalAlpha = Math.max(0, a); ctx.textAlign = 'center'; ctx.shadowColor = 'rgba(0,0,0,0.8)'; ctx.shadowBlur = 12;
+      ctx.fillStyle = '#ffe7a8'; ctx.font = '700 ' + Math.round(H * 0.05) + 'px Georgia, "Times New Roman", serif';
+      ctx.fillText(K.name.toUpperCase().split('').join(' '), W / 2, H * 0.24);
+      ctx.fillStyle = '#ffffff'; ctx.font = 'italic ' + Math.round(H * 0.03) + 'px Georgia, "Times New Roman", serif';
+      ctx.fillText(rule, W / 2, H * 0.24 + H * 0.05);
+      ctx.restore();
+    },
+    /** The curve y = 1/x around the fortress, its hole at x = 0, and the crack spreading out of it. */
+    hole: function (ctx, p, s, t, k) {
+      var cx = p.x, cy = p.y - s * 0.5, u = s * 0.3;
+      ctx.save(); ctx.lineCap = 'round';
+      [[6, 0.15], [2, 0.9]].forEach(function (Lw) {
+        ctx.strokeStyle = 'rgba(181,156,242,' + Lw[1] + ')'; ctx.lineWidth = Lw[0] / 1.5;
+        [-1, 1].forEach(function (sg) { ctx.beginPath(); for (var x = 0.18; x <= 4; x += 0.05) { var X = cx + sg * x * u, Y = cy - sg * (1 / x) * u; if (x === 0.18) ctx.moveTo(X, Y); else ctx.lineTo(X, Y); } ctx.stroke(); });
+      });
+      ctx.setLineDash([4, 4]); ctx.strokeStyle = 'rgba(255,77,109,0.7)'; ctx.lineWidth = 1.2;
+      ctx.beginPath(); ctx.moveTo(cx, cy - 4 * u); ctx.lineTo(cx, cy + 4 * u); ctx.stroke(); ctx.setLineDash([]);
+      var rr = u * (0.12 + 0.25 * k);
+      ctx.globalCompositeOperation = 'lighter';
+      ctx.drawImage(F.SceneKit.glow('#ff4d6d', 0.2), cx - rr * 5, cy - rr * 5, rr * 10, rr * 10);
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.fillStyle = '#05030f'; ctx.beginPath(); ctx.arc(cx, cy, rr, 0, 7); ctx.fill();
+      ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1.5; ctx.stroke();
+      var rnd = F.SceneKit.rng(7), n = Math.floor(3 + k * 9);
+      for (var i = 0; i < n; i++) {
+        var ang = rnd() * Math.PI * 2, len = u * (0.5 + rnd() * 2.5) * k, x = cx + Math.cos(ang) * rr, y = cy + Math.sin(ang) * rr;
+        ctx.strokeStyle = i % 2 ? 'rgba(63,224,255,0.85)' : 'rgba(255,77,109,0.85)'; ctx.lineWidth = 1.3; ctx.beginPath(); ctx.moveTo(x, y);
+        for (var j = 1; j <= 4; j++) { x += Math.cos(ang + (rnd() - 0.5) * 0.9) * len / 4; y += Math.sin(ang + (rnd() - 0.5) * 0.9) * len / 4; ctx.lineTo(x, y); }
+        ctx.stroke();
+      }
+      ctx.restore();
+    },
+    birds: function (ctx, W, H, t) {
+      ctx.save(); ctx.strokeStyle = 'rgba(60,40,70,0.55)'; ctx.lineWidth = 1.6; ctx.lineCap = 'round';
+      for (var i = 0; i < 7; i++) {
+        var x = ((t * 34 + i * 140) % (W + 200)) - 100, y = H * 0.22 + Math.sin(i * 2.1) * 50 + Math.sin(t * 1.5 + i) * 6, f = Math.sin(t * 9 + i) * 4, w = 7 + (i % 3) * 2;
+        ctx.beginPath(); ctx.moveTo(x - w, y - f); ctx.quadraticCurveTo(x - w * 0.4, y - 3, x, y); ctx.quadraticCurveTo(x + w * 0.4, y - 3, x + w, y - f); ctx.stroke();
+      }
+      ctx.restore();
+    },
+    rays: function (ctx, W, H, t) {
+      ctx.save(); ctx.globalCompositeOperation = 'lighter';
+      for (var r = 0; r < 6; r++) {
+        var a = Math.PI * 0.62 + r * 0.09 + Math.sin(t * 0.3 + r) * 0.02, len = Math.max(W, H) * 1.3, sx = W * 0.82, sy = -H * 0.05;
+        ctx.fillStyle = 'rgba(255,236,190,0.06)';
+        ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(sx + Math.cos(a - 0.025) * len, sy + Math.sin(a - 0.025) * len); ctx.lineTo(sx + Math.cos(a + 0.025) * len, sy + Math.sin(a + 0.025) * len); ctx.closePath(); ctx.fill();
+      }
+      ctx.restore();
     },
     pointer: function (type, x, y) { if (this.view) this.view.pointer(type, x, y); },
     key: function (e) { return this.view ? this.view.key(e) : false; },

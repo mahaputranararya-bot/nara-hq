@@ -225,5 +225,6 @@
     if (k >= 1) K.twinkle(ctx, cx + sxp, fy + Math.sin(sxp / (size * 0.35) - t * 2) * size * 0.08, size * 0.09, Math.sin(Math.PI * ((t * 0.18) % 1)), '#fff3c4');
     return { bottom: y0 + L.h * 1.05 };
   };
+  T.bridge = bridge; T.plinth = plinth;
   F.TitleScene = T;
 })();

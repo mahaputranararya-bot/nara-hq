@@ -148,6 +148,12 @@ fieldset.row legend { font-weight: 800; margin-bottom: 7px; padding: 0; font-siz
 .dialogue.full { right: 24px; }
 body[data-screen=map] .dialogue, body[data-screen=kingdom] .dialogue, body[data-screen=title] .dialogue, body[data-screen=ending] .dialogue, body[data-screen=opening] .dialogue { right: 24px; }
 .dialogue.narration { background: rgba(8,8,20,0.8); border-color: rgba(255,231,160,0.3); }
+/* the opening film: subtitles in the lower letterbox bar */
+.dialogue.cinema { left: 0; right: 0; bottom: 0; max-width: none; height: 12vh; padding: 0 8vw; border: 0; border-radius: 0; background: none; box-shadow: none; justify-content: center; }
+.dialogue.cinema .portrait, .dialogue.cinema .speaker, .dialogue.cinema .scene-title { display: none; }
+.dialogue.cinema .dbody { text-align: center; }
+.dialogue.cinema .line { margin: 0; font: italic 500 clamp(1rem, 1.55vw, 1.3rem)/1.4 Georgia, "Times New Roman", serif; color: #f6efff; text-shadow: 0 2px 10px #000, 0 0 2px #000; letter-spacing: 0.01em; }
+.dialogue.cinema .dbtns { position: fixed; right: 18px; bottom: calc(12vh + 10px); opacity: 0.8; }
 .dialogue .portrait { flex: none; }
 .dbody { flex: 1; min-width: 0; }
 .scene-title { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }

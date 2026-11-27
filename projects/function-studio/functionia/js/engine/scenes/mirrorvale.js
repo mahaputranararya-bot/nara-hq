@@ -219,12 +219,15 @@
   function drawAurora(W, H, t, amt) {
     var h0 = hor(H), Q = 4, aw = Math.ceil(W / Q), ah = Math.ceil(h0 / Q);
     if (!aur) aur = document.createElement('canvas');
+    // the aurora drifts slowly: repaint it at most 20 times a second
+    if (aur.width === aw && aur.height === ah && aur._amt === amt && Math.abs(t - (aur._t || -9)) < 0.05) return aur;
     if (aur.width !== aw || aur.height !== ah) { aur.width = aw; aur.height = ah; }
+    aur._t = t; aur._amt = amt;
     var g = aur.getContext('2d');
     g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, aw, ah);
     if (amt <= 0) return aur;
     g.globalCompositeOperation = 'lighter';
-    var S = auroraStrip(), step = 1;
+    var S = auroraStrip(), step = 2;
     for (var rb = 0; rb < 2; rb++) {
       for (var x = 0; x < aw; x += step) {
         var X = x * Q;
@@ -271,23 +274,26 @@
     var uw = Math.ceil(W / 2), uh = Math.ceil(h0 / 2);
     if (!up) up = document.createElement('canvas');
     if (up.width !== uw || up.height !== uh) { up.width = uw; up.height = uh; }
-    var ug = up.getContext('2d');
+    var ug = up.getContext('2d'), fresh = Math.abs(tm - (up._t || -9)) >= 0.05 || up._ox !== ox[0] || up._lit !== lightsOn;
+    if (fresh) { up._t = tm; up._ox = ox[0]; up._lit = lightsOn; }
     ug.setTransform(0.5, 0, 0, 0.5, 0, 0);
+    if (fresh) {
     ug.drawImage(sky.c, -PAD + ox[0], -PAD, sky.w, sky.h);
     ug.globalCompositeOperation = 'screen'; ug.drawImage(A, ox[0], 0, W, h0); ug.globalCompositeOperation = 'source-over';
     ug.drawImage(far.c, -PAD + ox[1], -PAD, far.w, far.h);
     ug.drawImage(mid.c, -PAD + ox[2], -PAD, mid.w, mid.h);
     if (lightsOn) drawLights(ug, ox[2], tm);
+    }
     K.blit(ctx, lake, -PAD, h0 - 2);
     var depth = H - h0;
     ctx.save();
     ctx.globalAlpha = 0.82;
-    for (var y = h0; y < H; y += 2) {
+    for (var y = h0; y < H; y += 3) {
       var d = y - h0, k = d / depth;
-      var sy = (h0 - d - 2) / 2;
+      var sy = (h0 - d - 3) / 2;
       if (sy < 0) break;
       var dx = (Math.sin(d * 0.13 - tm * 2.1) * 0.7 + Math.sin(d * 0.041 + tm * 0.8) * 1.4) * (0.25 + k * 3.2);
-      ctx.drawImage(up, 0, sy, uw, 1, dx - 6, y, W + 12, 2.2);
+      ctx.drawImage(up, 0, sy, uw, 1.5, dx - 6, y, W + 12, 3.2);
     }
     ctx.restore();
     // deeper water darkens and turns blue toward the viewer

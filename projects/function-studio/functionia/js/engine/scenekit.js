@@ -63,8 +63,8 @@
       draw(g, w, h);
       e = cache[k] = { c: c, w: w, h: h };
       order.push(k);
-      while (order.length > 24) delete cache[order.shift()];
-    }
+      while (order.length > 40) delete cache[order.shift()];
+    } else if (order[order.length - 1] !== k) { order.splice(order.indexOf(k), 1); order.push(k); } // most recently used stays
     return e;
   };
   K.blit = function (ctx, e, x, y) { ctx.drawImage(e.c, x, y, e.w, e.h); };

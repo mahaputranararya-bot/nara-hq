@@ -44,6 +44,7 @@
     D.el.classList.toggle('narration', D.lines.every(function (l) { return l[0] === 'narrator'; }));
     D.el.style.setProperty('--side', o.side === 'full' ? '0px' : '');
     D.el.classList.toggle('full', o.side === 'full');
+    D.el.classList.toggle('cinema', !!o.cinema);
     D.skipBtn.style.display = o.skippable === false ? 'none' : '';
     if (F.Audio) F.Audio.duck(true);
     D.show();
