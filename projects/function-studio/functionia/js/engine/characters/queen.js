@@ -119,7 +119,13 @@
     ctx.bezierCurveTo(0.3 * u * f, 0.36 * u, 0.12 * u, 0.26 * u, 0.08 * u, 0.15 * u);
     ctx.closePath();
   }
+  var LONG = 1.32; // the gown is stretched downward from the waist: a tall, elegant figure
   function skirt(ctx, u, t, cor) {
+    ctx.save(); ctx.translate(0, 0.15 * u); ctx.scale(1, LONG); ctx.translate(0, -0.15 * u);
+    skirtBody(ctx, u, t, cor);
+    ctx.restore();
+  }
+  function skirtBody(ctx, u, t, cor) {
     // sheer outer layer, a little wider
     skirtPath(ctx, u, 1.08);
     ctx.fillStyle = cor ? 'rgba(200,200,225,0.25)' : 'rgba(214,232,255,0.3)'; ctx.fill();
@@ -444,4 +450,7 @@
   };
   /** In the round dialogue portrait, frame her head and shoulders. */
   P.queen.closeup = { s: 2.05, dy: 0.36 };
+  /** Kingdom hub: draw her a little larger; her hem (feet) sits at y = 0.64 S. */
+  P.queen.hubScale = 1.15;
+  P.queen.feet = 0.64;
 })();

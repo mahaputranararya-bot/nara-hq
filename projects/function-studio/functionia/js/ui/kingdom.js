@@ -109,7 +109,8 @@
       var Sc = F.Scenes && F.Scenes[k];
       if (Sc && Sc.stage) Sc.stage(ctx, cx, cy + S * 0.5, S * 0.5, t);
       else { ctx.save(); ctx.fillStyle = 'rgba(255,255,255,0.16)'; ctx.beginPath(); ctx.ellipse(cx, cy + S * 0.5, S * 0.45, S * 0.08, 0, 0, 7); ctx.fill(); ctx.restore(); }
-      F.Portraits.draw(ctx, this.K.rulerKey, cx, cy, S, t, { corrupted: !kd.restored });
+      var pf = F.Portraits.P[this.K.rulerKey] || {}, hs = pf.hubScale || 1, feet = pf.feet || 0.5;
+      F.Portraits.draw(ctx, this.K.rulerKey, cx, cy + S * (0.5 - hs * feet), S * hs, t, { corrupted: !kd.restored });
       // Ori bounces beside the ruler; Delta hovers at the ruler's shoulder (both drawn larger here)
       var big = Math.max(1.4, S / 210);
       G.ori.setPos(cx + S * 0.5, cy + S * 0.36 - Math.abs(Math.sin(t * 2)) * 10); G.ori.setCoord(null);
