@@ -280,6 +280,54 @@
   }
   THEMES.mir = { bpm: 92, root: 62, scale: 'lydian', custom: mirWaltz, wet: 0.35 };
 
+  /*
+   * "Functionia" — the main title theme, hand-arranged in 4/4 (D major), 16 bars:
+   * bars 1–4 intro (harp + strings, the Ori motif on music box), 5–12 the tune on flute,
+   * a choir joins at 9, and bars 13–16 build to a climax (timpani-like hits, music box doubling), then it loops.
+   */
+  var TITLEV = {
+    chords: [
+      { b: 38, v: [54, 57, 62, 66] }, { b: 35, v: [54, 59, 62, 66] }, { b: 43, v: [55, 59, 62, 67] }, { b: 45, v: [52, 57, 61, 64] },
+      { b: 38, v: [54, 57, 62, 66] }, { b: 37, v: [52, 57, 61, 64] }, { b: 35, v: [54, 59, 62, 66] }, { b: 43, v: [55, 59, 62, 67] },
+      { b: 38, v: [54, 57, 62, 66] }, { b: 42, v: [54, 57, 61, 66] }, { b: 43, v: [55, 59, 62, 67] }, { b: 45, v: [52, 57, 61, 64] },
+      { b: 35, v: [54, 59, 62, 66] }, { b: 43, v: [55, 59, 62, 67] }, { b: 40, v: [55, 59, 62, 64] }, { b: 45, v: [52, 57, 62, 64] }
+    ],
+    mel: [ // [eighth 0–7, MIDI, length in eighths]
+      [[0, 74, 2], [2, 78, 1], [3, 81, 2], [5, 86, 1], [6, 81, 2]], [[0, 78, 3], [3, 74, 1], [4, 71, 4]],
+      [[0, 74, 2], [2, 79, 1], [3, 83, 2], [5, 86, 1], [6, 83, 2]], [[0, 81, 6]],
+      [[0, 74, 3], [3, 76, 1], [4, 78, 2], [6, 81, 2]], [[0, 81, 4], [4, 79, 2], [6, 78, 2]],
+      [[0, 76, 3], [3, 78, 1], [4, 74, 4]], [[0, 71, 2], [2, 74, 2], [4, 79, 4]],
+      [[0, 78, 3], [3, 79, 1], [4, 81, 2], [6, 86, 2]], [[0, 85, 4], [4, 81, 2], [6, 78, 2]],
+      [[0, 79, 3], [3, 81, 1], [4, 83, 2], [6, 86, 2]], [[0, 85, 6], [6, 83, 1], [7, 85, 1]],
+      [[0, 86, 3], [3, 85, 1], [4, 83, 2], [6, 81, 2]], [[0, 83, 3], [3, 81, 1], [4, 79, 2], [6, 78, 2]],
+      [[0, 76, 2], [2, 78, 2], [4, 79, 2], [6, 83, 2]], [[0, 81, 6]]
+    ]
+  };
+  function titleTheme(r, th, step, t, out) {
+    var spb = 60 / th.bpm, s16 = spb / 4, bar = Math.floor(step / 16) % 16, pos = step % 16, C = TITLEV.chords[bar];
+    var intro = bar < 4, climax = bar >= 12;
+    if (pos === 0) {
+      C.v.forEach(function (m) { play(r, 'strings', m, t, spb * 4, climax ? 1.3 : 0.9, out); });
+      if (bar >= 8) C.v.forEach(function (m, i) { if (i) play(r, 'choir', m, t, spb * 4, climax ? 0.7 : 0.45, out); });
+      play(r, 'softbass', C.b, t, spb * 2, 1, out);
+      if (climax || bar === 8) play(r, 'kick', null, t, 0.1, 0.55, out);
+    }
+    if (pos === 8) { play(r, 'softbass', C.b + 7, t, spb * 2, 0.7, out); if (climax) play(r, 'kick', null, t, 0.1, 0.4, out); }
+    if (pos % 2 === 0) { // harp: rolling eighths through the chord
+      var e = pos / 2, pat = [0, 1, 2, 3, 2, 3, 1, 2], up = e >= 4 && bar % 2 ? 12 : 0;
+      play(r, 'harp', C.v[pat[e]] + 12 + up, t, s16 * 2, e === 0 ? 0.7 : 0.5, out);
+    }
+    if (!intro && (pos === 4 || pos === 12)) play(r, 'shaker', null, t, 0.1, climax ? 0.7 : 0.4, out);
+    TITLEV.mel[bar].forEach(function (n) {
+      if (n[0] * 2 !== pos) return;
+      var dur = n[2] * s16 * 2;
+      if (intro) play(r, 'musicbox', n[1], t, dur, 1, out);
+      else { play(r, 'flute', n[1] - 12, t, dur * 0.92, 1.05, out); if (bar >= 8) play(r, 'musicbox', n[1] + 12, t, dur, climax ? 0.4 : 0.22, out); }
+    });
+    if (bar === 15 && pos >= 8) play(r, 'musicbox', C.v[(pos - 8) % 4] + 24 + (pos >= 12 ? 12 : 0), t, s16, 0.3, out);
+  }
+  THEMES.title = { bpm: 76, root: 62, scale: 'major', custom: titleTheme, wet: 0.32 };
+
   var DRUMS = { // 16 sixteenth-steps per bar: k = kick, s = snare, h = hat, t = shaker
     none: [],
     soft: [['k', 0], ['t', 4], ['h', 8], ['t', 12]],

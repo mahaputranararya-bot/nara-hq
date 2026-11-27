@@ -2,6 +2,7 @@
 (function () {
   'use strict';
   var F = window.F, G = F.Game, h = F.h;
+  function K01(x) { return x < 0 ? 0 : (x > 1 ? 1 : x); }
 
   /** The Grand Graph: six glowing curves meeting at the Origin. Used by title, opening and ending. */
   F.drawGrandGraph = function (ctx, W, H, t, o) {
@@ -64,12 +65,17 @@
       menu.appendChild(F.btn('How to play', function () { G.openOverlay('howto'); }, { cls: 'ghost' }));
       menu.appendChild(F.btn('Settings', function () { G.openOverlay('settings'); }, { cls: 'ghost' }));
       menu.appendChild(F.btn('Credits', function () { G.go('credits'); }, { cls: 'ghost' }));
-      ui.appendChild(h('main', { class: 'title-screen' }, [
-        h('h1', { class: 'logo', text: 'Functionia' }),
+      // first time this session: a short reveal (any key or click skips it)
+      this.t0 = G.time; this.revealing = !Title.seen; Title.seen = true;
+      if (!this.revealing) this.t0 = G.time - 99;
+      menu.classList.add('glass');
+      this.el = h('main', { class: 'title-screen' + (this.revealing ? ' reveal' : '') }, [
+        h('h1', { class: 'logo sr-only', text: 'Functionia' }),
         h('p', { class: 'tagline', text: 'A point. A broken graph. Six kingdoms to restore.' }),
         menu,
         h('p', { class: 'foot', text: 'Group 5 • Term 3 Function Studio • SMA Kemala Taruna Bhayangkara' + (G.dev ? ' • DEV MODE' : '') })
-      ]));
+      ]);
+      ui.appendChild(this.el);
       setTimeout(function () { var b = ui.querySelector('.menu .btn'); if (b) b.focus({ preventScroll: true }); }, 50);
       G.ori.ring = [];
     },
@@ -79,16 +85,30 @@
       G.startSlot(slot, d);
       if (!d.story.opening) G.go('opening'); else G.go('map');
     },
+    skipReveal: function () { if (this.revealing && G.time - this.t0 < 3.6) { this.t0 = G.time - 99; this.el.classList.remove('reveal'); } this.revealing = false; },
+    key: function () { this.skipReveal(); return false; },
+    pointer: function (type) { if (type === 'down') this.skipReveal(); },
     render: function (ctx) {
-      var W = G.W, H = G.H, t = G.time;
-      F.Art.kingdom(ctx, 'void', W, H, t);
-      var gg = F.drawGrandGraph(ctx, W, H, t, { dy: -H * 0.06, glow: 0.9 });
-      G.ori.r = 22;
-      G.ori.setPos(gg.cx, gg.cy - Math.abs(Math.sin(t * 2.2)) * 26);
-      if (Math.sin(t * 2.2) * Math.sin((t - 0.016) * 2.2) < 0) G.ori.land();
-      G.ori.setCoord(0, 0);
-      G.ori.draw(ctx);
-      G.ori.r = 17;
+      var W = G.W, H = G.H, t = G.time, rv = t - this.t0;
+      var O = F.TitleScene.render(ctx, W, H, t, { reveal: rv, parallax: { x: G.mouse.x / W - 0.5, y: G.mouse.y / H - 0.5 } });
+      // "Group 5 presents"
+      var pa = Math.min(K01(rv / 0.4), K01((1.5 - rv) / 0.4));
+      if (pa > 0) {
+        ctx.save(); ctx.globalAlpha = pa; ctx.fillStyle = '#e8e4ff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.font = 'italic 600 ' + Math.round(H * 0.032) + 'px Georgia, "Times New Roman", serif';
+        ctx.fillText('Group 5 presents', W / 2, H * 0.45); ctx.restore();
+      }
+      F.TitleScene.logo(ctx, W / 2, H * 0.18, Math.min(W * 0.075, H * 0.12), t, K01((rv - 1.9) / 1.1));
+      var oa = K01((rv - 2.3) / 0.6);
+      if (oa > 0) {
+        G.ori.r = 20; G.ori.alpha = oa;
+        G.ori.setPos(O.x, O.y - 18 - Math.abs(Math.sin(t * 2.2)) * 24);
+        if (Math.sin(t * 2.2) * Math.sin((t - 0.016) * 2.2) < 0) G.ori.land();
+        G.ori.setCoord(null);
+        G.ori.draw(ctx, { ring: false });
+        G.ori.r = 17; G.ori.alpha = 1;
+        G.delta.moveTo(O.x + Math.cos(t * 0.7) * 110, O.y - 70 + Math.sin(t * 1.4) * 18); G.delta.draw(ctx, 1.2);
+      }
     }
   };
   G.register('title', Title);

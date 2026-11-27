@@ -254,12 +254,23 @@ html.reduced #glitchbanner.show { animation: gbsoft 1.9s ease-out forwards; }
 #fade.on { opacity: 1; }
 
 /* ---------------------------------------------------------------- title + slots */
-.title-screen { position: fixed; left: 0; right: 0; top: 7vh; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; pointer-events: none; }
+.title-screen { position: fixed; left: 0; right: 0; top: 0; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; pointer-events: none; }
 .title-screen > * { pointer-events: auto; }
 .logo { font: 900 clamp(3rem, 7vw, 5.6rem)/1 var(--display); margin: 0; background: linear-gradient(90deg, #8EC5FF, #F2C14E, #F08A3C, #2BB3A3, #9BE15D, #7C6CFF); -webkit-background-clip: text; background-clip: text; color: transparent;
   filter: drop-shadow(0 6px 18px rgba(0,0,0,0.5)); }
-.tagline { font-size: 1.1rem; color: #dfe3ff; }
-.title-screen .menu { margin-top: 31vh; min-width: 280px; }
+.tagline { font-size: 1.1rem; color: #efe9ff; margin: 31vh 0 0; letter-spacing: 0.02em; text-shadow: 0 2px 12px rgba(10,6,40,0.9); }
+.title-screen .menu { position: fixed; top: 57vh; left: 50%; transform: translateX(-50%); width: min(440px, 92vw); display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 16px; }
+.title-screen .menu .btn.primary { grid-column: 1 / -1; }
+.menu.glass { background: linear-gradient(180deg, rgba(40,32,96,0.55), rgba(16,12,44,0.6)); border: 1px solid rgba(220,210,255,0.22); border-radius: 22px;
+  box-shadow: 0 18px 50px rgba(5,3,20,0.55), inset 0 1px 0 rgba(255,255,255,0.18); -webkit-backdrop-filter: blur(10px) saturate(1.2); backdrop-filter: blur(10px) saturate(1.2); }
+.title-screen.reveal .tagline { animation: tsIn 0.8s ease 2.9s both; }
+.title-screen.reveal .menu { animation: tsFade 0.7s ease 3.0s both; }
+.title-screen.reveal .menu .btn { animation: tsIn 0.5s ease both; }
+.title-screen.reveal .menu .btn:nth-child(1) { animation-delay: 3.2s; } .title-screen.reveal .menu .btn:nth-child(2) { animation-delay: 3.3s; }
+.title-screen.reveal .menu .btn:nth-child(3) { animation-delay: 3.4s; } .title-screen.reveal .menu .btn:nth-child(4) { animation-delay: 3.5s; }
+.title-screen.reveal .menu .btn:nth-child(5) { animation-delay: 3.6s; } .title-screen.reveal .foot { animation: tsIn 0.8s ease 3.4s both; }
+@keyframes tsIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes tsFade { from { opacity: 0; } to { opacity: 1; } }
 .foot { position: fixed; bottom: 12px; left: 0; right: 0; font-size: 0.75rem; color: var(--muted); }
 .slots-screen { position: fixed; inset: 6vh 4vw; display: flex; flex-direction: column; align-items: center; gap: 14px; overflow: auto; }
 .slots { display: grid; grid-template-columns: repeat(3, minmax(220px, 300px)); gap: 16px; }
@@ -336,7 +347,6 @@ html.reduced *, html.reduced *::before, html.reduced *::after { animation-durati
   html.large { font-size: 20px; }
   .ppanel { padding: 14px 14px 10px; gap: 8px; }
   .ptitle { font-size: 1.2rem; }
-  .title-screen .menu { margin-top: 29vh; }
 }
 @media (max-width: 1000px) {
   .stages { grid-template-columns: 1fr; }
