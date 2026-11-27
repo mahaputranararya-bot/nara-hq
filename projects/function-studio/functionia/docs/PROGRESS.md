@@ -29,6 +29,12 @@ README, HOW_TO_PLAY, printable one-page how-to-play card (checked: exactly 1 A4 
 ## M12: independent review ✅
 No math errors in 142 independently checked items. Reviewer score 41/42; all of its findings are fixed and all tests pass again. Details are in the "Independent review" section of `RUBRIC_SELF_ASSESSMENT.md`.
 
+## v1.2: visual + sound upgrade ✅ (27 Nov 2026)
+- The puzzle panel was redesigned (card inputs, button rows). The layout audit shows 0 overlaps and 0 overflow in 2,064 panel states.
+- New character art (paint toolkit, Ori moods, Delta, 6 ruler portraits × 2 moods, 3 Glitch moods), scene atmosphere, map islands, unified panel chrome, and a dev Art gallery.
+- New music and sound engine with 12 composed themes, crossfades, reverb, character voices, and an offline audio check.
+- All 70 unit tests and all browser suites pass. 59–61 fps. Size about 660 KB.
+
 ## Known issues
-- Art is simple code-drawn shapes (planned: Kayyira may replace it).
+- Art is code-drawn (richer since v1.2). Kayyira may still replace any piece.
 - Sound starts only after the first click or key press (browser rule).

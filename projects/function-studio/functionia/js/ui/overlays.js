@@ -147,7 +147,7 @@
     title: 'Art gallery', cls: 'wide',
     open: function (body) {
       body.appendChild(h('p', { class: 'note', text: 'Every character, animated, in every mood. Art lives in js/engine/ori.js, delta.js, portraits.js and art.js (see docs/README.md).' }));
-      var W = 900, H = 560;
+      var W = 900, H = 596;
       var cv = F.liveCanvas(W, H, function (g, t) {
         g.fillStyle = '#1d2140'; g.fillRect(0, 0, W, H);
         var oriMoods = [['normal', {}], ['happy', { happy: 9 }], ['dizzy', { dizzy: 9 }], ['surprised', { flicker: 9 }], ['sleepy', { sleeping: true }]];
@@ -163,11 +163,11 @@
         gal.d = gal.d || new F.Delta();
         ['none', 'party', 'wizard'].forEach(function (hat, i) { var d = gal.d; d.time = t + i; d.hat = hat; d.x = 730 + (i % 2) * 90; d.y = 60 + i * 34; d.size = 26; d.draw(g); });
         ['queen', 'king', 'archer', 'serpent', 'witch', 'warden'].forEach(function (w, i) {
-          F.Portraits.draw(g, w, 75 + i * 150, 255, 150, t, { corrupted: true });
-          F.Portraits.draw(g, w, 75 + i * 150, 420, 150, t, {});
+          F.Portraits.draw(g, w, 75 + i * 150, 262, 150, t, { corrupted: true });
+          F.Portraits.draw(g, w, 75 + i * 150, 450, 150, t, {});
         });
-        g.fillStyle = '#b9c0e6'; g.textAlign = 'left'; g.fillText('corrupted (worried) \u2191   restored (happy) \u2193', 10, 343);
-        ['angry', 'hurt', 'friendly'].forEach(function (m, i) { F.Portraits.drawGlitch(g, 300 + i * 150, 525, 22, t, m); });
+        g.fillStyle = '#b9c0e6'; g.textAlign = 'left'; g.fillText('corrupted (worried) \u2191   restored (happy) \u2193', 10, 362);
+        ['angry', 'hurt', 'friendly'].forEach(function (m, i) { F.Portraits.drawGlitch(g, 300 + i * 150, 562, 20, t, m); });
       });
       body.appendChild(cv);
     }

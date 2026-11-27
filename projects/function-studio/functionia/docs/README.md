@@ -73,5 +73,15 @@ lin: { title: 'Slope: Rise Over Run', url: 'https://youtube.com/shorts/XXXX' },
 ```
 An empty link shows "Coming soon on f(x)plained!". If the computer is offline, the card says "Watch later".
 
+## Music and sound
+Everything is made in code in `js/core/audio.js`, with no audio files:
+- **Themes:** the `THEMES` table. Each theme has a tempo, key, scale, a chord per bar, and two 16-step melody phrases written as scale degrees.
+- **Drums:** the `DRUMS` patterns.
+- **Instruments:** the `INST` table.
+- **Sound effects:** the `SFX` table.
+- **Character voices:** the `VOICES` table.
+
+To hear every theme without playing, run `node tests/e2e/audio.js`. It saves WAV files and checks levels.
+
 ## Replacing the art (for Kayyira)
-All drawing is code in `js/engine/art.js` (backgrounds, map islands, icons), `js/engine/portraits.js` (rulers, The Glitch) and the `drawBody` functions in `js/engine/ori.js` and `js/engine/delta.js`. Each is a separate function, so one picture can be swapped at a time. Keep Ori's colours (#FFC94A fill, #C98A12 outline) and Delta's coral (#E8604C), or update `docs/DECISIONS.md`.
+Shared shading/eye/mouth helpers are in `js/engine/paint.js`. Open the **Art gallery** in the Dev panel (`?dev=1`) to see every character in every mood. All drawing is code in `js/engine/art.js` (backgrounds, map islands, icons), `js/engine/portraits.js` (rulers, The Glitch) and the `drawBody` functions in `js/engine/ori.js` and `js/engine/delta.js`. Each is a separate function, so one picture can be swapped at a time. Keep Ori's colours (#FFC94A fill, #C98A12 outline) and Delta's coral (#E8604C), or update `docs/DECISIONS.md`.
