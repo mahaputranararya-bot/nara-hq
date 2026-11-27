@@ -181,44 +181,114 @@
     return 'normal';
   };
 
-  /** The body art: a glossy golden point with expressive eyes, brows, cheeks and mouth. */
-  Ori.prototype.drawBody = function (ctx, R) {
-    var Pn = F.Paint, mood = this.mood(), t = this.time;
-    // soft glow
-    ctx.save();
-    var glow = ctx.createRadialGradient(0, 0, R * 0.6, 0, 0, R * 1.8);
-    glow.addColorStop(0, 'rgba(255,214,94,0.45)'); glow.addColorStop(1, 'rgba(255,214,94,0)');
-    ctx.fillStyle = glow; ctx.beginPath(); ctx.arc(0, 0, R * 1.8, 0, Math.PI * 2); ctx.fill();
-    ctx.restore();
-    // sphere
-    ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2);
-    var g = ctx.createRadialGradient(-R * 0.38, -R * 0.45, R * 0.08, 0, 0, R * 1.05);
-    g.addColorStop(0, '#FFF7D6'); g.addColorStop(0.4, '#FFD866'); g.addColorStop(0.78, '#FFC94A'); g.addColorStop(1, '#E9A426');
+  /** Big glossy anime eye (amber), with moods. Drawn at (x, y): rx, ry = half size. */
+  function animeEye(ctx, x, y, rx, ry, mood, blink, look, side, t) {
+    var ink = '#3a2008';
+    ctx.save(); ctx.translate(x, y);
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = ink;
+    if (mood === 'happy') {
+      ctx.lineWidth = rx * 0.42;
+      ctx.beginPath(); ctx.moveTo(-rx * 0.95, ry * 0.25); ctx.quadraticCurveTo(0, -ry * 0.75, rx * 0.95, ry * 0.25); ctx.stroke();
+      ctx.restore(); return;
+    }
+    if (mood === 'sleepy' || blink) {
+      ctx.lineWidth = rx * 0.36;
+      ctx.beginPath(); ctx.moveTo(-rx * 0.95, 0); ctx.quadraticCurveTo(0, ry * 0.55, rx * 0.95, 0); ctx.stroke();
+      ctx.lineWidth = rx * 0.2; ctx.beginPath(); ctx.moveTo(side * rx * 0.9, 0); ctx.lineTo(side * rx * 1.25, -ry * 0.2); ctx.stroke();
+      ctx.restore(); return;
+    }
+    if (mood === 'dizzy') {
+      ctx.lineWidth = rx * 0.24; ctx.beginPath();
+      for (var i = 0; i <= 26; i++) { var a = i * 0.55 + t * 6 * side, r = rx * 0.9 * i / 26; if (!i) ctx.moveTo(Math.cos(a) * r, Math.sin(a) * r * ry / rx); else ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r * ry / rx); }
+      ctx.stroke(); ctx.restore(); return;
+    }
+    var sc = mood === 'surprised' ? 0.82 : 1, lx = (look ? look.x : 0) * rx * 0.22, ly = (look ? look.y : 0) * ry * 0.15;
+    if (mood === 'surprised') { ctx.beginPath(); ctx.ellipse(0, 0, rx * 1.02, ry * 1.02, 0, 0, Math.PI * 2); ctx.fillStyle = '#fffdf5'; ctx.fill(); }
+    ctx.beginPath(); ctx.ellipse(lx, ly, rx * sc, ry * sc, 0, 0, Math.PI * 2);
+    var g = ctx.createLinearGradient(0, -ry, 0, ry);
+    g.addColorStop(0, '#24120a'); g.addColorStop(0.5, '#6b3c10'); g.addColorStop(0.85, '#c98a2a'); g.addColorStop(1, '#e8b04a');
     ctx.fillStyle = g; ctx.fill();
-    // cel shade on the lower right + rim light
+    // highlights: one big, one small, plus a warm sparkle low in the eye
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath(); ctx.ellipse(lx - rx * 0.3, ly - ry * 0.36, rx * 0.36, ry * 0.3, -0.4, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(lx + rx * 0.34, ly + ry * 0.4, rx * 0.16, 0, Math.PI * 2); ctx.fill();
+    ctx.globalAlpha = 0.6 + 0.4 * Math.sin(t * 3 + side);
+    ctx.fillStyle = '#fff3c4'; ctx.beginPath(); ctx.arc(lx - rx * 0.1, ly + ry * 0.55, rx * 0.1, 0, Math.PI * 2); ctx.fill();
+    ctx.globalAlpha = 1;
+    // lash line over the top with a small flick at the outer corner
+    ctx.lineWidth = rx * 0.26;
+    ctx.beginPath(); ctx.ellipse(lx, ly, rx * sc * 1.02, ry * sc * 1.02, 0, Math.PI * 1.12, Math.PI * 1.88); ctx.stroke();
+    ctx.lineWidth = rx * 0.18;
+    ctx.beginPath(); ctx.moveTo(lx + side * rx * 0.85, ly - ry * 0.55); ctx.lineTo(lx + side * rx * 1.2, ly - ry * 0.8); ctx.stroke();
+    ctx.restore();
+  }
+
+  /** The body art: a little star-spirit. A warm orb lit from inside, sparkles drifting within,
+   *  big glossy eyes, and a tiny star floating above (Ori is a point, after all). Keeps #FFC94A / #C98A12. */
+  Ori.prototype.drawBody = function (ctx, R) {
+    var Pn = F.Paint, K = F.SceneKit, mood = this.mood(), t = this.time;
+    // warm halo
+    var glow = ctx.createRadialGradient(0, 0, R * 0.7, 0, 0, R * 2.3);
+    glow.addColorStop(0, 'rgba(255,214,110,0.5)'); glow.addColorStop(0.5, 'rgba(255,200,90,0.16)'); glow.addColorStop(1, 'rgba(255,200,90,0)');
+    ctx.fillStyle = glow; ctx.beginPath(); ctx.arc(0, 0, R * 2.3, 0, Math.PI * 2); ctx.fill();
+    // the orb, glowing from its centre
+    ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2);
+    var g = ctx.createRadialGradient(-R * 0.15, -R * 0.25, 0, 0, 0, R);
+    g.addColorStop(0, '#FFFEF4'); g.addColorStop(0.32, '#FFF0B2'); g.addColorStop(0.68, '#FFD866'); g.addColorStop(0.9, '#FFC94A'); g.addColorStop(1, '#F0A830');
+    ctx.fillStyle = g; ctx.fill();
     ctx.save(); ctx.clip();
-    ctx.fillStyle = 'rgba(201,138,18,0.28)'; ctx.beginPath(); ctx.arc(R * 0.32, R * 0.36, R * 1.0, 0, Math.PI * 2); ctx.arc(-R * 0.1, -R * 0.12, R * 1.0, 0, Math.PI * 2, true); ctx.fill('evenodd');
-    ctx.strokeStyle = 'rgba(255,245,200,0.75)'; ctx.lineWidth = R * 0.1; ctx.beginPath(); ctx.arc(0, 0, R * 0.95, 0.15 * Math.PI, 0.55 * Math.PI); ctx.stroke();
+    var sub = ctx.createRadialGradient(R * 0.2, R * 0.9, 0, R * 0.2, R * 0.9, R * 1.1);
+    sub.addColorStop(0, 'rgba(255,140,40,0.35)'); sub.addColorStop(1, 'rgba(255,140,40,0)');
+    ctx.fillStyle = sub; ctx.fillRect(-R, -R, R * 2, R * 2);
+    if (K) for (var i = 0; i < 5; i++) { // sparkles drifting inside the light
+      var a = t * (0.35 + i * 0.07) + i * 1.257, rr = R * (0.74 + 0.08 * (i % 2));
+      K.twinkle(ctx, Math.cos(a) * rr, Math.sin(a) * rr, R * 0.11, 0.25 + 0.35 * Math.pow(Math.max(0, Math.sin(t * 2.2 + i * 2)), 3), '#ffffff');
+    }
+    ctx.strokeStyle = 'rgba(255,252,225,0.85)'; ctx.lineWidth = R * 0.09;
+    ctx.beginPath(); ctx.arc(0, 0, R * 0.93, 0.1 * Math.PI, 0.5 * Math.PI); ctx.stroke();
+    var sp = ctx.createRadialGradient(-R * 0.45, -R * 0.55, 0, -R * 0.45, -R * 0.55, R * 0.42);
+    sp.addColorStop(0, 'rgba(255,255,255,0.85)'); sp.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = sp; ctx.fillRect(-R, -R, R * 1.2, R * 1.2);
     ctx.restore();
     ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2);
-    Pn.stroke(ctx, '#C98A12', Math.max(1.6, R * 0.1));
-    Pn.gloss(ctx, -R * 0.6, -R * 0.62, R * 0.17, R * 0.09, 0.7, -0.75);
-    Pn.gloss(ctx, -R * 0.78, -R * 0.36, R * 0.05, R * 0.04, 0.8, 0);
-    // cheeks
-    Pn.blush(ctx, -R * 0.6, R * 0.22, R * 0.24, 0.5);
-    Pn.blush(ctx, R * 0.6, R * 0.22, R * 0.24, 0.5);
-    // eyes + brows
-    var look = { x: this.eye.x, y: this.eye.y };
-    var blink = this.blink > 0 ? 1 : 0;
+    Pn.stroke(ctx, '#C98A12', Math.max(1.4, R * 0.08));
+    // cheeks with little blush lines
     for (var s = -1; s <= 1; s += 2) {
-      var ex = s * R * 0.33, ey = -R * 0.12;
-      Pn.eye(ctx, ex, ey, R * 0.22, R * 0.28, { look: look, iris: '#6b4416', blink: blink, mood: mood, ink: '#3a2408', skin: '#FFD866', side: s, t: t });
+      Pn.blush(ctx, s * R * 0.6, R * 0.2, R * 0.22, 0.55);
+      ctx.strokeStyle = 'rgba(225,95,80,0.55)'; ctx.lineWidth = Math.max(0.6, R * 0.04); ctx.lineCap = 'round';
+      for (var k = -1; k <= 1; k++) { ctx.beginPath(); ctx.moveTo(s * R * 0.6 + k * R * 0.09 - R * 0.03, R * 0.25); ctx.lineTo(s * R * 0.6 + k * R * 0.09 + R * 0.03, R * 0.16); ctx.stroke(); }
+    }
+    // eyes and brows
+    var look = { x: this.eye.x, y: this.eye.y }, blink = this.blink > 0;
+    for (s = -1; s <= 1; s += 2) {
+      var ex = s * R * 0.34, ey = -R * 0.06;
+      animeEye(ctx, ex, ey, R * 0.17, R * 0.26, mood, blink, look, s, t);
       var browMood = mood === 'dizzy' ? 'worried' : (mood === 'surprised' ? 'surprised' : (mood === 'happy' ? 'happy' : 'normal'));
-      if (mood !== 'sleepy') Pn.brow(ctx, ex + s * R * 0.02, ey - R * 0.42, R * 0.3, s, browMood, '#a86e10', Math.max(1.2, R * 0.08));
+      if (mood !== 'sleepy') Pn.brow(ctx, ex + s * R * 0.02, ey - R * 0.43, R * 0.22, s, browMood, '#b07a14', Math.max(1, R * 0.06));
     }
     // mouth
-    var mouthMood = { dizzy: 'wavy', surprised: 'o', happy: 'grin', sleepy: 'flat' }[mood] || 'smile';
-    Pn.mouth(ctx, 0, R * 0.28, R * 0.36, mouthMood, '#7a4a0c');
+    ctx.save(); ctx.translate(0, R * 0.3);
+    ctx.strokeStyle = '#6a3a0c'; ctx.lineWidth = Math.max(1, R * 0.07); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    if (mood === 'happy') {
+      ctx.beginPath(); ctx.moveTo(-R * 0.17, -R * 0.03); ctx.quadraticCurveTo(0, R * 0.3, R * 0.17, -R * 0.03); ctx.closePath();
+      ctx.fillStyle = '#7a2e12'; ctx.fill(); ctx.stroke();
+      ctx.save(); ctx.clip(); ctx.fillStyle = '#ff8a7a'; ctx.beginPath(); ctx.ellipse(0, R * 0.17, R * 0.1, R * 0.07, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+    } else if (mood === 'surprised') { ctx.beginPath(); ctx.ellipse(0, R * 0.04, R * 0.07, R * 0.09, 0, 0, Math.PI * 2); ctx.fillStyle = '#7a2e12'; ctx.fill(); }
+    else if (mood === 'dizzy') { ctx.beginPath(); ctx.moveTo(-R * 0.18, 0); for (var w = 1; w <= 6; w++) ctx.lineTo(-R * 0.18 + w * R * 0.06, (w % 2 ? R * 0.05 : 0)); ctx.stroke(); }
+    else if (mood === 'sleepy') { ctx.beginPath(); ctx.moveTo(-R * 0.08, R * 0.02); ctx.lineTo(R * 0.08, R * 0.02); ctx.stroke(); }
+    else { ctx.beginPath(); ctx.moveTo(-R * 0.14, 0); ctx.quadraticCurveTo(-R * 0.07, R * 0.09, 0, 0); ctx.quadraticCurveTo(R * 0.07, R * 0.09, R * 0.14, 0); ctx.stroke(); }
+    ctx.restore();
+    // the tiny star that floats above Ori
+    if (!this.badgeText) {
+      var sy = -R * 1.5 + Math.sin(t * 2) * R * 0.08, ss = R * 0.24;
+      ctx.save(); ctx.translate(0, sy); ctx.rotate(Math.sin(t * 1.3) * 0.25);
+      if (K) { ctx.globalAlpha = 0.7; ctx.drawImage(K.glow('#ffe08a', 0.2), -ss * 2.2, -ss * 2.2, ss * 4.4, ss * 4.4); ctx.globalAlpha = 1; }
+      ctx.beginPath();
+      for (var p = 0; p < 8; p++) { var an = p * Math.PI / 4 - Math.PI / 2, rad = p % 2 ? ss * 0.38 : ss; ctx.lineTo(Math.cos(an) * rad, Math.sin(an) * rad); }
+      ctx.closePath(); ctx.fillStyle = '#FFF4C2'; ctx.fill();
+      ctx.strokeStyle = '#E9A426'; ctx.lineWidth = Math.max(0.8, R * 0.04); ctx.stroke();
+      ctx.restore();
+    }
   };
 
   Ori.prototype.drawRing = function (ctx, R) {

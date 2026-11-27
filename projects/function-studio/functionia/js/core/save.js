@@ -161,7 +161,7 @@
   function listSlots() { var out = []; for (var i = 0; i < SLOTS; i++) out.push(summary(i)); return out; }
 
   // ---------------- settings (shared by all slots) ----------------
-  var DEFAULT_SETTINGS = { music: 0.5, sfx: 0.8, reducedMotion: null, textSize: 'normal', dialogueSpeed: 'normal', highContrast: false };
+  var DEFAULT_SETTINGS = { music: 0.5, sfx: 0.8, reducedMotion: null, textSize: 'normal', dialogueSpeed: 'normal', highContrast: false, glow: true };
   function loadSettings() {
     var s = {};
     try { s = JSON.parse(get('settings') || '{}') || {}; } catch (e) { s = {}; }

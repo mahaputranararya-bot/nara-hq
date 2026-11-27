@@ -52,7 +52,8 @@
         toggle('Reduced motion', 'reducedMotion', 'No shaking or screen tearing. Glitches become a soft colour pulse.'),
         choice('Text size', 'textSize', [['normal', 'Normal'], ['large', 'Large']]),
         choice('Dialogue speed', 'dialogueSpeed', [['slow', 'Slow'], ['normal', 'Normal'], ['fast', 'Fast'], ['instant', 'Instant']]),
-        toggle('High-contrast graphs', 'highContrast', 'Black-and-white grid with thicker lines.')
+        toggle('High-contrast graphs', 'highContrast', 'Black-and-white grid with thicker lines.'),
+        toggle('Glow & lighting', 'glow', 'Soft glowing light (uses the graphics card). Turn off if the game feels slow.')
       ]));
       if (G.data && G.slot !== null) {
         var zone = h('div', { class: 'danger' });

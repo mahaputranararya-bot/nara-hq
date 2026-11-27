@@ -11,6 +11,7 @@ html.large { font-size: 21px; }
 * { box-sizing: border-box; }
 html, body { margin: 0; height: 100%; overflow: hidden; background: #0b0a1e; color: var(--text); font-family: var(--font); line-height: 1.4; }
 canvas#world { position: fixed; inset: 0; display: block; touch-action: none; }
+canvas#glfx { position: fixed; inset: 0; width: 100%; height: 100%; display: none; pointer-events: none; }
 #ui { position: fixed; inset: 0; pointer-events: none; }
 #ui > * { pointer-events: auto; }
 [hidden] { display: none !important; }
@@ -346,7 +347,7 @@ html.reduced *, html.reduced *::before, html.reduced *::after { animation-durati
 /* ---------------------------------------------------------------- print the Journal */
 @media print {
   html, body { overflow: visible; background: #fff; color: #000; height: auto; }
-  canvas#world, #ui, #toasts, #glitchbanner, #fade, .dialogue, .scrim, .mhead .close, .noprint { display: none !important; }
+  canvas#world, canvas#glfx, #ui, #toasts, #glitchbanner, #fade, .dialogue, .scrim, .mhead .close, .noprint { display: none !important; }
   #overlay, #overlay.show { display: block; position: static; }
   .modal { position: static; transform: none; width: auto; max-height: none; overflow: visible; background: #fff; color: #000; box-shadow: none; border: none; padding: 0; }
   .jpage { break-inside: avoid; border: 1px solid #999; border-left: 8px solid var(--k); }

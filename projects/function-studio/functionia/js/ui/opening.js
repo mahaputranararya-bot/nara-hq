@@ -155,6 +155,7 @@
     render: function (ctx) {
       var W = G.W, H = G.H, t = this.t;
       F.Art.kingdom(ctx, this.beat === 'bridge' ? 'mir' : 'void', W, H, t, { rest: this.beat === 'bridge' ? (this.view && this.view.solved ? 0.6 : 0.15) : 1 });
+      if (this.beat === 'bridge' && this.rect) G.glMask = [this.rect];
       if (this.beat === 'cinematic') {
         var prog = this.cap === 0 ? Math.min(1, this.capT / 3.5) : 1;
         if (this.cap <= 3) F.drawGrandGraph(ctx, W, H, t, { progress: prog, pieces: this.pieces, glow: this.cap >= 3 ? 0.6 : 1 });

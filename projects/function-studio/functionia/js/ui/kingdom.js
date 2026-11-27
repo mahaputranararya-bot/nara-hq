@@ -106,11 +106,15 @@
       var panelW = Math.min(520, G.W * 0.42);
       var cx = (G.W - panelW) / 2, cy = G.H * 0.56;
       var S = Math.min(G.H * 0.5, 330);
-      ctx.save(); ctx.fillStyle = 'rgba(255,255,255,0.16)'; ctx.beginPath(); ctx.ellipse(cx, cy + S * 0.5, S * 0.45, S * 0.08, 0, 0, 7); ctx.fill(); ctx.restore();
+      var Sc = F.Scenes && F.Scenes[k];
+      if (Sc && Sc.stage) Sc.stage(ctx, cx, cy + S * 0.5, S * 0.5, t);
+      else { ctx.save(); ctx.fillStyle = 'rgba(255,255,255,0.16)'; ctx.beginPath(); ctx.ellipse(cx, cy + S * 0.5, S * 0.45, S * 0.08, 0, 0, 7); ctx.fill(); ctx.restore(); }
       F.Portraits.draw(ctx, this.K.rulerKey, cx, cy, S, t, { corrupted: !kd.restored });
-      G.ori.setPos(cx + S * 0.45, cy + S * 0.42 - Math.abs(Math.sin(t * 2)) * 8); G.ori.setCoord(null);
-      G.ori.draw(ctx, { badge: false });
-      G.delta.moveTo(cx + S * 0.62, cy + S * 0.12); G.delta.draw(ctx);
+      // Ori bounces beside the ruler; Delta hovers at the ruler's shoulder (both drawn larger here)
+      var big = Math.max(1.4, S / 210);
+      G.ori.setPos(cx + S * 0.5, cy + S * 0.36 - Math.abs(Math.sin(t * 2)) * 10); G.ori.setCoord(null);
+      G.ori.draw(ctx, { badge: false, ring: false, scale: big });
+      G.delta.moveTo(cx + S * 0.6, cy - S * 0.08); G.delta.draw(ctx, big * 0.95);
     }
   };
   G.register('kingdom', KS);

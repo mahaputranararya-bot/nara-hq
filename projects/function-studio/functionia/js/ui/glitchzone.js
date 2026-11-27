@@ -317,6 +317,7 @@
     render: function (ctx) {
       var t = G.time;
       F.Art.kingdom(ctx, this.k, G.W, G.H, t, { rest: G.isRestored(this.k) ? 1 : 0.4 });
+      if (this.rect) G.glMask = [this.rect];
       ctx.save(); ctx.fillStyle = 'rgba(20,10,40,0.35)'; ctx.fillRect(0, 0, G.W, G.H); ctx.restore();
       this.G.drawBase(ctx);
       this.cfg.draw(ctx, this.s, this.G, t);

@@ -9,7 +9,8 @@
 - Folder: `projects/function-studio/functionia/` → double-click `index.html` (works offline, Chrome/Edge).
 - Built from `FUNCTIONIA_MASTER_PROMPT.md` (all 13 milestones, M0–M12).
 - Tests: `node --test` (70 pass, including 15,000 generated puzzles); browser tests in `tests/e2e/` all pass.
-- **v1.2 (27 Nov):** puzzle panel redesigned (no overlapping text), richer characters and scenes, new music and sound engine. Uploaded to Google Drive as functionia-v1.2.zip.
+- **v1.2 (27 Nov):** puzzle panel redesigned (no overlapping text), richer characters and scenes, new music and sound engine.
+- **v1.3 preview (27 Nov):** Mirrorvale showcase: painted scene with mirror lake and aurora, new Mirror Queen, new Ori, GPU glow (Settings → Glow & lighting), new "Mirror Waltz" music. Uploaded to Google Drive as functionia-v1.3-preview.zip for the group to try. Next: Nara's feedback, then the other five kingdoms in the same style.
 - Docs in `functionia/docs/`: README (handover), HOW_TO_PLAY + a printable one-page card, ANSWER_KEY (for Uno's sign-off),
   DECISIONS, PLAYTEST_CHECKLIST, RUBRIC_SELF_ASSESSMENT, PROGRESS.
 

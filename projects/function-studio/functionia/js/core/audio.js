@@ -2,6 +2,8 @@
  * v1.2 engine: synth instruments (pad, pluck, bell, marimba, bass, lead, drum kit), a code-generated
  * reverb + tempo echo, composed themes (real chord progressions, a shared "Ori motif"), crossfades,
  * layered sound effects and per-character dialogue voices.
+ * v1.3: a physically modelled harp (Karplus–Strong), FM music box, flute, formant choir and strings,
+ * and hand-arranged themes (Mirrorvale's "Mirror Waltz" in 3/4).
  * Audio starts only after the first click or key press (browser autoplay rules).
  * A.render(theme, seconds) renders offline (used to check the music without speakers). */
 (function () {
@@ -128,6 +130,69 @@
       g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(0.04 * v, t + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.08);
     }
   };
+  // ---- v1.3 instruments: richer timbres for the hand-arranged themes ----
+  /** Karplus–Strong plucked string, rendered once per note into a buffer (a real physical model of a string). */
+  function ksBuffer(ctx, f, bright) {
+    var cache = ctx._ks || (ctx._ks = {}), key = Math.round(f * 10) + ':' + bright;
+    if (cache[key]) return cache[key];
+    var sr = ctx.sampleRate, t60 = Math.max(1.2, 4.2 * Math.pow(220 / f, 0.45)), len = Math.floor(sr * Math.min(4.5, t60 + 0.4));
+    var buf = ctx.createBuffer(1, len, sr), y = buf.getChannelData(0);
+    var D = sr / f - 0.5, k = Math.floor(D), a = D - k, g = Math.pow(0.001, 1 / (f * t60)), prev = 0, peak = 0, i;
+    for (i = 0; i <= k + 1 && i < len; i++) { prev += ((Math.random() * 2 - 1) - prev) * bright; y[i] = prev * (0.6 + 0.4 * Math.sin(Math.PI * i / (k + 1))); }
+    for (i = k + 2; i < len; i++) {
+      var y1 = (1 - a) * y[i - k] + a * y[i - k - 1], y2 = (1 - a) * y[i - k - 1] + a * y[i - k - 2 >= 0 ? i - k - 2 : 0];
+      y[i] = g * 0.5 * (y1 + y2);
+    }
+    for (i = 0; i < len; i++) peak = Math.max(peak, Math.abs(y[i]));
+    for (i = 0; i < len; i++) y[i] /= (peak || 1);
+    return (cache[key] = buf);
+  }
+  INST.harp = function (r, f, t, d, v, out) {
+    var s = r.ctx.createBufferSource(); s.buffer = ksBuffer(r.ctx, f, 0.55);
+    var lp = filter(r, 'lowpass', Math.min(9000, f * 7), 0.5), g = r.ctx.createGain(); g.gain.value = 0.16 * v;
+    s.connect(lp); lp.connect(g); g.connect(out); s.start(t); s.stop(t + s.buffer.duration);
+  };
+  /** Music box / celesta: FM bell with a bright attack that mellows. */
+  INST.musicbox = function (r, f, t, d, v, out) {
+    var g = r.ctx.createGain(); g.connect(out);
+    var car = osc(r, 'sine', f, t, t + 2.6), mod = osc(r, 'sine', f * 3.5, t, t + 2.6), mg = r.ctx.createGain();
+    mg.gain.setValueAtTime(f * 2.4, t); mg.gain.exponentialRampToValueAtTime(f * 0.04, t + 0.9);
+    mod.connect(mg); mg.connect(car.frequency); car.connect(g);
+    var oc = r.ctx.createGain(); oc.gain.value = 0.12; osc(r, 'sine', f * 2, t, t + 1.4).connect(oc); oc.connect(g);
+    g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(0.1 * v, t + 0.003); g.gain.exponentialRampToValueAtTime(0.0001, t + 2.4);
+  };
+  /** Soft breathy flute with delayed vibrato. */
+  INST.flute = function (r, f, t, d, v, out) {
+    var g = r.ctx.createGain(), lp = filter(r, 'lowpass', 3200, 0.5), end = t + d + 0.5;
+    var o1 = osc(r, 'sine', f, t, end), o2 = osc(r, 'triangle', f, t, end, 3), og = r.ctx.createGain(); og.gain.value = 0.35;
+    var lfo = r.ctx.createOscillator(), lg = r.ctx.createGain(); lfo.frequency.value = 5;
+    lg.gain.setValueAtTime(0, t); lg.gain.linearRampToValueAtTime(f * 0.007, t + Math.min(0.5, d * 0.6) + 0.1);
+    lfo.connect(lg); lg.connect(o1.frequency); lg.connect(o2.frequency); lfo.start(t); lfo.stop(end);
+    o1.connect(lp); o2.connect(og); og.connect(lp);
+    var br = filter(r, 'bandpass', f * 2, 2), bg = r.ctx.createGain(); bg.gain.value = 0.05; noiseSrc(r, t, d + 0.4).connect(br); br.connect(bg); bg.connect(lp);
+    lp.connect(g); g.connect(out); env(g, t, 0.075 * v, 0.07, 0.4, 0.85, 0.35, t + d);
+  };
+  /** A soft "aah" choir: detuned saws through vowel formant filters, with gentle vibrato. */
+  INST.choir = function (r, f, t, d, v, out) {
+    var sum = r.ctx.createGain(), g = r.ctx.createGain(), end = t + d + 1.8;
+    var lfo = r.ctx.createOscillator(), lg = r.ctx.createGain(); lfo.frequency.value = 4.6; lg.gain.value = 9; lfo.connect(lg); lfo.start(t); lfo.stop(end);
+    [-9, 0, 8].forEach(function (dt) { var o = osc(r, 'sawtooth', f, t, end, dt); lg.connect(o.detune); o.connect(sum); });
+    [[730, 1.0, 9], [1100, 0.55, 11], [2550, 0.22, 13]].forEach(function (fm) { var b = filter(r, 'bandpass', fm[0], fm[2]), bg = r.ctx.createGain(); bg.gain.value = fm[1]; sum.connect(b); b.connect(bg); bg.connect(g); });
+    g.connect(out); env(g, t, 0.2 * v, Math.min(0.9, d * 0.5), 0.6, 0.9, 1.6, t + d);
+  };
+  /** String ensemble pad. */
+  INST.strings = function (r, f, t, d, v, out) {
+    var g = r.ctx.createGain(), lp = filter(r, 'lowpass', 1700, 0.4), end = t + d + 1.2;
+    lp.frequency.setValueAtTime(900, t); lp.frequency.linearRampToValueAtTime(1900, t + d * 0.6);
+    [-13, -4, 5, 12].forEach(function (dt) { osc(r, 'sawtooth', f, t, end, dt).connect(lp); });
+    lp.connect(g); g.connect(out); env(g, t, 0.028 * v, Math.min(0.7, d * 0.45), 0.6, 0.85, 1.0, t + d);
+  };
+  /** Warm round bass (harp-like body, no buzz). */
+  INST.softbass = function (r, f, t, d, v, out) {
+    var g = r.ctx.createGain(), lp = filter(r, 'lowpass', 420, 0.7);
+    osc(r, 'sine', f, t, t + d + 0.6).connect(lp); var tg = r.ctx.createGain(); tg.gain.value = 0.3; osc(r, 'triangle', f * 2, t, t + d + 0.6).connect(tg); tg.connect(lp);
+    lp.connect(g); g.connect(out); env(g, t, 0.2 * v, 0.012, d * 0.8, 0.35, 0.4, t + d);
+  };
   function play(r, inst, midi, t, d, v, out) { INST[inst](r, midi === null ? 0 : mtof(midi), t, d, v === undefined ? 1 : v, out || r.music); }
 
   // ---------------------------------------------------------------- composition
@@ -165,6 +230,56 @@
     ending: { bpm: 76, root: 60, scale: 'major', chords: [0, 4, 5, 3, 0, 4, 3, 4], lead: 'bell', arp: 'pad', drums: 'soft',
       A: ORI.concat([9, null, 7, null, 4, null, null, null]), B: [5, null, 4, null, 2, null, 4, null, 7, null, 9, null, 7, null, null, null] }
   };
+  /*
+   * "The Mirror Waltz" — Mirrorvale's theme, hand-arranged in 3/4 (D major with a lydian G♯ for an icy shimmer).
+   * 16 bars: A (bars 1–8) and B (bars 9–16). The melody opens with the Ori motif (D F♯ A D′ A).
+   * First time round a music box sings the tune; second time a flute takes it with the music box an octave above,
+   * and a choir joins. Harp arpeggios, strings, a warm bass, a light shaker in B, and a sparkle run at each phrase end.
+   */
+  var MIRV = {
+    chords: [ // bass note + 4-note voicing (MIDI)
+      { b: 38, v: [54, 57, 61, 64] }, { b: 35, v: [54, 57, 62, 64] }, { b: 43, v: [54, 59, 61, 62] }, { b: 45, v: [52, 57, 62, 66] },
+      { b: 38, v: [54, 57, 61, 64] }, { b: 42, v: [52, 57, 61, 66] }, { b: 43, v: [54, 59, 62, 66] }, { b: 45, v: [52, 57, 61, 64] },
+      { b: 35, v: [54, 57, 61, 62] }, { b: 43, v: [54, 59, 62, 66] }, { b: 42, v: [57, 61, 62, 66] }, { b: 40, v: [54, 55, 59, 62] },
+      { b: 35, v: [54, 57, 61, 62] }, { b: 43, v: [54, 59, 61, 62] }, { b: 40, v: [55, 59, 62, 64] }, { b: 45, v: [52, 55, 61, 64] }
+    ],
+    mel: [ // per bar: [eighth position 0–5, MIDI, length in eighths]
+      [[0, 74, 2], [2, 78, 1], [3, 81, 1], [4, 86, 2]], [[0, 81, 3], [3, 78, 1], [4, 76, 2]],
+      [[0, 74, 2], [2, 76, 1], [3, 78, 1], [4, 80, 2]], [[0, 81, 5]],
+      [[0, 74, 2], [2, 78, 1], [3, 81, 1], [4, 88, 2]], [[0, 85, 3], [3, 81, 1], [4, 78, 2]],
+      [[0, 83, 2], [2, 81, 1], [3, 79, 1], [4, 78, 2]], [[0, 76, 4]],
+      [[0, 78, 2], [2, 83, 1], [3, 85, 1], [4, 86, 2]], [[0, 88, 3], [3, 86, 1], [4, 83, 2]],
+      [[0, 81, 2], [2, 78, 1], [3, 81, 1], [4, 86, 2]], [[0, 83, 4], [4, 81, 2]],
+      [[0, 78, 2], [2, 83, 1], [3, 85, 1], [4, 86, 2]], [[0, 88, 2], [2, 90, 1], [3, 88, 1], [4, 85, 2]],
+      [[0, 86, 2], [2, 83, 1], [3, 79, 1], [4, 76, 2]], [[0, 76, 2], [2, 73, 1], [3, 76, 1], [4, 79, 2]]
+    ]
+  };
+  function mirWaltz(r, th, step, t, out, layers) {
+    var spb = 60 / th.bpm, s16 = spb / 4, barAbs = Math.floor(step / 12), pos = step % 12, bar = barAbs % 16, second = Math.floor(barAbs / 16) % 2 === 1;
+    var C = MIRV.chords[bar];
+    if (pos === 0) {
+      C.v.forEach(function (m) { play(r, 'strings', m, t, spb * 3, 0.9, out); });
+      if (second || bar >= 8) C.v.forEach(function (m, i) { if (i) play(r, 'choir', m, t, spb * 3, 0.5, out); });
+      play(r, 'softbass', C.b, t, spb * 2.6, 1, out);
+    }
+    if (pos === 8 && bar % 2 === 1) play(r, 'softbass', C.b + 7, t, spb, 0.55, out);
+    if (pos % 2 === 0) { // harp: rising and falling broken chord in eighths
+      var e = pos / 2, pat = [0, 1, 2, 3, 2, 1], up = (e === 3 && bar % 4 === 3) ? 12 : 0;
+      play(r, 'harp', C.v[pat[e]] + 12 + up, t, s16 * 2, e === 0 ? 0.75 : 0.55, out);
+    }
+    if (bar >= 8 && (pos === 4 || pos === 8)) play(r, 'shaker', null, t, 0.1, 0.5, out);
+    MIRV.mel[bar].forEach(function (n) {
+      if (n[0] * 2 !== pos) return;
+      var dur = n[2] * s16 * 2;
+      if (!second) play(r, 'musicbox', n[1], t, dur, 0.95, out);
+      else { play(r, 'flute', n[1] - 12, t, dur * 0.92, 1, out); play(r, 'musicbox', n[1] + 12, t, dur, 0.3, out); }
+    });
+    if ((bar === 7 || bar === 15) && pos >= 4) { // a sparkling run up to the next phrase
+      var k = pos - 4; play(r, 'musicbox', C.v[k % 4] + 24 + 12 * Math.floor(k / 4), t, s16, 0.28, out);
+    }
+  }
+  THEMES.mir = { bpm: 92, root: 62, scale: 'lydian', custom: mirWaltz, wet: 0.35 };
+
   var DRUMS = { // 16 sixteenth-steps per bar: k = kick, s = snare, h = hat, t = shaker
     none: [],
     soft: [['k', 0], ['t', 4], ['h', 8], ['t', 12]],
@@ -184,6 +299,7 @@
 
   /** Schedule one sixteenth-step of a theme. layers: 0…6 (the map adds layers as kingdoms are restored). */
   function scheduleStep(r, th, step, t, out, layers) {
+    if (th.custom) return th.custom(r, th, step, t, out, layers);
     var spb = 60 / th.bpm, s16 = spb / 4;
     var bar = Math.floor(step / 16) % 8, pos = step % 16;
     var chord = th.chords[bar], notes = chordNotes(th, chord);
@@ -213,6 +329,7 @@
     var r = A.rig, th = THEMES[name];
     var out = r.ctx.createGain(); out.gain.setValueAtTime(0.0001, r.ctx.currentTime); out.gain.linearRampToValueAtTime(1, r.ctx.currentTime + 1.5);
     out.connect(r.music);
+    if (th.wet) { var wg = r.ctx.createGain(); wg.gain.value = th.wet; out.connect(wg); wg.connect(r.reverb); }
     return { name: name, th: th, out: out, step: 0, next: r.ctx.currentTime + 0.12 };
   }
   function tick() {
@@ -351,8 +468,9 @@
       Object.keys(SFX).forEach(function (k) { if (k === 'hover' || k === 'type') return; SFX[k](r, t); t += k === 'fanfare' ? 2.2 : 0.75; });
       Object.keys(VOICES).forEach(function (w, i) { for (var j = 0; j < 6; j++) { var v = VOICES[w], m = v.f[j % v.f.length]; if (v.bell) play(r, 'bell', m, t + j * 0.07, 0.1, 0.25, r.voice); else tone(r, v.type, mtof(m), t + j * 0.07, 0.06, 0.05, { lp: v.lp, out: v.crush ? r.crush : r.voice }); } t += 0.6; });
     } else {
-      var th = THEMES[name], step = 0, tt = 0.05, s16 = 60 / th.bpm / 4;
-      while (tt < seconds - 0.5) { scheduleStep(r, th, step, tt, r.music, layers); tt += s16; step++; }
+      var th = THEMES[name], step = 0, tt = 0.05, s16 = 60 / th.bpm / 4, bus = r.music;
+      if (th.wet) { bus = ctx.createGain(); bus.connect(r.music); var wg = ctx.createGain(); wg.gain.value = th.wet; bus.connect(wg); wg.connect(r.reverb); }
+      while (tt < seconds - 0.5) { scheduleStep(r, th, step, tt, bus, layers); tt += s16; step++; }
     }
     return ctx.startRendering();
   };

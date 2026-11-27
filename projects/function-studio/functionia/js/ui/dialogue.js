@@ -14,7 +14,7 @@
       var who = D.who;
       g.fillStyle = 'rgba(255,255,255,0.08)'; g.beginPath(); g.arc(w / 2, hh / 2, 48, 0, 7); g.fill();
       var friendly = F.Game && F.Game.data && F.Game.data.ended;
-      F.Portraits.draw(g, who, w / 2, hh / 2 + 4, 92, t, { corrupted: D.corrupted && D.corrupted[who], friendly: friendly });
+      F.Portraits.draw(g, who, w / 2, hh / 2 + 4, 92, t, { corrupted: D.corrupted && D.corrupted[who], friendly: friendly, closeup: true });
     }, 'portrait');
     D.name = h('div', { class: 'speaker' });
     D.text = h('p', { class: 'line', 'aria-live': 'polite' });

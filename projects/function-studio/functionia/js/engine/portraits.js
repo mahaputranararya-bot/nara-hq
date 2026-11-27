@@ -431,6 +431,7 @@
   function draw(ctx, who, cx, cy, S, t, o) {
     var fn = P[who] || P.narrator;
     ctx.save(); ctx.translate(cx, cy);
+    if (o && o.closeup && fn.closeup) { ctx.translate(0, S * fn.closeup.dy); ctx.scale(fn.closeup.s, fn.closeup.s); }
     fn(ctx, S, t, o || {});
     ctx.restore();
     if (o && o.corrupted && who !== 'glitch' && who !== 'warden') {

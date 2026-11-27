@@ -182,6 +182,7 @@
     root.classList.toggle('reduced', reduced);
     root.classList.toggle('large', s.textSize === 'large');
     root.classList.toggle('contrast', !!s.highContrast);
+    if (F.GLFX && Game.canvas) F.GLFX.setEnabled(s.glow !== false && !s.highContrast, Game.canvas);
     if (Game.screen && Game.screen.onSettings) Game.screen.onSettings();
   };
   Game.saveSettings = function () { F.save.saveSettings(Game.settings); Game.applySettings(); };

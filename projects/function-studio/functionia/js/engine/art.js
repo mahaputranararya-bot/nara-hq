@@ -284,12 +284,16 @@
     o = o || {};
     var D = DRAW[id] || DRAW.void;
     var px = o.parallax ? o.parallax.x : 0, py = o.parallax ? o.parallax.y : 0;
-    blit(ctx, layer(id + 'sky', W, H, D.sky), px * 4, py * 3);
-    blit(ctx, layer(id + 'far', W, H, D.far), px * 10, py * 6);
-    blit(ctx, layer(id + 'near', W, H, D.near), px * 18, py * 10);
     var rest = o.rest === undefined ? 1 : o.rest;
-    D.anim(ctx, W, H, t, rest);
-    Art.ambient(ctx, id, W, H, t, rest);
+    var Sc = F.Scenes && F.Scenes[id];
+    if (Sc) Sc.render(ctx, W, H, t, o, rest); // painted scene (js/engine/scenes/)
+    else {
+      blit(ctx, layer(id + 'sky', W, H, D.sky), px * 4, py * 3);
+      blit(ctx, layer(id + 'far', W, H, D.far), px * 10, py * 6);
+      blit(ctx, layer(id + 'near', W, H, D.near), px * 18, py * 10);
+      D.anim(ctx, W, H, t, rest);
+      Art.ambient(ctx, id, W, H, t, rest);
+    }
     if (rest < 1 && !o.noGrey) {
       ctx.save();
       ctx.globalCompositeOperation = 'saturation';
@@ -585,6 +589,6 @@
     ctx.restore();
   };
 
-  Art.clearCache = function () { cache = {}; };
+  Art.clearCache = function () { cache = {}; if (F.SceneKit) F.SceneKit.clear(); };
   F.Art = Art;
 })();

@@ -30,12 +30,14 @@
       var ctx = Game.ctx;
       ctx.setTransform(Game.dpr, 0, 0, Game.dpr, 0, 0);
       ctx.clearRect(0, 0, Game.W, Game.H);
+      Game.glMask = null;
       var off = F.FX.offset();
       ctx.save(); ctx.translate(off.x, off.y);
       if (Game.screen && Game.screen.render) Game.screen.render(ctx);
       F.FX.draw(ctx);
       ctx.restore();
       F.FX.post(ctx, Game.canvas, Game.dpr);
+      if (F.GLFX.on) F.GLFX.frame(Game.canvas, { mask: Game.glMask, W: Game.W, H: Game.H, dt: dt });
     } catch (e) {
       if (!Game._errShown) { Game._errShown = true; console.error(e); }
     }

@@ -194,6 +194,7 @@
     render: function (ctx) {
       var t = G.time;
       F.Art.kingdom(ctx, this.k, G.W, G.H, t, { rest: this.rest, parallax: { x: (G.mouse.x / G.W - 0.5), y: (G.mouse.y / G.H - 0.5) } });
+      if (this.rect) G.glMask = [this.rect];
       if (this.mode === 'boss') this.renderBoss(ctx, t);
       if (this.view) this.view.render(ctx);
       else if (this.showcase) {
