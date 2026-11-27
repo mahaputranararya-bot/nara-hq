@@ -50,43 +50,57 @@ kbd { display: inline-block; font: 700 0.62rem/1 var(--font); padding: 3px 5px; 
 @keyframes bump { 40% { transform: scale(1.25); background: rgba(255,201,74,0.35); } }
 
 /* ---------------------------------------------------------------- puzzle panel */
-.ppanel { position: fixed; top: 74px; right: 16px; bottom: 16px; width: var(--panel-w); background: var(--panel); border-radius: 20px; padding: 18px 18px 14px; overflow-y: auto;
-  box-shadow: 0 12px 34px rgba(0,0,0,0.4); border: 2px solid rgba(255,255,255,0.08); display: flex; flex-direction: column; gap: 10px; animation: slidein 0.28s ease-out; }
+.ppanel { position: fixed; top: 74px; right: 16px; bottom: 16px; width: var(--panel-w); border-radius: 22px; padding: 18px 18px 16px; overflow-y: auto; overflow-x: hidden;
+  background: linear-gradient(180deg, rgba(34,38,72,0.96), rgba(20,22,46,0.97)); border: 1.5px solid rgba(255,255,255,0.12);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.08);
+  display: flex; flex-direction: column; gap: 12px; animation: slidein 0.28s ease-out; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.25) transparent; }
 @keyframes slidein { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: none; } }
-.ppanel > * { flex-shrink: 0; }
-.ppanel.golden { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(255,201,74,0.35), 0 12px 34px rgba(0,0,0,0.4); }
-.phead { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
-.ptag { width: 100%; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gold); }
-.ptitle { font-size: 1.35rem; margin: 0; }
+.ppanel > * { flex-shrink: 0; min-width: 0; }
+.ppanel p, .ppanel .formula, .ppanel .feedback, .ppanel .opt, .ppanel legend { overflow-wrap: anywhere; }
+.ppanel.golden { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(255,201,74,0.35), 0 16px 40px rgba(0,0,0,0.45); }
+.phead { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+.ptag { width: 100%; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); }
+.ptitle { font-size: 1.32rem; margin: 0; line-height: 1.15; }
 .goldtag { font-weight: 800; color: var(--ink); background: var(--gold); border-radius: 999px; padding: 1px 9px; font-size: 0.75rem; }
-.prompt { font-size: 1rem; margin: 0; }
-.formula { white-space: pre-wrap; font: 700 1.1rem var(--display); background: rgba(255,255,255,0.08); border-radius: 10px; padding: 8px 12px; letter-spacing: 0.02em; }
-.predict { font-size: 0.8rem; color: var(--gold); background: rgba(255,201,74,0.1); border-radius: 8px; padding: 6px 10px; }
+.prompt { font-size: 0.98rem; line-height: 1.45; margin: 0; color: #e9ecff; }
+.formula { white-space: pre-wrap; font: 700 1.12rem/1.35 var(--display); background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 9px 13px; letter-spacing: 0.02em; }
+.predict { font-size: 0.8rem; color: var(--gold); background: rgba(255,201,74,0.1); border-radius: 10px; padding: 7px 11px; }
 .inputs { display: flex; flex-direction: column; gap: 10px; }
-.fields { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 10px; }
-.fields.three { grid-template-columns: 1fr 1fr 1fr; }
-.fields.stack { grid-template-columns: 1fr; }
-.field input.num { flex: 1 1 auto; min-width: 2.6em; }
-.echo { font-size: 0.9rem; color: var(--muted); }
+/* answer boxes: label on its own line, box underneath, so nothing squeezes sideways */
+.fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(128px, 1fr)); gap: 10px; }
+.fields.n1 { grid-template-columns: 1fr; }
+.fcell { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.fcard { display: flex; flex-direction: column; gap: 5px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 8px 10px 10px; min-width: 0; cursor: text; }
+.fcard:focus-within { border-color: rgba(255,201,74,0.7); background: rgba(255,201,74,0.07); }
+.flabel { font-weight: 700; font-size: 0.86rem; color: #dfe3ff; line-height: 1.25; overflow-wrap: anywhere; }
+.fbox { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.fbox input.num { flex: 1 1 auto; min-width: 0; width: 100%; }
+.unit { color: var(--muted); font-size: 0.82rem; flex: none; }
+.formrow { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 10px 12px; font: 700 1.08rem var(--display); }
+.formrow input.num { width: 4.6em; min-width: 0; flex: 0 0 auto; text-align: center; }
+.formrow .ft { white-space: nowrap; }
+.echo { font-size: 0.88rem; color: var(--muted); overflow-wrap: anywhere; }
 .echo b { color: var(--text); font-family: var(--display); }
-.fcell { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
-.field { display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.06); border-radius: 10px; padding: 6px 8px; min-width: 0; }
-.field .pre { font-weight: 700; white-space: nowrap; font-size: 0.92rem; }
-.field .post { color: var(--muted); font-size: 0.85rem; }
-input.num, input.code, input.name, select { font: 700 1.05rem var(--font); width: 100%; min-width: 3.2em; padding: 7px 9px; border-radius: 9px; border: 2px solid rgba(255,255,255,0.25); background: #fff; color: var(--ink); }
+input.num, input.code, input.name, select { font: 700 1.05rem var(--font); width: 100%; min-width: 3.2em; padding: 7px 10px; border-radius: 9px; border: 2px solid rgba(255,255,255,0.25); background: #fff; color: var(--ink); }
 input.num:focus, input.code:focus, input.name:focus, select:focus { border-color: var(--gold); outline: none; box-shadow: 0 0 0 3px rgba(255,201,74,0.35); }
 select { font-size: 0.9rem; }
 .pslider, .scanner input, .set input[type=range], .zone input[type=range] { width: 100%; accent-color: var(--gold); }
 .scanner { display: flex; align-items: center; gap: 10px; font-weight: 700; }
 .scanner span { white-space: nowrap; }
-fieldset.row { border: none; margin: 0; padding: 0; }
-fieldset.row legend { font-weight: 800; margin-bottom: 6px; padding: 0; }
-.opts { display: flex; flex-wrap: wrap; gap: 6px; }
-.opt { font: 700 0.92rem var(--font); padding: 8px 12px; border-radius: 10px; border: 2px solid rgba(255,255,255,0.25); background: rgba(255,255,255,0.07); color: var(--text); cursor: pointer; transition: transform 0.1s, background 0.15s; text-align: left; }
-.opt:hover { background: rgba(255,255,255,0.15); transform: translateY(-1px); }
+fieldset.row { border: none; margin: 0; padding: 0; min-width: 0; }
+fieldset.row legend { font-weight: 800; margin-bottom: 7px; padding: 0; font-size: 0.92rem; }
+.opts { display: flex; flex-wrap: wrap; gap: 7px; }
+.opt { font: 700 0.92rem/1.25 var(--font); padding: 9px 12px; min-height: 40px; border-radius: 11px; border: 2px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.06); color: var(--text); cursor: pointer; transition: transform 0.1s, background 0.15s, border-color 0.15s; text-align: left; max-width: 100%; }
+.opts.long { flex-direction: column; }
+.opts.long .opt { width: 100%; }
+.opt:hover { background: rgba(255,255,255,0.14); transform: translateY(-1px); }
 .opt.on { background: var(--gold); color: var(--ink); border-color: var(--gold2); }
-.actions { display: flex; flex-wrap: wrap; gap: 8px; }
-.actions .launch { flex: 1 1 auto; justify-content: center; font-size: 1.05rem; }
+/* buttons: Launch on its own row, Retry + Hint share the next one */
+.actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.actions .btn { justify-content: center; min-width: 0; white-space: nowrap; }
+.actions .launch { grid-column: 1 / -1; font-size: 1.08rem; padding: 0.65em 1em; }
+.actions .btn .lbl { overflow: hidden; text-overflow: ellipsis; }
+.ppanel kbd { font-size: 0.56rem; padding: 2px 4px; margin-left: 4px; }
 .feedback { min-height: 1.4em; font-size: 0.98rem; border-radius: 10px; padding: 0; transition: background 0.2s; }
 .feedback.good, .feedback.miss, .feedback.glitch, .feedback.info { padding: 9px 12px; }
 .feedback.good { background: rgba(123,201,111,0.2); border-left: 4px solid var(--good); }

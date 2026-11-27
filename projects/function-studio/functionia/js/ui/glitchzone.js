@@ -10,7 +10,7 @@
     var inp = h('input', { type: 'text', class: 'num', value: val, 'aria-label': label, maxlength: '12' });
     inp.addEventListener('input', function () { cb(inp.value); });
     inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); Z.run(); } });
-    return h('label', { class: 'field' }, [h('span', { class: 'pre', text: label }), inp, o.post ? h('span', { class: 'post', text: o.post }) : null]);
+    return h('label', { class: 'fcard' }, [h('span', { class: 'flabel', text: label.replace(/\s+/g, ' ') }), h('span', { class: 'fbox' }, [inp, o.post ? h('span', { class: 'unit', text: o.post }) : null])]);
   }
   function P(s) { var r = F.parse.parse(s); return r.ok ? r.value : null; }
 
@@ -100,7 +100,7 @@
       init: function (s) { s.a = '-1'; s.h = '3'; s.k = '9'; },
       controls: function (s, el) {
         el.appendChild(h('p', { class: 'formula', text: 'y = a(x ' + M + ' h)² + k' }));
-        el.appendChild(h('div', { class: 'fields three' }, [numIn('a =', s.a, function (v) { s.a = v; }), numIn('h =', s.h, function (v) { s.h = v; }), numIn('k =', s.k, function (v) { s.k = v; })]));
+        el.appendChild(h('div', { class: 'fields' }, [numIn('a =', s.a, function (v) { s.a = v; }), numIn('h =', s.h, function (v) { s.h = v; }), numIn('k =', s.k, function (v) { s.k = v; })]));
       },
       runLabel: 'Launch the arrow',
       draw: function (ctx, s, Gr) {
@@ -190,7 +190,7 @@
       init: function (s) { s.a = '2'; s.h = '1'; s.k = '1'; s.x = '3'; },
       controls: function (s, el) {
         el.appendChild(h('p', { class: 'formula', text: 'y = a/(x ' + M + ' h) + k' }));
-        el.appendChild(h('div', { class: 'fields three' }, [numIn('a =', s.a, function (v) { s.a = v; }), numIn('h =', s.h, function (v) { s.h = v; }), numIn('k =', s.k, function (v) { s.k = v; })]));
+        el.appendChild(h('div', { class: 'fields' }, [numIn('a =', s.a, function (v) { s.a = v; }), numIn('h =', s.h, function (v) { s.h = v; }), numIn('k =', s.k, function (v) { s.k = v; })]));
         el.appendChild(numIn('Send Ori to x =', s.x, function (v) { s.x = v; }));
       },
       runLabel: 'Send Ori',

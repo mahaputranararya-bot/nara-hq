@@ -106,7 +106,8 @@
     if (p.kind === 'choice' || p.kind === 'vlt') {
       (p.rows || []).forEach(function (row) {
         var fs = h('fieldset', { class: 'row' }, [h('legend', { text: row.label })]);
-        var opts = h('div', { class: 'opts', role: 'radiogroup', 'aria-label': row.label });
+        var isLong = row.options.some(function (o) { return o.t.length > 13; });
+        var opts = h('div', { class: 'opts' + (isLong ? ' long' : ''), role: 'radiogroup', 'aria-label': row.label });
         row.options.forEach(function (op) {
           var b = h('button', { type: 'button', class: 'opt', role: 'radio', 'aria-checked': 'false', text: op.t });
           b.addEventListener('click', function () {
@@ -131,16 +132,34 @@
       }
       return;
     }
-    var longLabels = (p.fields || []).some(function (f) { return (f.label || '').length > 12; });
-    var wrap = h('div', { class: 'fields' + (longLabels ? ' stack' : ((p.fields || []).length > 2 ? ' three' : '')) });
-    (p.fields || []).forEach(function (f, i) {
+    function makeInput(f) {
       var inp = h('input', { type: 'text', inputmode: 'text', autocomplete: 'off', spellcheck: 'false', class: 'num', 'aria-label': f.name || f.label, id: 'in-' + f.key, maxlength: '24' });
       inp.addEventListener('input', function () { self.raw[f.key] = inp.value; self.syncSlider(f.key); self.onInputChange(); });
       inp.addEventListener('keydown', function (e) {
         if (e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); self.launch(); }
       });
       self.inputs[f.key] = inp;
-      var row = h('label', { class: 'field', for: 'in-' + f.key }, [h('span', { class: 'pre', text: f.label }), inp, f.post ? h('span', { class: 'post', text: f.post }) : null]);
+      return inp;
+    }
+    if (p.kind === 'inverse') {
+      // the answer is written as a formula: f⁻¹(x) = ( x − [ ] ) ÷ [ ]
+      var fp = p.fields[0], fq = p.fields[1];
+      this.inputsEl.appendChild(h('div', { class: 'formrow', role: 'group', 'aria-label': 'Inverse function' }, [
+        h('span', { class: 'ft', text: 'f\u207B\u00B9(x) =' }), h('span', { class: 'ft', text: '(x \u2212' }), makeInput(fp), h('span', { class: 'ft', text: ')' }),
+        h('span', { class: 'ft', text: '\u00F7' }), makeInput(fq)
+      ]));
+      this.echoEl = h('div', { class: 'echo', 'aria-live': 'polite' });
+      this.inputsEl.appendChild(this.echoEl);
+      return;
+    }
+    var wrap = h('div', { class: 'fields n' + (p.fields || []).length });
+    (p.fields || []).forEach(function (f, i) {
+      var inp = makeInput(f);
+      var label = (f.label || '').replace(/\s+/g, ' ').trim();
+      var row = h('label', { class: 'fcard', for: 'in-' + f.key }, [
+        h('span', { class: 'flabel', text: label }),
+        h('span', { class: 'fbox' }, [inp, f.post ? h('span', { class: 'unit', text: f.post }) : null])
+      ]);
       var cell = h('div', { class: 'fcell' }, [row]);
       if (f.slider && self.info.preview) {
         var s = h('input', { type: 'range', min: String(f.slider.min), max: String(f.slider.max), step: String(f.slider.step), class: 'pslider', 'aria-label': (f.name || f.key) + ' slider' });
@@ -155,7 +174,6 @@
       wrap.appendChild(cell);
     });
     this.inputsEl.appendChild(wrap);
-    if (p.kind === 'inverse') { this.echoEl = h('div', { class: 'echo', 'aria-live': 'polite' }); this.inputsEl.appendChild(this.echoEl); }
   };
 
   PuzzleView.prototype.syncSlider = function (key) {
@@ -307,6 +325,8 @@
   };
 
   PuzzleView.prototype.say = function (text, type, prefix) {
+    var fb = this.feedback;
+    setTimeout(function () { if (fb.isConnected) fb.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }, 30);
     F.clear(this.feedback);
     this.feedback.className = 'feedback ' + (type || '');
     if (prefix) this.feedback.appendChild(F.h('strong', { text: prefix }));
@@ -321,7 +341,7 @@
     var lbl = this.hintBtn.querySelector('.lbl');
     if (!this.hintsOpen()) {
       var left = this.info.hintAfter - this.misses;
-      lbl.textContent = 'Hint (after ' + left + ' tr' + (left === 1 ? 'y' : 'ies') + ')';
+      lbl.textContent = 'Hint in ' + left + ' tr' + (left === 1 ? 'y' : 'ies'); this.hintBtn.title = 'Hints open after ' + left + ' more wrong tr' + (left === 1 ? 'y' : 'ies');
     } else if (this.hintLevel >= 3) lbl.textContent = 'Hints';
     else lbl.textContent = 'Hint ' + (this.hintLevel + 1) + '/3';
   };
@@ -356,6 +376,7 @@
   PuzzleView.prototype.renderHintBox = function (body, btns) {
     F.clear(this.hintBox);
     this.hintBox.hidden = false;
+    var hb = this.hintBox; setTimeout(function () { if (hb.isConnected) hb.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }, 30);
     var mini = F.liveCanvas(44, 44, function (g, t) { F.Portraits.draw(g, 'delta', 22, 24, 40, t); });
     this.hintBox.appendChild(F.h('div', { class: 'hb' }, [mini, F.h('div', { class: 'hbody' }, [F.h('div', { class: 'who', text: 'Delta' }), body, F.h('div', { class: 'hbtns' }, btns)])]));
   };
@@ -383,6 +404,7 @@
     var h = F.h, self = this;
     F.clear(this.after);
     this.after.hidden = false;
+    var af = this.after; setTimeout(function () { if (af.isConnected) af.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }, 60);
     var starRow = h('div', { class: 'stars', 'aria-label': stars + ' out of 3 stars' });
     for (var i = 0; i < 3; i++) starRow.appendChild(h('span', { class: 'star' + (i < stars ? ' on' : ''), text: '★', style: 'animation-delay:' + (i * 0.15) + 's' }));
     var why = this.revealed ? 'You asked to see the answer. That’s smart: now you know how it works.'

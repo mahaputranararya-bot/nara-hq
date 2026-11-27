@@ -19,7 +19,7 @@ async function skipDialogue(p, times = 10) {
   }
 }
 async function typeIn(p, label, value) {
-  const inp = p.locator('.ppanel label.field', { hasText: label }).first().locator('input');
+  const inp = p.locator('.ppanel label.fcard', { hasText: label }).first().locator('input');
   await inp.fill(value);
 }
 async function answer(p) {
