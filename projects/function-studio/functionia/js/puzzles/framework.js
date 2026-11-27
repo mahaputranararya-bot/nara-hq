@@ -450,7 +450,10 @@
       var r = this.G.rect, a = 0.5 + Math.sin(this.time * 3) * 0.3;
       ctx.save(); ctx.strokeStyle = 'rgba(255,210,74,' + a + ')'; ctx.lineWidth = 4; F.roundRect(ctx, r.x - 10, r.y - 10, r.w + 20, r.h + 20, 20); ctx.stroke(); ctx.restore();
     }
+    var oR = this.ori.r + 30;
+    this.G.avoid = { x: this.ori.px - 48, y: this.ori.py - oR - 14, w: 96, h: oR + 14 + this.ori.r };
     this.viz.draw(ctx, this, this.G, this.time);
+    this.G.avoid = null;
     // the graph Ori has drawn with its scarf trail
     var self = this;
     this.drawn.forEach(function (d) { self.G.clip(ctx); self.G.strokePieces(ctx, [d.pts], { color: d.color || self.trailColor, width: 4.5, glow: d.glow }); self.G.endClip(ctx); });

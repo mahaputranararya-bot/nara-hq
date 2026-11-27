@@ -119,7 +119,7 @@
       if (pv.lit.gate) G.segment(ctx, s[0], s[1], ans[0], ans[1], { color: '#8a76c8', width: 2, dash: [4, 6], alpha: 0.9 });
       else if (pv.marks.perp) { var L = 40; G.segment(ctx, s[0] - L, s[1] + L, s[0] + L, s[1] - L, { color: '#8a76c8', width: 2, dash: [4, 6], alpha: 0.5 }); } // the reflection lies somewhere on this line
       icon(ctx, pv, 'crystal', s[0], s[1], 13, null, { lit: true });
-      G.label(ctx, F.fmt.coord(s[0], s[1]), s[0], s[1], { dx: 14, dy: -18, bg: true, size: 13 });
+      if (Math.hypot(pv.oriW.x - s[0], pv.oriW.y - s[1]) > 0.3) G.label(ctx, F.fmt.coord(s[0], s[1]), s[0], s[1], { dx: 14, dy: -18, bg: true, size: 13 });
       var n = pv.nums();
       if (n.x !== null && n.y !== null && !pv.lit.gate) {
         icon(ctx, pv, 'gate', n.x, n.y, 14, null, { lit: false });

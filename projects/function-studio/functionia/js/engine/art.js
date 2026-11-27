@@ -289,6 +289,7 @@
     blit(ctx, layer(id + 'near', W, H, D.near), px * 18, py * 10);
     var rest = o.rest === undefined ? 1 : o.rest;
     D.anim(ctx, W, H, t, rest);
+    Art.ambient(ctx, id, W, H, t, rest);
     if (rest < 1 && !o.noGrey) {
       ctx.save();
       ctx.globalCompositeOperation = 'saturation';
@@ -297,6 +298,61 @@
       ctx.restore();
       ctx.fillStyle = 'rgba(20,16,40,' + (0.18 * (1 - rest)) + ')'; ctx.fillRect(0, 0, W, H);
     }
+  };
+
+  // ----------------------------------------------------------------- atmosphere: light, fog, floating particles
+  var AMB = {
+    mir: { n: 34, color: '#ffffff', kind: 'flake', vy: 14, vx: 6, fog: 'rgba(230,240,255,0.35)', rays: 'rgba(255,255,255,0.10)' },
+    lin: { n: 26, color: '#fff3a0', kind: 'dot', vy: -6, vx: 18, fog: 'rgba(255,246,214,0.25)', rays: 'rgba(255,240,170,0.16)', sun: [0.82, 0.16] },
+    par: { n: 30, color: '#ffb35a', kind: 'ember', vy: -22, vx: 6, fog: 'rgba(255,190,130,0.22)', rays: 'rgba(255,200,140,0.14)', sun: [0.3, 0.52] },
+    cub: { n: 22, color: '#b8ffe9', kind: 'firefly', vy: -4, vx: 4, fog: 'rgba(120,90,160,0.25)' },
+    exp: { n: 30, color: '#d7ff9a', kind: 'spore', vy: -10, vx: 8, fog: 'rgba(40,110,50,0.25)', rays: 'rgba(220,255,170,0.10)', sun: [0.5, -0.1] },
+    rat: { n: 26, color: '#3FE0FF', kind: 'static', vy: 0, vx: 0, fog: 'rgba(40,30,90,0.35)' },
+    void: { n: 24, color: '#c9cfff', kind: 'dot', vy: -3, vx: 2 }
+  };
+  Art.ambient = function (ctx, id, W, H, t, rest) {
+    var A = AMB[id];
+    if (!A) return;
+    ctx.save();
+    // soft light rays from the sun
+    if (A.rays && A.sun) {
+      var sx = W * A.sun[0], sy = H * A.sun[1];
+      ctx.globalCompositeOperation = 'lighter';
+      for (var r = 0; r < 6; r++) {
+        var ang = Math.PI * 0.35 + r * 0.16 + Math.sin(t * 0.2 + r) * 0.03, len = Math.max(W, H) * 1.2;
+        ctx.fillStyle = A.rays;
+        ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(sx + Math.cos(ang - 0.03) * len, sy + Math.sin(ang - 0.03) * len); ctx.lineTo(sx + Math.cos(ang + 0.03) * len, sy + Math.sin(ang + 0.03) * len); ctx.closePath(); ctx.fill();
+      }
+      ctx.globalCompositeOperation = 'source-over';
+    }
+    // ground fog
+    if (A.fog) {
+      var fg = ctx.createLinearGradient(0, H * 0.55, 0, H);
+      fg.addColorStop(0, 'rgba(0,0,0,0)'); fg.addColorStop(0.5, A.fog); fg.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = fg; ctx.fillRect(0, H * 0.55, W, H * 0.45);
+    }
+    // floating particles (computed from time, so no state is stored)
+    var n = Math.round(A.n * (0.5 + 0.5 * rest));
+    for (var i = 0; i < n; i++) {
+      var s1 = (i * 0.6180339) % 1, s2 = (i * 0.4142135 + 0.3) % 1, s3 = (i * 0.7320508) % 1;
+      var x = ((s1 * W + t * A.vx * (0.5 + s2)) % W + W) % W + Math.sin(t * (0.5 + s3) + i) * 12;
+      var y = ((s2 * H + t * A.vy * (0.5 + s3)) % H + H) % H;
+      var a = 0.35 + 0.45 * Math.sin(t * (1 + s3 * 2) + i * 1.7);
+      if (a <= 0) continue;
+      ctx.globalAlpha = a; ctx.fillStyle = A.color;
+      var sz = 1.5 + s3 * 2.5;
+      if (A.kind === 'flake') { F.Paint.sparkle(ctx, x, y, sz * 1.6, a); }
+      else if (A.kind === 'firefly') { ctx.shadowColor = A.color; ctx.shadowBlur = 10; ctx.beginPath(); ctx.arc(x, y, sz, 0, Math.PI * 2); ctx.fill(); ctx.shadowBlur = 0; }
+      else if (A.kind === 'ember') { ctx.fillStyle = s3 > 0.5 ? '#ffd27a' : '#ff8a4a'; ctx.beginPath(); ctx.arc(x, y, sz * 0.8, 0, Math.PI * 2); ctx.fill(); }
+      else if (A.kind === 'static') { var st = Math.floor(t * 3); ctx.fillStyle = (i + st) % 2 ? '#FF4D6D' : '#3FE0FF'; ctx.globalAlpha = 0.35; ctx.fillRect(((s1 * 977 + st * 37) % 1) * W, ((s2 * 613 + st * 53) % 1) * H, sz + 1, sz + 1); }
+      else { ctx.beginPath(); ctx.arc(x, y, sz, 0, Math.PI * 2); ctx.fill(); }
+    }
+    ctx.globalAlpha = 1;
+    // gentle vignette keeps the eye on the centre
+    var vg = ctx.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.45, W / 2, H / 2, Math.max(W, H) * 0.8);
+    vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(10,8,30,0.35)');
+    ctx.fillStyle = vg; ctx.fillRect(0, 0, W, H);
+    ctx.restore();
   };
 
   // ----------------------------------------------------------------- realm map
@@ -319,12 +375,32 @@
   Art.island = function (ctx, motif, x, y, s, t, color, alive, accent) {
     ctx.save();
     ctx.translate(x, y);
-    // island body
-    ctx.fillStyle = alive ? '#6b5a4a' : '#4a4a55';
-    ctx.beginPath(); ctx.ellipse(0, s * 0.2, s * 1.05, s * 0.42, 0, 0, Math.PI); ctx.fill();
-    ctx.fillStyle = alive ? color : '#7a7a88';
-    ctx.beginPath(); ctx.ellipse(0, s * 0.18, s * 1.05, s * 0.36, 0, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = 'rgba(255,255,255,0.18)'; ctx.beginPath(); ctx.ellipse(-s * 0.2, s * 0.1, s * 0.7, s * 0.2, 0, 0, Math.PI * 2); ctx.fill();
+    // glow when restored
+    if (alive) {
+      var gl = ctx.createRadialGradient(0, s * 0.1, s * 0.3, 0, s * 0.1, s * 1.8);
+      gl.addColorStop(0, F.hexA(color, 0.35)); gl.addColorStop(1, F.hexA(color, 0));
+      ctx.fillStyle = gl; ctx.beginPath(); ctx.arc(0, s * 0.1, s * 1.8, 0, Math.PI * 2); ctx.fill();
+    }
+    // floating rock with layered cliffs (strata)
+    var rock = alive ? '#7a6450' : '#4a4a55';
+    ctx.beginPath(); ctx.moveTo(-s * 1.05, s * 0.18);
+    ctx.bezierCurveTo(-s * 0.9, s * 0.7, -s * 0.35, s * 1.05, 0, s * 1.15);
+    ctx.bezierCurveTo(s * 0.35, s * 1.05, s * 0.9, s * 0.7, s * 1.05, s * 0.18); ctx.closePath();
+    var rg = ctx.createLinearGradient(0, s * 0.2, 0, s * 1.15); rg.addColorStop(0, rock); rg.addColorStop(1, F.Paint.tint(rock, -0.5));
+    ctx.fillStyle = rg; ctx.fill();
+    ctx.strokeStyle = 'rgba(0,0,0,0.18)'; ctx.lineWidth = 1.5;
+    for (var st = 1; st <= 3; st++) { ctx.beginPath(); ctx.moveTo(-s * (1 - st * 0.18), s * (0.2 + st * 0.2)); ctx.quadraticCurveTo(0, s * (0.32 + st * 0.22), s * (1 - st * 0.18), s * (0.2 + st * 0.2)); ctx.stroke(); }
+    // grass / ground top
+    var top = alive ? color : '#7a7a88';
+    ctx.beginPath(); ctx.ellipse(0, s * 0.18, s * 1.05, s * 0.36, 0, 0, Math.PI * 2);
+    var tg = ctx.createLinearGradient(0, -s * 0.2, 0, s * 0.55); tg.addColorStop(0, F.Paint.tint(top, 0.25)); tg.addColorStop(1, F.Paint.tint(top, -0.2));
+    ctx.fillStyle = tg; ctx.fill();
+    ctx.strokeStyle = F.Paint.tint(top, -0.4); ctx.lineWidth = 2; ctx.stroke();
+    ctx.fillStyle = 'rgba(255,255,255,0.2)'; ctx.beginPath(); ctx.ellipse(-s * 0.25, s * 0.08, s * 0.6, s * 0.16, 0, 0, Math.PI * 2); ctx.fill();
+    if (alive) { // little grass tufts on the rim
+      ctx.strokeStyle = F.Paint.tint(top, -0.3); ctx.lineWidth = 1.5;
+      for (var gt = 0; gt < 7; gt++) { var ga = Math.PI * (0.15 + gt * 0.1); var gx = Math.cos(ga) * s * 1.0, gy = s * 0.18 + Math.sin(ga) * s * 0.34; ctx.beginPath(); ctx.moveTo(gx, gy); ctx.lineTo(gx - 2, gy + 7); ctx.moveTo(gx, gy); ctx.lineTo(gx + 2, gy + 6); ctx.stroke(); }
+    }
     var c2 = alive ? accent : '#9a9aa8';
     ctx.lineWidth = 2;
     if (motif === 'crystal') {

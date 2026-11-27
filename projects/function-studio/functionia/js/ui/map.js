@@ -180,8 +180,16 @@
       });
       // the Origin island in the centre
       ctx.save();
-      ctx.fillStyle = 'rgba(255,231,160,0.25)'; ctx.beginPath(); ctx.ellipse(this.cx, this.cy + 18, 52, 16, 0, 0, 7); ctx.fill();
-      ctx.strokeStyle = 'rgba(255,231,160,0.7)'; ctx.lineWidth = 2; ctx.stroke();
+      // the Origin: a floating stone plinth with the x- and y-axes carved into it
+      var ox0 = this.cx, oy0 = this.cy + 18;
+      ctx.beginPath(); ctx.moveTo(ox0 - 56, oy0); ctx.lineTo(ox0 - 44, oy0 + 22); ctx.lineTo(ox0 + 44, oy0 + 22); ctx.lineTo(ox0 + 56, oy0); ctx.closePath();
+      var pg = ctx.createLinearGradient(0, oy0, 0, oy0 + 22); pg.addColorStop(0, '#8a86a8'); pg.addColorStop(1, '#4a4668');
+      ctx.fillStyle = pg; ctx.fill();
+      ctx.beginPath(); ctx.ellipse(ox0, oy0, 56, 17, 0, 0, Math.PI * 2);
+      var tg = ctx.createRadialGradient(ox0 - 10, oy0 - 6, 4, ox0, oy0, 60); tg.addColorStop(0, '#fff3c4'); tg.addColorStop(1, '#c9b886');
+      ctx.fillStyle = tg; ctx.fill(); ctx.strokeStyle = 'rgba(255,231,160,0.9)'; ctx.lineWidth = 2; ctx.stroke();
+      ctx.strokeStyle = 'rgba(201,138,18,' + (0.5 + 0.3 * Math.sin(t * 2)) + ')'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(ox0 - 46, oy0); ctx.lineTo(ox0 + 46, oy0); ctx.moveTo(ox0, oy0 - 14); ctx.lineTo(ox0, oy0 + 14); ctx.stroke();
       ctx.fillStyle = 'rgba(255,255,255,0.8)'; ctx.font = '700 12px "Trebuchet MS", sans-serif'; ctx.textAlign = 'center';
       ctx.fillText('The Origin (0, 0)', this.cx, this.cy + 52);
       ctx.restore();

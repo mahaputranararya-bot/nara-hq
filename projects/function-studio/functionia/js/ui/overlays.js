@@ -142,6 +142,37 @@
     }
   };
 
+  // ---------------------------------------------------------------- Art gallery (dev): every character in every mood
+  G.overlays.gallery = {
+    title: 'Art gallery', cls: 'wide',
+    open: function (body) {
+      body.appendChild(h('p', { class: 'note', text: 'Every character, animated, in every mood. Art lives in js/engine/ori.js, delta.js, portraits.js and art.js (see docs/README.md).' }));
+      var W = 900, H = 560;
+      var cv = F.liveCanvas(W, H, function (g, t) {
+        g.fillStyle = '#1d2140'; g.fillRect(0, 0, W, H);
+        var oriMoods = [['normal', {}], ['happy', { happy: 9 }], ['dizzy', { dizzy: 9 }], ['surprised', { flicker: 9 }], ['sleepy', { sleeping: true }]];
+        var gal = G.overlays.gallery;
+        gal.oris = gal.oris || oriMoods.map(function () { return new F.Ori(); });
+        oriMoods.forEach(function (m, i) {
+          var o = gal.oris[i]; for (var k in m[1]) o[k] = m[1][k];
+          o.time = t; o.r = 34; o.px = 80 + i * 130; o.py = 80; o.vx = 0; o.vy = 0; o.trail = []; o.badgeText = '';
+          if (G.data) o.applyCosmetics(G.data.cosmetics.equipped);
+          o.draw(g, { badge: false });
+          g.fillStyle = '#b9c0e6'; g.font = '700 13px sans-serif'; g.textAlign = 'center'; g.fillText('Ori: ' + m[0], o.px, 150);
+        });
+        gal.d = gal.d || new F.Delta();
+        ['none', 'party', 'wizard'].forEach(function (hat, i) { var d = gal.d; d.time = t + i; d.hat = hat; d.x = 730 + (i % 2) * 90; d.y = 60 + i * 34; d.size = 26; d.draw(g); });
+        ['queen', 'king', 'archer', 'serpent', 'witch', 'warden'].forEach(function (w, i) {
+          F.Portraits.draw(g, w, 75 + i * 150, 255, 150, t, { corrupted: true });
+          F.Portraits.draw(g, w, 75 + i * 150, 420, 150, t, {});
+        });
+        g.fillStyle = '#b9c0e6'; g.textAlign = 'left'; g.fillText('corrupted (worried) \u2191   restored (happy) \u2193', 10, 343);
+        ['angry', 'hurt', 'friendly'].forEach(function (m, i) { F.Portraits.drawGlitch(g, 300 + i * 150, 525, 22, t, m); });
+      });
+      body.appendChild(cv);
+    }
+  };
+
   // ---------------------------------------------------------------- Dev / Teacher panel (?dev=1)
   G.overlays.dev = {
     title: 'Teacher / Dev mode',
@@ -154,6 +185,7 @@
       row.appendChild(F.btn('Skip the opening', function () { G.data.story.opening = true; G.saveNow(); G.closeOverlay(true); G.go('map'); }));
       row.appendChild(F.btn('+30 stars (test unlocks)', function () { var b = G.data.kingdoms.mir.practice.best; for (var i = 0; i < 10; i++) b['dev' + i] = 3; G.checkUnlocks(); G.saveNow(); F.HUD.refresh(); }));
       row.appendChild(F.btn('Play the ending', function () { G.closeOverlay(true); G.go('ending'); }));
+      row.appendChild(F.btn('Art gallery', function () { G.openOverlay('gallery'); }));
       body.appendChild(row);
       F.realm.order.forEach(function (k) {
         var K = F.realm.kingdoms[k];

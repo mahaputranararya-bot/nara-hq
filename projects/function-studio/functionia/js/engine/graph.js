@@ -109,7 +109,12 @@
     ctx.save();
     ctx.shadowColor = 'rgba(0,0,0,0.25)'; ctx.shadowBlur = 18; ctx.shadowOffsetY = 6;
     roundRect(ctx, r.x - 8, r.y - 8, r.w + 16, r.h + 16, 18);
-    ctx.fillStyle = c.bg; ctx.fill();
+    if (this.theme === 'light' && !this.contrast) {
+      var cg = ctx.createLinearGradient(0, r.y - 8, 0, r.y + r.h + 8);
+      cg.addColorStop(0, 'rgba(255,255,255,0.93)'); cg.addColorStop(1, 'rgba(238,242,255,0.9)');
+      ctx.fillStyle = cg;
+    } else ctx.fillStyle = c.bg;
+    ctx.fill();
     ctx.shadowColor = 'transparent';
     ctx.lineWidth = 2; ctx.strokeStyle = c.border; ctx.stroke();
     ctx.restore();
@@ -327,6 +332,12 @@
     if (bx + w > r.x + r.w - 4) { px -= (bx + w) - (r.x + r.w - 4); bx = r.x + r.w - 4 - w; }
     if (bx < r.x + 4) { px += r.x + 4 - bx; bx = r.x + 4; }
     py = F.clamp(py, r.y + 12, r.y + r.h - 12);
+    // keep labels clear of Ori and its coordinate badge
+    var av = this.avoid;
+    if (av && bx < av.x + av.w && bx + w > av.x && py - 11 < av.y + av.h && py + 11 > av.y) {
+      py = (py > av.y + av.h / 2) ? av.y + av.h + 14 : av.y - 14;
+      py = F.clamp(py, r.y + 12, r.y + r.h - 12);
+    }
     if (o.bg) {
       ctx.fillStyle = o.bgColor || 'rgba(29,34,56,0.82)';
       roundRect(ctx, bx - 5, py - 11, w + 10, 22, 7); ctx.fill();

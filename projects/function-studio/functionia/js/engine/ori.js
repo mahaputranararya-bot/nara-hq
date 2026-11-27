@@ -109,90 +109,116 @@
   };
 
   Ori.prototype.drawScarf = function (ctx, R) {
-    var t = this.time;
+    var t = this.time, Pn = F.Paint;
     // tails stream away from the direction of motion
     var sp = Math.hypot(this.vx, this.vy);
-    var dir = sp > 30 ? Math.atan2(-this.vy, -this.vx) : Math.PI * 0.82 + Math.sin(t * 2) * 0.08;
-    var len = R * (1.25 + Math.min(1, sp / 400) * 0.8);
-    var wob = Math.sin(t * 9) * 0.16;
+    var dir = sp > 30 ? Math.atan2(-this.vy, -this.vx) : Math.PI * 0.8 + Math.sin(t * 2) * 0.08;
+    var len = R * (1.2 + Math.min(1, sp / 400) * 0.9);
+    var base = this.scarf, dark = Pn.tint(base, -0.35), light = Pn.tint(base, 0.3);
     ctx.save();
-    ctx.translate(-R * 0.15, R * 0.42);
-    ctx.fillStyle = this.scarf; ctx.strokeStyle = 'rgba(0,0,0,0.25)'; ctx.lineWidth = 1.5;
-    // neck band
-    ctx.beginPath(); ctx.ellipse(R * 0.15, 0, R * 0.78, R * 0.2, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-    for (var s = 0; s < 2; s++) {
-      var a = dir + (s ? 0.28 : -0.12) + wob * (s ? -1 : 1);
-      var ex = Math.cos(a) * len, ey = Math.sin(a) * len;
-      var mx = Math.cos(a + 0.5) * len * 0.5, my = Math.sin(a + 0.5) * len * 0.5;
+    ctx.translate(-R * 0.6, R * 0.66); // the knot sits low on Ori's left side
+    for (var s = 1; s >= 0; s--) {
+      var wob = Math.sin(t * 9 + s * 1.3) * 0.18;
+      var a = dir + (s ? 0.32 : -0.08) + wob;
+      var ex = Math.cos(a) * len * (s ? 0.85 : 1), ey = Math.sin(a) * len * (s ? 0.85 : 1);
+      var nx = Math.cos(a + Math.PI / 2), ny = Math.sin(a + Math.PI / 2), wdt = R * 0.3;
+      var mx = ex * 0.5 + nx * Math.sin(t * 7 + s) * R * 0.25, my = ey * 0.5 + ny * Math.sin(t * 7 + s) * R * 0.25;
       ctx.beginPath();
-      ctx.moveTo(-R * 0.2, -R * 0.08);
-      ctx.quadraticCurveTo(mx, my, ex, ey);
-      ctx.lineTo(ex + Math.cos(a + 1.57) * R * 0.32, ey + Math.sin(a + 1.57) * R * 0.32);
-      ctx.quadraticCurveTo(mx * 0.8, my * 0.8 + R * 0.2, -R * 0.1, R * 0.12);
+      ctx.moveTo(-nx * wdt * 0.5, -ny * wdt * 0.5);
+      ctx.quadraticCurveTo(mx - nx * wdt * 0.5, my - ny * wdt * 0.5, ex - nx * wdt * 0.5, ey - ny * wdt * 0.5);
+      ctx.lineTo(ex + nx * wdt * 0.5, ey + ny * wdt * 0.5);
+      ctx.quadraticCurveTo(mx + nx * wdt * 0.5, my + ny * wdt * 0.5, nx * wdt * 0.5, ny * wdt * 0.5);
       ctx.closePath();
-      ctx.fill(); ctx.stroke();
+      var g = ctx.createLinearGradient(-nx * wdt, -ny * wdt, nx * wdt, ny * wdt);
+      g.addColorStop(0, s ? dark : light); g.addColorStop(1, s ? Pn.tint(base, -0.5) : base);
+      ctx.fillStyle = g; ctx.fill();
+      Pn.stroke(ctx, 'rgba(20,20,40,0.35)', 1.4);
       if (this.pattern !== 'plain') {
         ctx.save(); ctx.clip();
-        ctx.fillStyle = 'rgba(255,255,255,0.55)';
-        for (var i = -4; i < 8; i++) {
-          if (this.pattern === 'stripes') ctx.fillRect(i * 7, -40, 3, 80);
-          else if (this.pattern === 'dots') { ctx.beginPath(); ctx.arc(i * 7, ey * (i / 8), 2, 0, Math.PI * 2); ctx.arc(i * 7 + 3, ey * (i / 8) + 6, 1.6, 0, Math.PI * 2); ctx.fill(); }
-          else if (this.pattern === 'zigzag') { ctx.beginPath(); ctx.moveTo(i * 8, -30); ctx.lineTo(i * 8 + 4, 0); ctx.lineTo(i * 8, 30); ctx.lineWidth = 2; ctx.strokeStyle = 'rgba(255,255,255,0.6)'; ctx.stroke(); }
-          else if (this.pattern === 'stars') { F.drawStar(ctx, i * 8, ey * (i / 8), 2.6, 0); ctx.fill(); }
+        ctx.fillStyle = 'rgba(255,255,255,0.55)'; ctx.strokeStyle = 'rgba(255,255,255,0.6)'; ctx.lineWidth = 2;
+        for (var i = 1; i < 7; i++) {
+          var px = ex * i / 7, py = ey * i / 7;
+          if (this.pattern === 'stripes') { ctx.beginPath(); ctx.moveTo(px - nx * wdt, py - ny * wdt); ctx.lineTo(px + nx * wdt, py + ny * wdt); ctx.lineWidth = 2.5; ctx.stroke(); }
+          else if (this.pattern === 'dots') { ctx.beginPath(); ctx.arc(px, py, 1.8, 0, Math.PI * 2); ctx.fill(); }
+          else if (this.pattern === 'zigzag') { ctx.beginPath(); ctx.moveTo(px - nx * wdt, py - ny * wdt); ctx.lineTo(px + ex * 0.04, py + ey * 0.04); ctx.lineTo(px + nx * wdt, py + ny * wdt); ctx.stroke(); }
+          else if (this.pattern === 'stars') { F.drawStar(ctx, px, py, 2.6, i); ctx.fill(); }
         }
         ctx.restore();
+      }
+      // fringe at the tail end
+      ctx.strokeStyle = s ? dark : base; ctx.lineWidth = 1.3;
+      for (var f = -1; f <= 1; f++) {
+        var fx = ex + nx * wdt * 0.3 * f, fy = ey + ny * wdt * 0.3 * f;
+        ctx.beginPath(); ctx.moveTo(fx, fy); ctx.lineTo(fx + Math.cos(a) * R * 0.18, fy + Math.sin(a) * R * 0.18); ctx.stroke();
       }
     }
     ctx.restore();
   };
 
-  /** The body art: golden point with eyes, smile and cheeks. */
-  Ori.prototype.drawBody = function (ctx, R) {
-    var g = ctx.createRadialGradient(-R * 0.35, -R * 0.4, R * 0.1, 0, 0, R * 1.05);
-    g.addColorStop(0, '#FFF1B8'); g.addColorStop(0.55, '#FFC94A'); g.addColorStop(1, '#F5B12E');
+  /** The neck band wraps around the front of the body; drawn after the body. */
+  Ori.prototype.drawScarfBand = function (ctx, R) {
+    var Pn = F.Paint, base = this.scarf;
     ctx.save();
-    ctx.shadowColor = 'rgba(255,201,74,0.75)'; ctx.shadowBlur = R * 0.9;
-    ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2);
-    ctx.fillStyle = g; ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(-R * 0.93, R * 0.42);
+    ctx.quadraticCurveTo(0, R * 0.86, R * 0.93, R * 0.42);
+    ctx.lineTo(R * 0.8, R * 0.68);
+    ctx.quadraticCurveTo(0, R * 1.12, -R * 0.8, R * 0.68);
+    ctx.closePath();
+    Pn.fillV(ctx, base, R * 0.4, R * 1.0, 0.3, -0.3);
+    Pn.stroke(ctx, 'rgba(20,20,40,0.35)', 1.4);
+    // knot
+    ctx.beginPath(); ctx.ellipse(-R * 0.6, R * 0.66, R * 0.19, R * 0.15, -0.4, 0, Math.PI * 2);
+    Pn.fill3D(ctx, base, -R * 0.6, R * 0.66, R * 0.19); Pn.stroke(ctx, 'rgba(20,20,40,0.35)', 1.2);
     ctx.restore();
-    ctx.lineWidth = Math.max(1.5, R * 0.11); ctx.strokeStyle = '#C98A12'; ctx.stroke();
+  };
+
+  Ori.prototype.mood = function () {
+    if (this.dizzy > 0) return 'dizzy';
+    if (this.sleeping) return 'sleepy';
+    if (this.flicker > 0) return 'surprised';
+    if (this.happy > 0) return 'happy';
+    return 'normal';
+  };
+
+  /** The body art: a glossy golden point with expressive eyes, brows, cheeks and mouth. */
+  Ori.prototype.drawBody = function (ctx, R) {
+    var Pn = F.Paint, mood = this.mood(), t = this.time;
+    // soft glow
+    ctx.save();
+    var glow = ctx.createRadialGradient(0, 0, R * 0.6, 0, 0, R * 1.8);
+    glow.addColorStop(0, 'rgba(255,214,94,0.45)'); glow.addColorStop(1, 'rgba(255,214,94,0)');
+    ctx.fillStyle = glow; ctx.beginPath(); ctx.arc(0, 0, R * 1.8, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+    // sphere
+    ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2);
+    var g = ctx.createRadialGradient(-R * 0.38, -R * 0.45, R * 0.08, 0, 0, R * 1.05);
+    g.addColorStop(0, '#FFF7D6'); g.addColorStop(0.4, '#FFD866'); g.addColorStop(0.78, '#FFC94A'); g.addColorStop(1, '#E9A426');
+    ctx.fillStyle = g; ctx.fill();
+    // cel shade on the lower right + rim light
+    ctx.save(); ctx.clip();
+    ctx.fillStyle = 'rgba(201,138,18,0.28)'; ctx.beginPath(); ctx.arc(R * 0.32, R * 0.36, R * 1.0, 0, Math.PI * 2); ctx.arc(-R * 0.1, -R * 0.12, R * 1.0, 0, Math.PI * 2, true); ctx.fill('evenodd');
+    ctx.strokeStyle = 'rgba(255,245,200,0.75)'; ctx.lineWidth = R * 0.1; ctx.beginPath(); ctx.arc(0, 0, R * 0.95, 0.15 * Math.PI, 0.55 * Math.PI); ctx.stroke();
+    ctx.restore();
+    ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2);
+    Pn.stroke(ctx, '#C98A12', Math.max(1.6, R * 0.1));
+    Pn.gloss(ctx, -R * 0.6, -R * 0.62, R * 0.17, R * 0.09, 0.7, -0.75);
+    Pn.gloss(ctx, -R * 0.78, -R * 0.36, R * 0.05, R * 0.04, 0.8, 0);
     // cheeks
-    ctx.fillStyle = 'rgba(255,128,110,0.38)';
-    ctx.beginPath(); ctx.ellipse(-R * 0.55, R * 0.28, R * 0.2, R * 0.13, 0, 0, Math.PI * 2); ctx.fill();
-    ctx.beginPath(); ctx.ellipse(R * 0.55, R * 0.28, R * 0.2, R * 0.13, 0, 0, Math.PI * 2); ctx.fill();
-    // eyes
-    var ex = this.eye.x * R * 0.1, ey = this.eye.y * R * 0.1;
-    var closed = this.blink > 0 || this.sleeping;
+    Pn.blush(ctx, -R * 0.6, R * 0.22, R * 0.24, 0.5);
+    Pn.blush(ctx, R * 0.6, R * 0.22, R * 0.24, 0.5);
+    // eyes + brows
+    var look = { x: this.eye.x, y: this.eye.y };
+    var blink = this.blink > 0 ? 1 : 0;
     for (var s = -1; s <= 1; s += 2) {
-      var cx = s * R * 0.33 + ex, cy = -R * 0.12 + ey;
-      if (closed) {
-        ctx.beginPath(); ctx.strokeStyle = '#3a2a10'; ctx.lineWidth = R * 0.09;
-        ctx.arc(cx, cy, R * 0.18, 0.15 * Math.PI, 0.85 * Math.PI); ctx.stroke();
-        continue;
-      }
-      if (this.dizzy > 0) {
-        ctx.strokeStyle = '#3a2a10'; ctx.lineWidth = R * 0.08;
-        ctx.beginPath();
-        for (var a = 0; a < Math.PI * 4; a += 0.4) ctx.lineTo(cx + Math.cos(a + this.time * 8) * a * R * 0.02, cy + Math.sin(a + this.time * 8) * a * R * 0.02);
-        ctx.stroke();
-        continue;
-      }
-      ctx.fillStyle = '#fff';
-      ctx.beginPath(); ctx.ellipse(cx, cy, R * 0.23, R * 0.27, 0, 0, Math.PI * 2); ctx.fill();
-      ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(0,0,0,0.15)'; ctx.stroke();
-      var px = cx + this.eye.x * R * 0.08, py = cy + this.eye.y * R * 0.09;
-      ctx.fillStyle = '#2a1d0a';
-      ctx.beginPath(); ctx.arc(px, py, R * 0.13, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = '#fff';
-      ctx.beginPath(); ctx.arc(px - R * 0.05, py - R * 0.06, R * 0.05, 0, Math.PI * 2); ctx.fill();
+      var ex = s * R * 0.33, ey = -R * 0.12;
+      Pn.eye(ctx, ex, ey, R * 0.22, R * 0.28, { look: look, iris: '#6b4416', blink: blink, mood: mood, ink: '#3a2408', skin: '#FFD866', side: s, t: t });
+      var browMood = mood === 'dizzy' ? 'worried' : (mood === 'surprised' ? 'surprised' : (mood === 'happy' ? 'happy' : 'normal'));
+      if (mood !== 'sleepy') Pn.brow(ctx, ex + s * R * 0.02, ey - R * 0.42, R * 0.3, s, browMood, '#a86e10', Math.max(1.2, R * 0.08));
     }
     // mouth
-    ctx.strokeStyle = '#7a4a0c'; ctx.lineWidth = R * 0.08; ctx.lineCap = 'round';
-    ctx.beginPath();
-    if (this.dizzy > 0) { ctx.moveTo(-R * 0.15, R * 0.42); ctx.quadraticCurveTo(0, R * 0.32, R * 0.15, R * 0.42); }
-    else if (this.happy > 0) { ctx.arc(0, R * 0.22, R * 0.22, 0.1 * Math.PI, 0.9 * Math.PI); }
-    else ctx.arc(0, R * 0.2, R * 0.16, 0.2 * Math.PI, 0.8 * Math.PI);
-    ctx.stroke();
+    var mouthMood = { dizzy: 'wavy', surprised: 'o', happy: 'grin', sleepy: 'flat' }[mood] || 'smile';
+    Pn.mouth(ctx, 0, R * 0.28, R * 0.36, mouthMood, '#7a4a0c');
   };
 
   Ori.prototype.drawRing = function (ctx, R) {
@@ -246,6 +272,7 @@
     ctx.scale(sx, sy);
     this.drawScarf(ctx, R);
     this.drawBody(ctx, R);
+    this.drawScarfBand(ctx, R);
     ctx.restore();
     if (this.dizzy > 0) {
       for (var i = 0; i < 3; i++) {
