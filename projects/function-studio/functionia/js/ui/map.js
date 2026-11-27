@@ -83,8 +83,8 @@
         F.btn('Wardrobe', function () { G.openOverlay('wardrobe'); }, { icon: '✨' }),
         d.ended ? F.btn('Credits', function () { G.go('credits', { fromEnding: true }); }, { cls: 'ghost' }) : null
       ]);
+      if (!meta) bar.appendChild(h('span', { class: 'maphint', text: 'Practice Mode and the Puzzle of the Day open after you restore Mirrorvale.' }));
       ui.appendChild(bar);
-      if (!meta) ui.appendChild(h('p', { class: 'maphint', text: 'Practice Mode and the Puzzle of the Day open after you restore Mirrorvale.' }));
       this.layout(G.W, G.H);
     },
     placeButtons: function () {
@@ -105,7 +105,8 @@
       var p = this.pos(k), self = this;
       this.travel = { k: k, t: 0, from: { x: this.cx, y: this.cy }, to: p };
       F.Audio.sfx('hop');
-      F.tweens.to(this.travel, { t: 1 }, 0.7, 'inOutSine', function () { G.go('kingdom', { k: k, fromMap: true }); });
+      F.tweens.to(this.travel, { t: 1 }, 0.8, 'inOutSine', function () { G.go('kingdom', { k: k, fromMap: true }); });
+      if (!(F.FX && F.FX.reduced)) F.tweens.to(this.cam, { x: (p.x - this.cx) * 0.45, y: (p.y - this.cy) * 0.45, z: 1.35 }, 0.8, 'inOutSine');
       void self;
     },
     playIntro: function () {
@@ -129,80 +130,47 @@
     update: function () { this.placeButtons(); },
     render: function (ctx) {
       var W = G.W, H = G.H, t = G.time, self = this, n = G.restored().length;
-      F.Art.mapBackground(ctx, W, H, t, n);
-      ctx.save();
-      var c = this.cam;
-      ctx.translate(this.cx, this.cy); ctx.scale(c.z, c.z); ctx.translate(-this.cx - c.x, -this.cy - c.y);
-      // y = x sight line (the Mirror Queen's gift)
-      if (G.isRestored('mir')) {
-        ctx.save(); ctx.strokeStyle = 'rgba(181,156,242,0.35)'; ctx.lineWidth = 2; ctx.setLineDash([10, 10]); ctx.lineDashOffset = -t * 20;
-        ctx.beginPath(); ctx.moveTo(this.cx - H * 0.45, this.cy + H * 0.45); ctx.lineTo(this.cx + H * 0.45, this.cy - H * 0.45); ctx.stroke(); ctx.restore();
-      }
-      // paths from the Origin
-      F.realm.order.forEach(function (k) {
-        var p = self.pos(k), st = self.status(k), K = F.realm.kingdoms[k];
-        ctx.save();
-        ctx.lineCap = 'round';
-        if (st === 'restored') { ctx.strokeStyle = K.color; ctx.lineWidth = 5; ctx.shadowColor = K.color; ctx.shadowBlur = 12; }
-        else if (st === 'open') { ctx.strokeStyle = 'rgba(255,255,255,0.55)'; ctx.lineWidth = 3; ctx.setLineDash([8, 10]); ctx.lineDashOffset = -t * 14; }
-        else { ctx.strokeStyle = 'rgba(255,255,255,0.18)'; ctx.lineWidth = 2; ctx.setLineDash([2, 10]); }
-        ctx.beginPath(); ctx.moveTo(self.cx, self.cy); ctx.quadraticCurveTo((self.cx + p.x) / 2, (self.cy + p.y) / 2 - 30, p.x, p.y); ctx.stroke();
-        ctx.restore();
-      });
-      // islands
-      F.realm.order.forEach(function (k) {
-        var p = self.pos(k), st = self.status(k), K = F.realm.kingdoms[k];
-        var s = self.size * (k === 'rat' ? 1.3 : 1) * (self.hover === k ? 1.08 : 1);
-        var bob = Math.sin(t * 1.2 + p.x) * 3;
-        var alive = st === 'restored';
-        var wash = self.wash[k];
-        if (wash !== undefined && wash < 1) alive = false;
-        F.Art.island(ctx, K.motif, p.x, p.y + bob, s, t, K.color, alive, K.accent);
-        if (wash !== undefined && wash < 1) {
-          ctx.save(); ctx.globalAlpha = wash; F.Art.island(ctx, K.motif, p.x, p.y + bob, s, t, K.color, true, K.accent); ctx.restore();
-          ctx.save(); ctx.strokeStyle = K.color; ctx.globalAlpha = 1 - wash; ctx.lineWidth = 4;
-          ctx.beginPath(); ctx.arc(p.x, p.y, s * (1 + wash * 2.5), 0, 7); ctx.stroke(); ctx.restore();
-        }
-        if (st === 'open') {
-          ctx.save(); ctx.strokeStyle = 'rgba(255,255,255,' + (0.35 + Math.sin(t * 3) * 0.2) + ')'; ctx.lineWidth = 2.5;
-          ctx.beginPath(); ctx.ellipse(p.x, p.y + s * 0.2 + bob, s * 1.25, s * 0.5, 0, 0, 7); ctx.stroke(); ctx.restore();
-        }
-        if (st === 'locked') {
-          ctx.save(); ctx.fillStyle = 'rgba(30,26,60,0.55)';
-          for (var i = 0; i < 5; i++) { ctx.beginPath(); ctx.ellipse(p.x + Math.cos(i * 1.3 + t * 0.3) * s * 0.6, p.y - s * 0.2 + Math.sin(i * 1.7 + t * 0.4) * s * 0.3, s * 0.7, s * 0.35, 0, 0, 7); ctx.fill(); }
-          ctx.restore();
-        }
-        if (k === 'rat' && st !== 'restored') {
-          var pulse = 0.4 + Math.sin(t * 2.5) * 0.25;
-          ctx.save(); ctx.globalAlpha = pulse; ctx.strokeStyle = '#FF4D6D'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(p.x, p.y - s * 0.3, s * 1.4, 0, 7); ctx.stroke();
-          ctx.strokeStyle = '#3FE0FF'; ctx.beginPath(); ctx.arc(p.x + 3, p.y - s * 0.3, s * 1.4, 0, 7); ctx.stroke(); ctx.restore();
+      F.RealmScene.sky(ctx, W, H, t, n, { x: G.mouse.x / W - 0.5, y: G.mouse.y / H - 0.5 });
+      var L = { cx: this.cx, cy: this.cy, sx: this.sx, vk: this.vk, size: this.size };
+      F.RealmScene.world(ctx, W, H, t, {
+        layout: L, cam: this.cam,
+        wash: function (k) { var st = self.status(k); if (st !== 'restored') return 0; return self.wash[k] === undefined ? 1 : self.wash[k]; },
+        bridge: function (k) { var st = self.status(k); return st === 'restored' ? { alpha: 1, style: 'light' } : (st === 'open' ? { alpha: 1, style: 'dash' } : { alpha: 1, style: 'dots' }); },
+        sizeK: function (k) { return self.hover === k ? 1.08 : 1; },
+        island: function (c, k, x, y, s) {
+          var st = self.status(k), K = F.realm.kingdoms[k], wash = self.wash[k];
+          if (wash !== undefined && wash < 1) { c.save(); c.strokeStyle = K.color; c.globalAlpha = 1 - wash; c.lineWidth = 4; c.beginPath(); c.arc(x, y, s * (1 + wash * 2.5), 0, 7); c.stroke(); c.restore(); }
+          if (st === 'open') { c.save(); c.strokeStyle = 'rgba(255,255,255,' + (0.35 + Math.sin(t * 3) * 0.2) + ')'; c.lineWidth = 2.5; c.beginPath(); c.ellipse(x, y + s * 0.2, s * 1.3, s * 0.48, 0, 0, 7); c.stroke(); c.restore(); }
+          if (st === 'locked') { // drifting fog over a locked kingdom
+            c.save(); c.fillStyle = 'rgba(40,34,80,0.42)';
+            for (var i = 0; i < 6; i++) { c.beginPath(); c.ellipse(x + Math.cos(i * 1.3 + t * 0.3) * s * 0.7, y - s * 0.3 + Math.sin(i * 1.7 + t * 0.4) * s * 0.35, s * 0.75, s * 0.34, 0, 0, 7); c.fill(); }
+            c.restore();
+          }
+          if (k === 'rat' && st !== 'restored') {
+            var pulse = 0.4 + Math.sin(t * 2.5) * 0.25;
+            c.save(); c.globalAlpha = pulse; c.strokeStyle = '#FF4D6D'; c.lineWidth = 3; c.beginPath(); c.arc(x, y - s * 0.4, s * 1.5, 0, 7); c.stroke();
+            c.strokeStyle = '#3FE0FF'; c.beginPath(); c.arc(x + 3, y - s * 0.4, s * 1.5, 0, 7); c.stroke(); c.restore();
+          }
+        },
+        after: function (c, LL, O) {
+          if (G.isRestored('mir')) { // the Mirror Queen's gift: the y = x line
+            c.save(); c.strokeStyle = 'rgba(181,156,242,0.35)'; c.lineWidth = 2; c.setLineDash([10, 10]); c.lineDashOffset = -t * 20;
+            c.beginPath(); c.moveTo(self.cx - H * 0.45, self.cy + H * 0.45); c.lineTo(self.cx + H * 0.45, self.cy - H * 0.45); c.stroke(); c.restore();
+          }
+          c.save(); c.fillStyle = 'rgba(255,255,255,0.85)'; c.font = '700 12px "Trebuchet MS", sans-serif'; c.textAlign = 'center';
+          c.shadowColor = 'rgba(0,0,0,0.6)'; c.shadowBlur = 6; c.fillText('The Origin (0, 0)', self.cx, self.cy + 58); c.restore();
+          if (G.isRestored('exp')) F.Art.seed(c, self.cx + 50, self.cy + 18, n, t);
+          if (G.data.ended) F.Portraits.drawGlitch(c, self.cx - 76, self.cy - 20 + Math.sin(t * 2) * 5, 16, t, 'friendly');
+          var tr = self.travel, ox = self.cx, oy = self.cy - 4;
+          if (tr) { ox = F.lerp(tr.from.x, tr.to.x, tr.t); oy = F.lerp(tr.from.y, tr.to.y, tr.t) - Math.sin(Math.PI * tr.t) * 60; }
+          G.ori.setPos(ox, oy - Math.abs(Math.sin(t * 2)) * (tr ? 0 : 6));
+          G.ori.setCoord(0, 0);
+          var roomy = H >= 640; // on short screens the badge would touch the Rationalis label
+          if (!roomy) G.ori.setCoord(null);
+          G.ori.draw(c, { badge: !tr && roomy });
+          G.delta.moveTo(ox - 58, oy - (roomy ? 44 : 8)); G.delta.draw(c);
         }
       });
-      // the Origin island in the centre
-      ctx.save();
-      // the Origin: a floating stone plinth with the x- and y-axes carved into it
-      var ox0 = this.cx, oy0 = this.cy + 18;
-      ctx.beginPath(); ctx.moveTo(ox0 - 56, oy0); ctx.lineTo(ox0 - 44, oy0 + 22); ctx.lineTo(ox0 + 44, oy0 + 22); ctx.lineTo(ox0 + 56, oy0); ctx.closePath();
-      var pg = ctx.createLinearGradient(0, oy0, 0, oy0 + 22); pg.addColorStop(0, '#8a86a8'); pg.addColorStop(1, '#4a4668');
-      ctx.fillStyle = pg; ctx.fill();
-      ctx.beginPath(); ctx.ellipse(ox0, oy0, 56, 17, 0, 0, Math.PI * 2);
-      var tg = ctx.createRadialGradient(ox0 - 10, oy0 - 6, 4, ox0, oy0, 60); tg.addColorStop(0, '#fff3c4'); tg.addColorStop(1, '#c9b886');
-      ctx.fillStyle = tg; ctx.fill(); ctx.strokeStyle = 'rgba(255,231,160,0.9)'; ctx.lineWidth = 2; ctx.stroke();
-      ctx.strokeStyle = 'rgba(201,138,18,' + (0.5 + 0.3 * Math.sin(t * 2)) + ')'; ctx.lineWidth = 2;
-      ctx.beginPath(); ctx.moveTo(ox0 - 46, oy0); ctx.lineTo(ox0 + 46, oy0); ctx.moveTo(ox0, oy0 - 14); ctx.lineTo(ox0, oy0 + 14); ctx.stroke();
-      ctx.fillStyle = 'rgba(255,255,255,0.8)'; ctx.font = '700 12px "Trebuchet MS", sans-serif'; ctx.textAlign = 'center';
-      ctx.fillText('The Origin (0, 0)', this.cx, this.cy + 52);
-      ctx.restore();
-      if (G.isRestored('exp')) F.Art.seed(ctx, this.cx + 44, this.cy + 18, n, t);
-      if (G.data.ended) F.Portraits.drawGlitch(ctx, this.cx - 70, this.cy - 20 + Math.sin(t * 2) * 5, 16, t, 'friendly');
-      // Ori (travelling or standing at the Origin)
-      var tr = this.travel, ox = this.cx, oy = this.cy;
-      if (tr) { ox = F.lerp(tr.from.x, tr.to.x, tr.t); oy = F.lerp(tr.from.y, tr.to.y, tr.t) - Math.sin(Math.PI * tr.t) * 60; }
-      G.ori.setPos(ox, oy - Math.abs(Math.sin(t * 2)) * (tr ? 0 : 6));
-      G.ori.setCoord(0, 0);
-      G.ori.draw(ctx, { badge: !tr });
-      G.delta.moveTo(ox - 50, oy - 40); G.delta.draw(ctx);
-      ctx.restore();
     },
     key: function (e) {
       if (e.key === 'Escape') return false;
