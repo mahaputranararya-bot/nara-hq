@@ -499,6 +499,9 @@
     },
     page: function (r, t) { var b = noiseHit(r, t, 0.2, 0.07, 'bandpass', 2500, 0.7); b.frequency.exponentialRampToValueAtTime(5000, t + 0.18); },
     whoosh: function (r, t) { var b = noiseHit(r, t, 0.45, 0.13, 'bandpass', 300, 0.9); b.frequency.exponentialRampToValueAtTime(2400, t + 0.4); },
+    crew0: function (r, t) { play(r, 'musicbox', 74, t, 0.8, 0.9, r.sfx); },
+    crew1: function (r, t) { play(r, 'musicbox', 78, t, 0.8, 0.9, r.sfx); },
+    crew2: function (r, t) { play(r, 'musicbox', 81, t, 0.8, 0.9, r.sfx); play(r, 'musicbox', 86, t + 0.35, 1.2, 0.7, r.sfx); },
     rumble: function (r, t) {
       var b = noiseHit(r, t, 2.6, 0.35, 'lowpass', 140, 0.7); b.frequency.linearRampToValueAtTime(320, t + 2.2);
       tone(r, 'sine', 42, t, 2.6, 0.3, { att: 0.8 });

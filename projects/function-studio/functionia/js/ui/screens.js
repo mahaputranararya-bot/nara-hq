@@ -85,19 +85,14 @@
       G.startSlot(slot, d);
       if (!d.story.opening) G.go('opening'); else G.go('map');
     },
-    skipReveal: function () { if (this.revealing && G.time - this.t0 < 3.6) { this.t0 = G.time - 99; this.el.classList.remove('reveal'); } this.revealing = false; },
+    skipReveal: function () { if (this.revealing && G.time - this.t0 < F.TitleScene.CREDITS + 3.6) { this.t0 = G.time - 99; this.el.classList.remove('reveal'); } this.revealing = false; },
     key: function () { this.skipReveal(); return false; },
     pointer: function (type) { if (type === 'down') this.skipReveal(); },
     render: function (ctx) {
-      var W = G.W, H = G.H, t = G.time, rv = t - this.t0;
+      var W = G.W, H = G.H, t = G.time, CR = F.TitleScene.CREDITS, raw = t - this.t0, rv = raw - CR + 0.9;
       var O = F.TitleScene.render(ctx, W, H, t, { reveal: rv, parallax: { x: G.mouse.x / W - 0.5, y: G.mouse.y / H - 0.5 } });
-      // "Group 5 presents"
-      var pa = Math.min(K01(rv / 0.4), K01((1.5 - rv) / 0.4));
-      if (pa > 0) {
-        ctx.save(); ctx.globalAlpha = pa; ctx.fillStyle = '#e8e4ff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-        ctx.font = 'italic 600 ' + Math.round(H * 0.032) + 'px Georgia, "Times New Roman", serif';
-        ctx.fillText('Group 5 presents', W / 2, H * 0.45); ctx.restore();
-      }
+      if (raw < CR) F.TitleScene.credits(ctx, W, H, t, raw); // Group 5 presents… Nara, Uno, Kayyira
+      if (this.revealing) [3.0, 4.25, 5.5].forEach(function (s, i) { var k = 'crew' + i; if (raw >= s && !Title[k]) { Title[k] = true; F.Audio.sfx(k); } });
       F.TitleScene.logo(ctx, W / 2, H * 0.18, Math.min(W * 0.075, H * 0.12), t, K01((rv - 1.9) / 1.1));
       var oa = K01((rv - 2.3) / 0.6);
       if (oa > 0) {

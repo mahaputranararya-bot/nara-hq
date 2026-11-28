@@ -5,6 +5,7 @@
   'use strict';
   var F = window.F, G = F.Game, h = F.h;
   function clamp01(x) { return x < 0 ? 0 : (x > 1 ? 1 : x); }
+  function ease01(x) { x = clamp01(x); return x * x * (3 - 2 * x); }
 
   var Op = {
     allowPause: true,
@@ -146,7 +147,7 @@
     },
     update: function (dt) {
       this.t += dt; this.capT += dt;
-      if (this.beat === 'cinematic' && F.Dialogue.active && !F.Dialogue.typing && this.capT > 5.4) { this.capT = -99; F.Dialogue.advance(); this.capT = 0; }
+      if (this.beat === 'cinematic' && F.Dialogue.active && !F.Dialogue.typing && this.capT > this.hold(this.cap)) { this.capT = -99; F.Dialogue.advance(); this.capT = 0; }
       if (this.pieces) this.pieces.forEach(function (p) { p.dx += p.vx * dt; p.dy += p.vy * dt; p.rot += p.vr * dt; p.vx *= 0.985; p.vy *= 0.985; p.alpha = Math.max(0.25, p.alpha - dt * 0.15); });
       if (this.view) this.view.update(dt);
       if (this.beat === 'wake' || this.beat === 'tile') {
@@ -195,8 +196,15 @@
       if (this.view) this.view.render(ctx);
     },
     // ---------------- the opening film: one shot per narration line
+    /** How long each shot holds (seconds): time to read the line, never rushed. */
+    hold: function (i) {
+      if (i === 1) return 14.5; // the six-kingdom montage
+      if (i === 4) return 8.5;  // the spark
+      var line = F.story.scenes.opening.lines[i], words = line ? line[1].split(/\s+/).length : 10;
+      return Math.max(7.5, 2.0 + words / 2.6);
+    },
     film: function (ctx, W, H, t) {
-      var i = this.cap, k = clamp01(this.capT / 5.4), e = k * k * (3 - 2 * k), R = F.RealmScene, L = R.layout(W, H), self = this;
+      var i = this.cap, k = clamp01(this.capT / this.hold(i)), e = k * k * (3 - 2 * k), R = F.RealmScene, L = R.layout(W, H), self = this;
       if (i === 0) { // Long ago… the whole realm at golden hour
         R.sky(ctx, W, H, t, 4.6);
         R.world(ctx, W, H, t, { layout: L, cam: { x: F.lerp(-W * 0.12, 0, e), y: F.lerp(-H * 0.05, 0, e), z: F.lerp(1.45, 1.05, e) } });
@@ -204,7 +212,7 @@
       } else if (i === 1) { // six kingdoms, six rules: a montage
         var f = k * 6, sub = Math.min(5, Math.floor(f)), loc = f - sub, ids = F.realm.order;
         this.card(ctx, W, H, t, ids[sub], loc);
-        if (loc < 0.22 && sub > 0) { ctx.save(); ctx.globalAlpha = 1 - loc / 0.22; this.card(ctx, W, H, t, ids[sub - 1], 1, true); ctx.restore(); }
+        if (loc < 0.36 && sub > 0) { ctx.save(); ctx.globalAlpha = 1 - ease01(loc / 0.36); this.card(ctx, W, H, t, ids[sub - 1], 1, true); ctx.restore(); }
       } else if (i === 2) { // something escaped from the hole at x = 0
         R.sky(ctx, W, H, t, 2.6 * (1 - e));
         var rp = R.pos(L, 'rat');
@@ -221,23 +229,26 @@
         F.Portraits.drawGlitch(ctx, W / 2 + Math.sin(t * 3) * 8, H * 0.45, 30 + e * 75, t, 'angry');
       } else { // in the dark, a tiny spark
         ctx.fillStyle = '#020108'; ctx.fillRect(0, 0, W, H);
-        var a = clamp01((this.capT - 0.8) / 1.6), r = (2 + 7 * a) * (1 + 0.1 * Math.sin(t * 4));
+        var a = clamp01((this.capT - 1.5) / 1.8), r = (2 + 7 * a) * (1 + 0.1 * Math.sin(t * 4));
         if (a > 0) {
           ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = a;
           ctx.drawImage(F.SceneKit.glow('#ffcf6a', 0.15), W / 2 - r * 9, H / 2 - r * 9, r * 18, r * 18); ctx.restore();
           F.SceneKit.twinkle(ctx, W / 2, H / 2, r * 2.2, a, '#fff4cc');
         }
-        var oa = clamp01((this.capT - 3) / 1.4);
+        var oa = clamp01((this.capT - 4.5) / 1.5);
         if (oa > 0) { G.ori.sleeping = true; G.ori.setPos(W / 2, H / 2); G.ori.setCoord(null); G.ori.alpha = oa; G.ori.draw(ctx, { ring: false, trail: false }); G.ori.alpha = 1; }
       }
       // letterbox bars, the opening fade and a dip to black between shots
-      var lb = H * 0.12 * clamp01(this.t / 1.2);
+      var lb = H * 0.12 * ease01(this.t / 1.8);
       ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, lb); ctx.fillRect(0, H - lb, W, lb);
-      var dark = Math.max(1 - this.t / 1.8, i > 0 && i !== 1 ? 1 - this.capT / 0.45 : 0);
+      var dark = Math.max(1 - this.t / 2.5, i > 0 ? 1 - ease01(this.capT / 0.9) : 0);
       if (dark > 0) { ctx.fillStyle = 'rgba(0,0,0,' + Math.min(1, dark) + ')'; ctx.fillRect(0, 0, W, H); }
     },
     card: function (ctx, W, H, t, id, loc, noText) {
-      F.Art.kingdom(ctx, id, W, H, t, { rest: 1, parallax: { x: (loc - 0.5) * 0.8, y: 0 } });
+      var z = 1.02 + 0.08 * loc; // a slow push-in
+      ctx.save(); ctx.translate(W / 2, H / 2); ctx.scale(z, z); ctx.translate(-W / 2, -H / 2);
+      F.Art.kingdom(ctx, id, W, H, t, { rest: 1, parallax: { x: (loc - 0.5) * 0.5, y: 0 } });
+      ctx.restore();
       F.drawGrandGraph(ctx, W, H, t, { only: [id], glow: 1.2, scale: 1.1 });
       var K = F.realm.kingdoms[id], rule = { mir: 'y = x', lin: 'y = mx + b', par: 'y = a(x − h)² + k', cub: 'y = ax³ + bx² + cx + d', exp: 'y = a · bˣ', rat: 'y = a ⁄ (x − h) + k' }[id];
       if (noText) return;

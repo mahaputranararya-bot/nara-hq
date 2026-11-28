@@ -63,6 +63,9 @@
     var speed = F.Game && F.Game.settings ? F.Game.settings.dialogueSpeed : 'normal';
     D.cps = SPEED[speed] || SPEED.normal;
     D.typing = D.cps < 10000;
+    if (D.el.classList.contains('cinema')) { // film captions: the whole line fades in
+      D.typing = false; D.text.classList.remove('cfade'); void D.text.offsetWidth; D.text.classList.add('cfade');
+    } else D.text.classList.remove('cfade');
     D.text.textContent = D.typing ? '' : D.full;
     D.text.setAttribute('aria-label', (sp.name ? sp.name + ': ' : '') + D.full);
     D.nextBtn.querySelector('.lbl').textContent = D.i === D.lines.length - 1 ? 'Continue' : 'Next';

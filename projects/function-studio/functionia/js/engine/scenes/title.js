@@ -225,6 +225,96 @@
     if (k >= 1) K.twinkle(ctx, cx + sxp, fy + Math.sin(sxp / (size * 0.35) - t * 2) * size * 0.08, size * 0.09, Math.sin(Math.PI * ((t * 0.18) % 1)), '#fff3c4');
     return { bottom: y0 + L.h * 1.05 };
   };
+  // ---------------------------------------------------------------- crew credits: "three points make a team"
+  T.CREDITS = 9.0; // seconds
+  var CREW = [['Nara', 'Code / Play-Test Engineer & Crew Lead'], ['Uno', 'Math Anchor & Showcase Host'], ['Kayyira', 'Creative & UX Designer']];
+  function ease(x) { x = K.clamp01(x); return x * x * (3 - 2 * x); }
+  /** Draw the opening crew credits at time r (0…T.CREDITS). Returns nothing; it paints over the whole screen. */
+  T.credits = function (ctx, W, H, t, r) {
+    var cx = W / 2, cy = H * 0.5, d = Math.min(W * 0.27, H * 0.42);
+    var fadeAll = 1 - ease((r - (T.CREDITS - 0.5)) / 0.5);
+    if (fadeAll <= 0) return;
+    ctx.save(); ctx.globalAlpha = fadeAll;
+    var bg = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(W, H) * 0.7);
+    bg.addColorStop(0, '#1a1440'); bg.addColorStop(1, '#03020a'); ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+    // faint graph paper that fades toward the edges
+    var gridA = 0.5 * ease(r / 1.2) * (1 - ease((r - 7.6) / 1.0)), step = Math.min(W, H) / 14;
+    if (gridA > 0) {
+      var gf = ctx.createRadialGradient(cx, cy, step, cx, cy, Math.max(W, H) * 0.55);
+      gf.addColorStop(0, 'rgba(170,180,255,' + 0.16 * gridA + ')'); gf.addColorStop(1, 'rgba(170,180,255,0)');
+      ctx.strokeStyle = gf; ctx.lineWidth = 1; ctx.beginPath();
+      for (var gx = cx % step; gx < W; gx += step) { ctx.moveTo(gx, 0); ctx.lineTo(gx, H); }
+      for (var gy = cy % step; gy < H; gy += step) { ctx.moveTo(0, gy); ctx.lineTo(W, gy); }
+      ctx.stroke();
+      ctx.strokeStyle = 'rgba(200,205,255,' + 0.22 * gridA + ')'; ctx.lineWidth = 1.5; ctx.beginPath();
+      ctx.moveTo(cx - d * 1.6, cy); ctx.lineTo(cx + d * 1.6, cy); ctx.moveTo(cx, cy - d * 1.2); ctx.lineTo(cx, cy + d * 1.2); ctx.stroke();
+    }
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    // "Group 5" … "presents"
+    var g5 = ease((r - 0.3) / 0.9) * (1 - ease((r - 2.6) / 0.6));
+    if (g5 > 0) {
+      ctx.save(); ctx.globalAlpha = fadeAll * g5; ctx.shadowColor = 'rgba(255,200,100,0.6)'; ctx.shadowBlur = 18;
+      ctx.fillStyle = '#ffe7a8'; ctx.font = '700 ' + Math.round(H * 0.075) + 'px Georgia, "Times New Roman", serif';
+      ctx.fillText('G r o u p   5', cx, cy - H * 0.03 - (1 - ease((r - 0.3) / 0.9)) * 10);
+      var pr = ease((r - 1.2) / 0.8);
+      ctx.globalAlpha = fadeAll * g5 * pr; ctx.shadowBlur = 8; ctx.fillStyle = '#e8e2ff';
+      ctx.font = 'italic ' + Math.round(H * 0.034) + 'px Georgia, "Times New Roman", serif';
+      ctx.fillText('presents', cx, cy + H * 0.05);
+      ctx.restore();
+    }
+    // the three points, plotted one by one, then joined into a triangle
+    var collapse = ease((r - 7.7) / 0.9);
+    var P = [[cx - d, cy + d * 0.42], [cx, cy - d * 0.6], [cx + d, cy + d * 0.42]].map(function (p) { return [p[0] + (cx - p[0]) * collapse, p[1] + (cy - p[1]) * collapse]; });
+    var lineK = ease((r - 6.6) / 1.0);
+    if (lineK > 0 && collapse < 1) {
+      ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.lineCap = 'round';
+      var seg = lineK * 3;
+      [[0, 1], [1, 2], [2, 0]].forEach(function (e, i) {
+        var f = K.clamp01(seg - i); if (f <= 0) return;
+        var a = P[e[0]], b = P[e[1]], x2 = a[0] + (b[0] - a[0]) * f, y2 = a[1] + (b[1] - a[1]) * f;
+        [[6, 0.12], [2, 0.8]].forEach(function (L) { ctx.strokeStyle = 'rgba(255,214,120,' + L[1] * (1 - collapse) + ')'; ctx.lineWidth = L[0]; ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(x2, y2); ctx.stroke(); });
+      });
+      ctx.restore();
+    }
+    CREW.forEach(function (c, i) {
+      var t0 = 3.0 + i * 1.25, k = ease((r - t0) / 0.6);
+      if (k <= 0) return;
+      var p = P[i], top = i === 1;
+      // the point: a ripple, a glow and a bright core
+      var rip = K.clamp01((r - t0) / 1.2);
+      if (rip < 1) { ctx.strokeStyle = 'rgba(255,220,140,' + (1 - rip) * 0.8 + ')'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(p[0], p[1], 6 + rip * 40, 0, 7); ctx.stroke(); }
+      var rr = (5 + 2 * Math.sin(t * 3 + i)) * k * (1 + collapse * 0.5);
+      ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.drawImage(K.glow('#ffcf6a', 0.18), p[0] - rr * 6, p[1] - rr * 6, rr * 12, rr * 12); ctx.restore();
+      ctx.fillStyle = '#fff8dc'; ctx.beginPath(); ctx.arc(p[0], p[1], rr * 0.8, 0, 7); ctx.fill();
+      // the name writes on, then the role fades in
+      var na = 1 - ease((r - 7.3) / 0.45), nameK = K.clamp01((r - t0 - 0.2) / 0.7), roleK = ease((r - t0 - 0.7) / 0.6);
+      if (na <= 0) return;
+      var ny = p[1] + (top ? -H * 0.085 : H * 0.075), fs = Math.round(H * 0.052);
+      ctx.save(); ctx.globalAlpha = fadeAll * na;
+      ctx.font = '700 ' + fs + 'px Georgia, "Times New Roman", serif';
+      var nw = ctx.measureText(c[0]).width;
+      ctx.beginPath(); ctx.rect(p[0] - nw / 2 - 4, ny - fs, (nw + 8) * nameK, fs * 2); ctx.clip();
+      ctx.shadowColor = 'rgba(255,190,90,0.7)'; ctx.shadowBlur = 16; ctx.fillStyle = '#ffe7a8'; ctx.fillText(c[0], p[0], ny);
+      ctx.restore();
+      if (roleK > 0) {
+        ctx.save(); ctx.globalAlpha = fadeAll * na * roleK; ctx.fillStyle = '#d9d3ff';
+        ctx.font = 'italic ' + Math.round(H * 0.024) + 'px Georgia, "Times New Roman", serif';
+        ctx.fillText(c[1], p[0], ny + (top ? -1 : 1) * H * 0.048);
+        ctx.restore();
+      }
+    });
+    // the triangle folds into one spark: the Origin, which bursts into the title's stars
+    var burst = K.clamp01((r - 8.5) / 0.5);
+    if (collapse > 0) {
+      var sr = 8 + collapse * 10 + burst * 40;
+      ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = fadeAll * (1 - burst * 0.6);
+      ctx.drawImage(K.glow('#ffd88a', 0.15), cx - sr * 5, cy - sr * 5, sr * 10, sr * 10); ctx.restore();
+      K.twinkle(ctx, cx, cy, sr * 1.4, fadeAll * (1 - burst * 0.5), '#fff6d0');
+      if (burst > 0) { ctx.strokeStyle = 'rgba(255,230,170,' + (1 - burst) + ')'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(cx, cy, burst * Math.max(W, H) * 0.5, 0, 7); ctx.stroke(); }
+    }
+    ctx.restore();
+  };
+
   T.bridge = bridge; T.plinth = plinth;
   F.TitleScene = T;
 })();

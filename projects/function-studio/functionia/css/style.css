@@ -269,12 +269,12 @@ html.reduced #glitchbanner.show { animation: gbsoft 1.9s ease-out forwards; }
 .title-screen .menu .btn.primary { grid-column: 1 / -1; }
 .menu.glass { background: linear-gradient(180deg, rgba(40,32,96,0.55), rgba(16,12,44,0.6)); border: 1px solid rgba(220,210,255,0.22); border-radius: 22px;
   box-shadow: 0 18px 50px rgba(5,3,20,0.55), inset 0 1px 0 rgba(255,255,255,0.18); -webkit-backdrop-filter: blur(10px) saturate(1.2); backdrop-filter: blur(10px) saturate(1.2); }
-.title-screen.reveal .tagline { animation: tsIn 0.8s ease 2.9s both; }
-.title-screen.reveal .menu { animation: tsFade 0.7s ease 3.0s both; }
+.title-screen.reveal .tagline { animation: tsIn 0.8s ease 11.0s both; }
+.title-screen.reveal .menu { animation: tsFade 0.7s ease 11.1s both; }
 .title-screen.reveal .menu .btn { animation: tsIn 0.5s ease both; }
-.title-screen.reveal .menu .btn:nth-child(1) { animation-delay: 3.2s; } .title-screen.reveal .menu .btn:nth-child(2) { animation-delay: 3.3s; }
-.title-screen.reveal .menu .btn:nth-child(3) { animation-delay: 3.4s; } .title-screen.reveal .menu .btn:nth-child(4) { animation-delay: 3.5s; }
-.title-screen.reveal .menu .btn:nth-child(5) { animation-delay: 3.6s; } .title-screen.reveal .foot { animation: tsIn 0.8s ease 3.4s both; }
+.title-screen.reveal .menu .btn:nth-child(1) { animation-delay: 11.3s; } .title-screen.reveal .menu .btn:nth-child(2) { animation-delay: 11.4s; }
+.title-screen.reveal .menu .btn:nth-child(3) { animation-delay: 11.5s; } .title-screen.reveal .menu .btn:nth-child(4) { animation-delay: 11.6s; }
+.title-screen.reveal .menu .btn:nth-child(5) { animation-delay: 11.7s; } .title-screen.reveal .foot { animation: tsIn 0.8s ease 11.6s both; }
 @keyframes tsIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 @keyframes tsFade { from { opacity: 0; } to { opacity: 1; } }
 .foot { position: fixed; bottom: 12px; left: 0; right: 0; font-size: 0.75rem; color: var(--muted); }
@@ -454,3 +454,8 @@ input.num, input.code, input.name, select { border-color: rgba(216,204,255,0.45)
 html.contrast .ppanel, html.contrast .khub, html.contrast .modal, html.contrast .dialogue:not(.cinema) { background: #000; border-color: #fff; -webkit-backdrop-filter: none; backdrop-filter: none; }
 html.reduced .btn::after, html.reduced .dialogue .dbody::after { animation: none !important; }
 @media (prefers-reduced-motion: reduce) { .btn::after, .dialogue .dbody::after { animation: none !important; } }
+/* v1.5 fixes: the intro's skip button keeps its fixed spot (the gem-button rule above made it relative) */
+.btn.skipall { position: fixed; top: 14px; right: 16px; left: auto; z-index: 21; }
+/* film captions fade in as a whole line */
+.dialogue.cinema .line.cfade { animation: capIn 1.3s ease both; }
+@keyframes capIn { from { opacity: 0; transform: translateY(6px); filter: blur(2px); } to { opacity: 1; transform: none; filter: none; } }
