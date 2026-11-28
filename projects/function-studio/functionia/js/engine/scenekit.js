@@ -75,6 +75,51 @@
     else ctx.drawImage(e.p, x, y, e.w, e.h);
   };
   K.clear = function () { cache = {}; order = []; };
+  /** A blurred copy of a canvas (down- then up-scaled: cheap and works in every browser). amt: CSS px. */
+  function soften(src, w, amt) {
+    var f = Math.max(1.5, amt * src.width / w), sw = Math.max(1, Math.round(src.width / f)), sh = Math.max(1, Math.round(src.height / f));
+    var a = document.createElement('canvas'); a.width = sw; a.height = sh; var ag = a.getContext('2d'); ag.imageSmoothingQuality = 'high'; ag.drawImage(src, 0, 0, sw, sh);
+    var b = document.createElement('canvas'); b.width = src.width; b.height = src.height; var bg = b.getContext('2d'); bg.imageSmoothingQuality = 'high'; bg.drawImage(a, 0, 0, src.width, src.height);
+    return b;
+  }
+  /** Like K.blit, but out of focus: for the layer nearest the camera (depth of field). */
+  K.blitSoft = function (ctx, e, x, y, amt) {
+    if (!e.cb) e.cb = soften(e.c, e.w, amt);
+    if (e.p && !e.pb) e.pb = soften(e.p, e.w, amt);
+    K.blit(ctx, { c: e.cb, p: e.pb, t0: e.t0, w: e.w, h: e.h }, x, y);
+  };
+  /** Out-of-focus specks of light drifting in front of everything (bokeh), kept faint around the focus point. */
+  K.bokeh = function (ctx, W, H, t, color, n, focus, a) {
+    var spr = K.glow(color, 0.55);
+    ctx.save(); ctx.globalCompositeOperation = 'screen';
+    for (var i = 0; i < n; i++) {
+      var h1 = (Math.sin(i * 91.7) * 43758.5) % 1, h2 = (Math.sin(i * 47.3 + 3) * 24634.6) % 1; h1 = Math.abs(h1); h2 = Math.abs(h2);
+      var x = ((h1 + t * (0.004 + h2 * 0.006)) % 1) * (W + 300) - 150, y = H * (0.5 + 0.5 * h2) + Math.sin(t * 0.3 + i) * H * 0.03, r = H * (0.035 + 0.08 * ((h1 * 7) % 1));
+      var al = (a || 0.16) * (0.5 + 0.5 * Math.sin(t * 0.5 + i * 1.3));
+      if (focus) { var d = Math.hypot(x - focus.x, y - focus.y) / focus.r; al *= Math.min(1, Math.max(0.15, d - 0.3)); }
+      ctx.globalAlpha = al; ctx.drawImage(spr, x - r, y - r, r * 2, r * 2);
+    }
+    ctx.restore();
+  };
+  /**
+   * Corruption in the air: little fragments of broken data that fade in, shiver with a red/cyan split and fade
+   * out, each in its own place. Every fragment moves smoothly (no flashing).
+   */
+  K.glitchBits = function (ctx, W, H, t, n, a, maxY) {
+    if (n <= 0 || a <= 0.01) return;
+    ctx.save();
+    for (var i = 0; i < n; i++) {
+      var per = 1.6 + (i % 5) * 0.45, ph = t / per + i * 0.37, cyc = Math.floor(ph), life = ph - cyc;
+      var hx = Math.abs(Math.sin(i * 12.9898 + cyc * 78.233) * 43758.5453) % 1, hy = Math.abs(Math.sin(i * 39.346 + cyc * 11.135) * 24634.634) % 1;
+      var x = hx * W, y = hy * H * (maxY || 0.9), s = 2 + (i % 4) * 1.5, len = 3 + (i % 3) * 2, al = a * Math.pow(Math.sin(Math.PI * life), 2);
+      var jit = Math.sin(t * 9 + i) * s * 0.6 * Math.sin(Math.PI * life);
+      ctx.globalAlpha = al * 0.7; ctx.fillStyle = '#FF4D6D'; ctx.fillRect(x - s * 0.6 + jit, y, s * len, s);
+      ctx.fillStyle = '#3FE0FF'; ctx.fillRect(x + s * 0.6 - jit, y + s * 0.3, s * len, s);
+      ctx.globalAlpha = al; ctx.fillStyle = '#f4f0ff';
+      for (var j = 0; j < len; j++) if ((i + j + cyc) % 3) ctx.fillRect(x + j * s, y + s * 0.15, s * 0.8, s * 0.7);
+    }
+    ctx.restore();
+  };
   /** A soft round glow (for bokeh snow, lights and stars). */
   K.glow = function (color, core) {
     var key = color + (core || 0);

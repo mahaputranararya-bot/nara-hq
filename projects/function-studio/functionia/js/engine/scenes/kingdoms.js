@@ -74,7 +74,7 @@
       if (a <= 0) continue;
       ctx.globalAlpha = a;
       if (kind === 'seed') { ctx.strokeStyle = 'rgba(255,255,255,0.8)'; ctx.lineWidth = 0.7; for (var k = 0; k < 6; k++) { var an = k * 1.047 + t * 0.5 + i; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + Math.cos(an) * sz * 1.8, y + Math.sin(an) * sz * 1.8); ctx.stroke(); } }
-      else if (kind === 'static') { var st = Math.floor(t * 3); ctx.globalAlpha = 0.4; ctx.fillStyle = (i + st) % 2 ? '#FF4D6D' : '#3FE0FF'; ctx.fillRect(((s1 * 977 + st * 37) % 1) * W, ((s2 * 613 + st * 53) % 1) * H * 0.9, sz + 1, sz + 1); }
+      else if (kind === 'static') { if (i === 0) K.glitchBits(ctx, W, H, t, n, 0.75); }
       else { ctx.globalCompositeOperation = 'lighter'; ctx.drawImage(K.glow(typeof col === 'function' ? col(i) : col, 0.25), x - sz * 3, y - sz * 3, sz * 6, sz * 6); ctx.globalCompositeOperation = 'source-over'; }
     }
     ctx.restore();
@@ -118,19 +118,28 @@
         });
         var ox = { sky: px * 4, far: px * 10, mid: px * 18, near: px * 30 };
         ['sky', 'far', 'mid', 'near'].forEach(function (n) {
-          if (L[n]) K.blit(ctx, L[n], -PAD + ox[n], -PAD);
+          if (L[n]) { if (n === 'near' && def.dof !== 0) K.blitSoft(ctx, L[n], -PAD + ox[n], -PAD, def.dof || 2.5); else K.blit(ctx, L[n], -PAD + ox[n], -PAD); }
+          if (n === 'far' && def.light) { // aerial haze: distance fades into the colour of the air
+            var hy = (def.hazeY || 0.6) * H, hz = ctx.createLinearGradient(0, hy - H * 0.2, 0, hy + H * 0.12);
+            hz.addColorStop(0, K.rgba(def.light.haze, 0)); hz.addColorStop(0.65, K.rgba(def.light.haze, def.light.hazeA || 0.26)); hz.addColorStop(1, K.rgba(def.light.haze, 0));
+            ctx.fillStyle = hz; ctx.fillRect(0, hy - H * 0.2, W, H * 0.32);
+          }
           var hook = def['after' + n.charAt(0).toUpperCase() + n.slice(1)];
           if (hook) hook(ctx, W, H, tm, rest, ox[n], st);
         });
         vignette(ctx, W, H, def.vig || 0.4);
       },
-      stage: def.stage
+      stage: def.stage,
+      light: def.light,
+      /** Drawn in front of the characters: out-of-focus light drifting past the camera. */
+      front: function (ctx, W, H, t, rest, focus) { if (def.light) K.bokeh(ctx, W, H, F.FX && F.FX.reduced ? t * 0.3 : t, def.light.bokeh, 7, focus, def.light.bokehA || 0.16); }
     };
     F.Scenes[id] = S;
   }
 
   // ================================================================ LINEARA — golden hour over straight fields
   makeScene('lin', {
+    light: { dir: [0.75, -0.66], key: '#fff1c8', shade: '#55608f', rim: '#fff3c4', rimA: 0.6, cast: '#3a3a60', castA: 0.25, haze: '#ffe8c4', bokeh: '#fff4d6', hazeY: 0.6 },
     sky: function (g, W, H, st) {
       sky(g, W, H, [[0, '#4f9fe6'], [0.38, '#98cdf0'], [0.56, '#ffe6b6'], [0.64, '#ffcf88'], [1, '#ffc47a']]);
       st.sun = { x: W * 0.8, y: H * 0.3 };
@@ -239,6 +248,7 @@
     }
   }
   makeScene('par', {
+    light: { dir: [-0.82, -0.55], key: '#ffc28a', shade: '#4a2848', rim: '#ffb070', rimA: 0.7, cast: '#2a1430', castA: 0.3, haze: '#ffb890', bokeh: '#ffd2a0', hazeY: 0.58 },
     sky: function (g, W, H, st) {
       var h0 = hor(H);
       sky(g, W, H, [[0, '#231c58'], [0.3, '#6a3478'], [0.5, '#c8546e'], [0.62, '#f08a4c'], [0.72, '#ffcf7a'], [1, '#ffd88a']]);
@@ -355,6 +365,7 @@
     return { L: L, R: R, C: C };
   }
   makeScene('cub', {
+    light: { dir: [-0.6, -0.8], key: '#ffb48a', shade: '#2a1a44', rim: '#a8f4e6', rimA: 0.55, cast: '#1a0c24', castA: 0.32, haze: '#c87a90', bokeh: '#d8ffb0', hazeY: 0.6 },
     sky: function (g, W, H, st) {
       sky(g, W, H, [[0, '#121034'], [0.32, '#30266a'], [0.5, '#7a4478'], [0.62, '#d0706e'], [0.72, '#ffae7a'], [1, '#ffb882']]);
       stars(g, W, H, 160, H * 0.38, 9);
@@ -447,6 +458,7 @@
     g.restore();
   }
   makeScene('exp', {
+    light: { dir: [0.25, -0.97], key: '#e2ffb8', shade: '#123a2a', rim: '#c8ffd8', rimA: 0.55, cast: '#08200f', castA: 0.3, haze: '#9fe8b0', bokeh: '#e8ffb0', bokehA: 0.2, hazeY: 0.6 },
     sky: function (g, W, H, st) {
       sky(g, W, H, [[0, '#05160e'], [0.3, '#0d3624'], [0.6, '#2a7044'], [0.85, '#64ae62'], [1, '#86cc78']]);
       var gl = g.createRadialGradient(W * 0.55, -H * 0.05, 0, W * 0.55, -H * 0.05, H * 0.75); gl.addColorStop(0, 'rgba(235,255,200,0.6)'); gl.addColorStop(1, 'rgba(235,255,200,0)'); g.fillStyle = gl; g.fillRect(-PAD, -PAD, W + PAD * 2, H);
@@ -527,6 +539,7 @@
 
   // ================================================================ RATIONALIS — a night fortress between two asymptote walls
   makeScene('rat', {
+    light: { dir: [0.7, -0.7], key: '#b8a8ff', shade: '#120a30', rim: '#3fe0ff', rimA: 0.75, cast: '#05020f', castA: 0.35, haze: '#4a3090', bokeh: '#3fe0ff', bokehA: 0.14, hazeY: 0.62 },
     sky: function (g, W, H, st) {
       sky(g, W, H, [[0, '#03021a'], [0.45, '#0e0932'], [0.75, '#1f1652'], [1, '#33266a']]);
       stars(g, W, H, 260, H * 0.6, 21);

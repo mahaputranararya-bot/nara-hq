@@ -296,11 +296,6 @@
     ctx.save(); ctx.globalCompositeOperation = 'lighter';
     for (i = 0; i < 6; i++) { var on = cor ? (i + step) % 3 !== 0 : true; if (!on) continue; ctx.fillStyle = cor ? (i % 2 ? c1 : c2) : c2; ctx.globalAlpha = cor ? 0.9 : 0.6 + 0.3 * Math.sin(t * 2 + i); ctx.fillRect(-0.075 * u + i * 0.026 * u, -0.19 * u, 0.018 * u, 0.012 * u); }
     ctx.globalAlpha = 1; ctx.restore();
-    if (cor) { // flash-safe static: changes three times a second
-      ctx.save(); ctx.globalAlpha = 0.35; ctx.lineWidth = 2;
-      for (i = 0; i < 3; i++) { ctx.strokeStyle = i % 2 ? '#3FE0FF' : '#FF4D6D'; var yy = -0.4 * u + ((step * 31 + i * 47) % 100) / 100 * u; ctx.beginPath(); ctx.moveTo(-0.3 * u, yy); ctx.lineTo(0.3 * u, yy); ctx.stroke(); }
-      ctx.restore();
-    }
     ctx.restore();
   };
   setup(P.warden, 1.08, 0.64, { s: 1.9, dy: 0.36 });

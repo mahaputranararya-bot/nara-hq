@@ -301,6 +301,8 @@
       ctx.fillRect(0, 0, W, H);
       ctx.restore();
       ctx.fillStyle = 'rgba(20,16,40,' + (0.18 * (1 - rest)) + ')'; ctx.fillRect(0, 0, W, H);
+      // broken data drifting in the air while the kingdom is still corrupted
+      if (F.SceneKit && !(F.FX && F.FX.reduced)) F.SceneKit.glitchBits(ctx, W, H, t, Math.round(14 * (1 - rest)), 0.75 * (1 - rest), 0.8);
     }
   };
 
@@ -348,7 +350,7 @@
       if (A.kind === 'flake') { F.Paint.sparkle(ctx, x, y, sz * 1.6, a); }
       else if (A.kind === 'firefly') { ctx.shadowColor = A.color; ctx.shadowBlur = 10; ctx.beginPath(); ctx.arc(x, y, sz, 0, Math.PI * 2); ctx.fill(); ctx.shadowBlur = 0; }
       else if (A.kind === 'ember') { ctx.fillStyle = s3 > 0.5 ? '#ffd27a' : '#ff8a4a'; ctx.beginPath(); ctx.arc(x, y, sz * 0.8, 0, Math.PI * 2); ctx.fill(); }
-      else if (A.kind === 'static') { var st = Math.floor(t * 3); ctx.fillStyle = (i + st) % 2 ? '#FF4D6D' : '#3FE0FF'; ctx.globalAlpha = 0.35; ctx.fillRect(((s1 * 977 + st * 37) % 1) * W, ((s2 * 613 + st * 53) % 1) * H, sz + 1, sz + 1); }
+      else if (A.kind === 'static') { if (i === 0 && F.SceneKit) F.SceneKit.glitchBits(ctx, W, H, t, A.n, 0.6); }
       else { ctx.beginPath(); ctx.arc(x, y, sz, 0, Math.PI * 2); ctx.fill(); }
     }
     ctx.globalAlpha = 1;

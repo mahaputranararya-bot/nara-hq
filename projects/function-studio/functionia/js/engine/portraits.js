@@ -428,23 +428,19 @@
   }
 
   /** Draw a portrait in a box. who: key in P. */
+  /** o: { corrupted, friendly, closeup, light (a scene's lighting), shadow, ground, slot, box } */
   function draw(ctx, who, cx, cy, S, t, o) {
+    o = o || {};
     var fn = P[who] || P.narrator;
-    ctx.save(); ctx.translate(cx, cy);
-    if (o && o.closeup && fn.closeup) { ctx.translate(0, S * fn.closeup.dy); ctx.scale(fn.closeup.s, fn.closeup.s); }
-    fn(ctx, S, t, o || {});
-    ctx.restore();
-    if (o && o.corrupted && who !== 'glitch' && who !== 'warden') {
-      // faint static over a corrupted ruler (3 steps a second: flash-safe)
-      ctx.save(); ctx.globalAlpha = 0.3; ctx.lineWidth = 2;
-      var step = Math.floor(t * 3);
-      for (var i = 0; i < 3; i++) {
-        ctx.strokeStyle = i % 2 ? '#3FE0FF' : '#FF4D6D';
-        var yy = cy - S * 0.4 + ((step * 31 + i * 47) % 80) / 80 * S * 0.8;
-        ctx.beginPath(); ctx.moveTo(cx - S * 0.35, yy); ctx.lineTo(cx + S * 0.35, yy); ctx.stroke();
-      }
-      ctx.restore();
-    }
+    var body = function (g) {
+      if (o.closeup && fn.closeup) { g.translate(0, S * fn.closeup.dy); g.scale(fn.closeup.s, fn.closeup.s); }
+      fn(g, S, t, o);
+    };
+    // corrupted rulers glitch inside their own outline; the Glitch itself always crackles a little
+    var gl = who === 'glitch' ? (o.friendly ? 0 : 0.7) : (o.corrupted ? 1 : 0);
+    if (!F.CharFX) { ctx.save(); ctx.translate(cx, cy); body(ctx); ctx.restore(); return; }
+    F.CharFX.draw(ctx, body, cx, cy, S, t, { light: o.light, glitch: F.FX && F.FX.reduced ? 0 : gl, shadow: o.shadow, ground: o.ground, feet: fn.feet || 0.5,
+      slot: o.slot || 'p', box: o.box, seed: who.length * 1.7, id: who + (o.corrupted ? '!' : '') + (o.friendly ? '+' : ''), closeup: o.closeup });
   }
 
   F.Portraits = { draw: draw, drawGlitch: drawGlitch, P: P };

@@ -106,20 +106,38 @@
       var C = F.kingdoms[k];
       var n = Object.keys(kd.learn).length + Object.keys(kd.practice.best).length + Object.keys(kd.trial).length;
       var rest = kd.restored ? 1 : Math.min(0.85, n / (C.learn.length + 5 + C.trial.length));
-      F.Art.kingdom(ctx, k, G.W, G.H, t, { rest: rest, parallax: { x: (G.mouse.x / G.W - 0.5), y: (G.mouse.y / G.H - 0.5) } });
+      // a slow drift of the camera, so the painted layers slide past each other and the scene feels deep
+      var dr = F.FX && F.FX.reduced ? 0 : 1;
+      F.Art.kingdom(ctx, k, G.W, G.H, t, { rest: rest, parallax: { x: (G.mouse.x / G.W - 0.5) + Math.sin(t * 0.13) * 0.4 * dr, y: (G.mouse.y / G.H - 0.5) + Math.sin(t * 0.09) * 0.2 * dr } });
       var panelW = Math.min(520, G.W * 0.42);
       var cx = (G.W - panelW) / 2, cy = G.H * 0.56;
       var S = Math.min(G.H * 0.5, 330);
-      var Sc = F.Scenes && F.Scenes[k];
-      if (Sc && Sc.stage) Sc.stage(ctx, cx, cy + S * 0.5, S * 0.5, t);
-      else { ctx.save(); ctx.fillStyle = 'rgba(255,255,255,0.16)'; ctx.beginPath(); ctx.ellipse(cx, cy + S * 0.5, S * 0.45, S * 0.08, 0, 0, 7); ctx.fill(); ctx.restore(); }
+      var Sc = F.Scenes && F.Scenes[k], Lt = Sc && Sc.light, CF = F.CharFX, stageY = cy + S * 0.5;
+      if (Sc && Sc.stage) Sc.stage(ctx, cx, stageY, S * 0.5, t);
+      else { ctx.save(); ctx.fillStyle = 'rgba(255,255,255,0.16)'; ctx.beginPath(); ctx.ellipse(cx, stageY, S * 0.45, S * 0.08, 0, 0, 7); ctx.fill(); ctx.restore(); }
       var pf = F.Portraits.P[this.K.rulerKey] || {}, hs = pf.hubScale || 1, feet = pf.feet || 0.5;
-      F.Portraits.draw(ctx, this.K.rulerKey, cx, cy + S * (0.5 - hs * feet), S * hs, t, { corrupted: !kd.restored });
+      // the ruler is lit by the kingdom's own light and casts a shadow on the stage
+      F.Portraits.draw(ctx, this.K.rulerKey, cx, cy + S * (0.5 - hs * feet), S * hs, t, { corrupted: !kd.restored, light: Lt, shadow: true, slot: 'ruler', box: [0.75, 1.05, 0.72],
+        ground: { x: cx, y: stageY + S * 0.02, rx: S * 0.56, ry: S * 0.13 } });
       // Ori bounces beside the ruler; Delta hovers at the ruler's shoulder (both drawn larger here)
-      var big = Math.max(1.4, S / 210);
-      G.ori.setPos(cx + S * 0.5, cy + S * 0.36 - Math.abs(Math.sin(t * 2)) * 10); G.ori.setCoord(null);
-      G.ori.draw(ctx, { badge: false, ring: false, scale: big });
-      G.delta.moveTo(cx + S * 0.6, cy - S * 0.08); G.delta.draw(ctx, big * 0.95);
+      var big = Math.max(1.4, S / 210), hop = Math.abs(Math.sin(t * 2)) * 10, ox = cx + S * 0.5, oy = cy + S * 0.36 - hop, R = G.ori.r * big;
+      G.ori.setPos(ox, oy); G.ori.setCoord(null);
+      if (Lt && CF) {
+        var sy = oy + hop + R * 1.05, sr = R * (1.1 - hop / 40), sg = ctx.createRadialGradient(ox, sy, 0, ox, sy, sr); // Ori's shadow shrinks as it hops
+        sg.addColorStop(0, F.SceneKit.rgba(Lt.cast || '#0a0618', 0.4 - hop / 50)); sg.addColorStop(1, F.SceneKit.rgba(Lt.cast || '#0a0618', 0));
+        ctx.save(); ctx.fillStyle = sg; ctx.beginPath(); ctx.ellipse(ox, sy, sr, sr * 0.28, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+        CF.draw(ctx, function (g) { G.ori.setPos(0, 0); G.ori.draw(g, { badge: false, ring: false, scale: big, trail: false }); }, ox, oy, R, t, { light: Lt, slot: 'ori', box: [2.2, 2.4, 1.8] });
+        G.ori.setPos(ox, oy);
+        G.delta.moveTo(cx + S * 0.6, cy - S * 0.08);
+        var D = G.delta, dxp = D.x, dyp = D.y, ds = D.size * big * 0.95;
+        CF.draw(ctx, function (g) { D.x = 0; D.y = 0; D.draw(g, big * 0.95); }, dxp, dyp, ds, t, { light: Lt, slot: 'delta', box: [1.6, 1.9, 1.6] });
+        D.x = dxp; D.y = dyp;
+      } else {
+        G.ori.draw(ctx, { badge: false, ring: false, scale: big });
+        G.delta.moveTo(cx + S * 0.6, cy - S * 0.08); G.delta.draw(ctx, big * 0.95);
+      }
+      // in front of everyone: out-of-focus light drifting past the camera
+      if (Sc && Sc.front) Sc.front(ctx, G.W, G.H, t, rest, { x: cx, y: cy, r: S * 0.75 });
     }
   };
   G.register('kingdom', KS);

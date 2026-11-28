@@ -141,29 +141,44 @@
     // pick a new tear pattern at most ~3 times per second; ease toward it in between
     var nowMs = performance.now();
     if (!FX.tear || nowMs > FX.tearNext) {
-      var bands = [], y = 0;
-      while (y < H) { var hh = (20 + Math.random() * 70) * dpr; bands.push({ y: y, h: hh, dx: (Math.random() - 0.5) * 60 * dpr, cur: FX.tear ? 0 : 0 }); y += hh; }
+      var bands = [], y = 0, blocks = [];
+      while (y < H) { var hh = (14 + Math.random() * 80) * dpr; bands.push({ y: y, h: hh, dx: Math.random() < 0.45 ? 0 : (Math.random() - 0.5) * 90 * dpr, cur: 0, split: Math.random() < 0.4 }); y += hh; }
       if (FX.tear) bands.forEach(function (b, i) { b.cur = FX.tear[i] ? FX.tear[i].cur : 0; });
-      FX.tear = bands; FX.tearNext = nowMs + 340;
+      for (var i = 0; i < 7; i++) { var bw = (40 + Math.random() * 180) * dpr, bh = (6 + Math.random() * 34) * dpr; blocks.push({ sx: Math.random() * (W - bw), sy: Math.random() * (H - bh), w: bw, h: bh, dx: (Math.random() - 0.5) * 160 * dpr, dy: (Math.random() - 0.5) * 30 * dpr }); }
+      FX.tear = bands; FX.blocks = blocks; FX.tearNext = nowMs + 340;
     }
     ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0);
-    // RGB split: red copy left, cyan copy right
     var red = ensure('red', W, H), cyan = ensure('cyan', W, H);
     tint(red, off, '#ff2a55'); tint(cyan, off, '#22e6ff');
-    ctx.globalCompositeOperation = 'screen';
-    ctx.globalAlpha = 0.5 * strength;
-    ctx.drawImage(red, -7 * dpr * strength, 0);
-    ctx.drawImage(cyan, 7 * dpr * strength, 0);
-    ctx.globalCompositeOperation = 'source-over';
-    ctx.globalAlpha = 1;
-    // tear slices
+    // 1. a gentle colour split over the whole picture
+    ctx.globalCompositeOperation = 'screen'; ctx.globalAlpha = 0.28 * strength;
+    ctx.drawImage(red, -6 * dpr * strength, 0); ctx.drawImage(cyan, 6 * dpr * strength, 0);
+    ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1;
+    // 2. torn slices that slide sideways; some tear apart into their red and cyan channels
     FX.tear.forEach(function (b) {
       b.cur += (b.dx - b.cur) * 0.25;
       var dx = b.cur * strength;
       if (Math.abs(dx) < 0.5) return;
       ctx.drawImage(off, 0, b.y, W, b.h, dx, b.y, W, b.h);
+      if (b.split) {
+        ctx.globalCompositeOperation = 'screen'; ctx.globalAlpha = 0.55 * strength;
+        ctx.drawImage(red, 0, b.y, W, b.h, dx - 10 * dpr, b.y, W, b.h); ctx.drawImage(cyan, 0, b.y, W, b.h, dx + 10 * dpr, b.y, W, b.h);
+        ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1;
+      }
     });
-    // soft static
+    // 3. blocks of the picture copied to the wrong place (like a broken video file)
+    ctx.globalAlpha = strength;
+    (FX.blocks || []).forEach(function (k) { ctx.drawImage(off, k.sx, k.sy, k.w, k.h, k.sx + k.dx * strength, k.sy + k.dy * strength, k.w, k.h); });
+    // 4. a tracking band that rolls down the screen, smearing what it passes over
+    var ty = (t / FX.glitchDur * 1.3 - 0.15) * H, th = 34 * dpr;
+    if (ty > -th && ty < H) {
+      for (var s = 0; s < 6; s++) { var yy = ty + s * th / 6, sh = Math.sin(s * 1.7 + t * 20) * 14 * dpr * strength; ctx.drawImage(off, 0, Math.max(0, yy), W, th / 6, sh, yy, W, th / 6); }
+      var tg = ctx.createLinearGradient(0, ty, 0, ty + th); tg.addColorStop(0, 'rgba(255,255,255,0)'); tg.addColorStop(0.5, 'rgba(230,240,255,' + 0.12 * strength + ')'); tg.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.fillStyle = tg; ctx.fillRect(0, ty, W, th);
+    }
+    // 5. scanlines and soft static
+    ctx.globalAlpha = 0.16 * strength; ctx.fillStyle = '#05000f';
+    for (var ly = 0; ly < H; ly += 3 * dpr) ctx.fillRect(0, ly, W, Math.max(1, dpr * 0.8));
     if (!FX.noise) FX.noise = makeNoise();
     ctx.globalAlpha = 0.09 * strength;
     var pat = ctx.createPattern(FX.noise, 'repeat');

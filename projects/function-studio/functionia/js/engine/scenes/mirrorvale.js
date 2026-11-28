@@ -309,7 +309,7 @@
     mirrorLine(ctx, W, H, tm, rest);
 
     // 3. foreground banks, glints and falling snow
-    K.blit(ctx, near, -PAD + ox[3], -PAD);
+    K.blitSoft(ctx, near, -PAD + ox[3], -PAD, 2.5); // nearest the camera: slightly out of focus
     drawGlints(ctx, ox[3], tm, rest);
     drawSnow(ctx, W, H, tm, rest);
     // gentle vignette
@@ -443,5 +443,7 @@
     ctx.restore();
   };
 
+  M.light = { dir: [-0.12, -0.99], key: '#e0e8ff', shade: '#2a2a60', rim: '#dce8ff', rimA: 0.6, cast: '#141238', castA: 0.3, haze: '#c0c8ff', bokeh: '#e4ecff' };
+  M.front = function (ctx, W, H, t, rest, focus) { K.bokeh(ctx, W, H, F.FX && F.FX.reduced ? t * 0.3 : t, M.light.bokeh, 7, focus, 0.15); };
   F.Scenes.mir = M;
 })();
