@@ -47,6 +47,10 @@ Painted Mirrorvale scene, new Mirror Queen and Ori, GPU glow pass, the Mirror Wa
 - Crew credits (Nara, Uno, Kayyira); a 49-second film with readable pacing; Skip button fixed; "begin" and portal transitions; island dioramas; all six kingdoms painted with brush strokes; five rulers redrawn.
 - Tests: 70/70 unit tests. Smoke, accessibility, tour (78 puzzles) and full game pass with no console errors. Layout audit: 2,064 panel states, 0 overlaps. Each kingdom finishes painting in about 2 s, in the background.
 
+## v1.6: sound from the start, hold-to-skip, dissolves, waterfall, lit characters, depth ✅ (28 Nov 2026)
+- "Click to begin" gate so the music plays from the first second; shorter crew credits; hold-to-skip for credits and film; whole-picture dissolves in the montage; a flowing waterfall in Cubrion; characters lit by their kingdom with rim light, brush grain and shadows; a glitch that lives inside corrupted figures and a new screen glitch; depth (soft foreground, haze, drifting light, slow camera drift).
+- Tests: 70/70 unit tests. Smoke, accessibility, tour (78 puzzles), audio and full game pass with no console errors. Layout audit: 2,064 panel states, 0 overlaps. The character pass adds about 2 ms per frame on a laptop without a graphics card.
+
 ## Known issues
 - Art is all code. Kayyira may still replace any piece (see README).
 - Sound starts only after the first click or key press (browser rule).

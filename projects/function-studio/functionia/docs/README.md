@@ -88,6 +88,8 @@ To hear every theme without playing, run `node tests/e2e/audio.js`. It saves WAV
 - `js/engine/scenes/`: `mirrorvale.js` (kingdom scene), `islands.js` (the six floating islands), `title.js` (title screen and logo), `realm.js` (skies and the world seen from above: map and opening film).
 - `js/engine/scenes/kingdoms.js`: Lineara, Parabolis, Cubrion, Expona and Rationalis.
 - `js/engine/painter.js`: turns any cached scene layer into a brush-stroke painting (pass a `paint` option to `K.layer`).
+- `js/engine/charfx.js`: the character pass. Each figure is drawn into its own small canvas first, then lit with the kingdom's light (`light` in each scene), given a rim light, brush grain and a shadow on the stage, and, when corrupted, a glitch that stays inside its outline. Figures refresh at 30 fps; the screen stays at 60.
+- `js/ui/holdskip.js`: the hold-to-skip button (it fills in a ring; a quick click never skips).
 - `js/engine/transition.js`: the 'begin' and portal transitions.
 - `js/engine/characters/`: `queen.js`, `rulers.js` (the other five rulers) and `body.js` (shared eyes, faces, limbs, robes). Ori's look is `drawBody` in `js/engine/ori.js`.
 - `js/engine/glfx.js`: the GPU glow. It can be switched off in Settings. Add `?glow=force` to the address to test it on a computer without a graphics card.
