@@ -39,6 +39,7 @@
       F.FX.post(ctx, Game.canvas, Game.dpr);
       if (F.GLFX.on) F.GLFX.frame(Game.canvas, { mask: Game.glMask, W: Game.W, H: Game.H, dt: dt });
       if (F.Transition) F.Transition.frame(dt);
+      if (F.Painter) F.Painter.tick();
     } catch (e) {
       if (!Game._errShown) { Game._errShown = true; console.error(e); }
     }

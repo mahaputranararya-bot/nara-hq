@@ -51,7 +51,7 @@
   var cache = {}, order = [], sprites = {};
   K.scale = function () { return Math.min(2, (F.Game && F.Game.dpr) || window.devicePixelRatio || 1); };
   /** Paint a layer once per size (in CSS pixels) at screen sharpness, then reuse it every frame. */
-  K.layer = function (key, w, h, draw, scale) {
+  K.layer = function (key, w, h, draw, scale, paint) {
     scale = scale || K.scale();
     var k = key + ':' + Math.round(w) + 'x' + Math.round(h) + '@' + scale;
     var e = cache[k];
@@ -62,12 +62,18 @@
       g.scale(scale, scale);
       draw(g, w, h);
       e = cache[k] = { c: c, w: w, h: h };
+      if (paint && F.Painter) F.Painter.job(c, w, h, paint, function (pc) { e.p = pc; e.t0 = performance.now(); });
       order.push(k);
       while (order.length > 40) delete cache[order.shift()];
     } else if (order[order.length - 1] !== k) { order.splice(order.indexOf(k), 1); order.push(k); } // most recently used stays
     return e;
   };
-  K.blit = function (ctx, e, x, y) { ctx.drawImage(e.c, x, y, e.w, e.h); };
+  K.blit = function (ctx, e, x, y) {
+    if (!e.p) { ctx.drawImage(e.c, x, y, e.w, e.h); return; }
+    var a = Math.min(1, (performance.now() - e.t0) / 700); // the painting fades in over the clean layer
+    if (a < 1) { ctx.drawImage(e.c, x, y, e.w, e.h); var ga = ctx.globalAlpha; ctx.globalAlpha = ga * a; ctx.drawImage(e.p, x, y, e.w, e.h); ctx.globalAlpha = ga; }
+    else ctx.drawImage(e.p, x, y, e.w, e.h);
+  };
   K.clear = function () { cache = {}; order = []; };
   /** A soft round glow (for bokeh snow, lights and stars). */
   K.glow = function (color, core) {
@@ -90,6 +96,55 @@
     ctx.moveTo(x, y - r * 1.2); ctx.lineTo(x + r * 0.08, y); ctx.lineTo(x, y + r * 1.2); ctx.lineTo(x - r * 0.08, y); ctx.closePath();
     ctx.fill();
     ctx.restore();
+  };
+
+  // ---------------------------------------------------------------- organic shapes (never perfect primitives)
+  /** An irregular blob: an ellipse whose outline is pushed in and out by noise. Leaves a path; the caller fills. */
+  K.blob = function (g, x, y, rx, ry, seed, rough) {
+    var n = 48, r = rough === undefined ? 0.18 : rough;
+    g.beginPath();
+    for (var i = 0; i <= n; i++) {
+      var a = i / n * Math.PI * 2, k = 1 + r * (K.fbm(Math.cos(a) * 1.6 + seed, Math.sin(a) * 1.6 + seed * 0.7, seed | 0, 3) - 0.5) * 2;
+      var px = x + Math.cos(a) * rx * k, py = y + Math.sin(a) * ry * k;
+      if (!i) g.moveTo(px, py); else g.lineTo(px, py);
+    }
+    g.closePath();
+  };
+  /** A polygon with a wobbly, hand-drawn outline. */
+  K.organic = function (g, pts, amp, seed) {
+    g.beginPath(); var first = true;
+    for (var i = 0; i < pts.length; i++) {
+      var a = pts[i], b = pts[(i + 1) % pts.length], len = Math.hypot(b[0] - a[0], b[1] - a[1]), n = Math.max(2, Math.ceil(len / 6)), nx = -(b[1] - a[1]) / (len || 1), ny = (b[0] - a[0]) / (len || 1);
+      for (var j = 0; j < n; j++) {
+        var u = j / n, d = amp * (K.noise((a[0] + (b[0] - a[0]) * u) * 0.05 + seed, (a[1] + (b[1] - a[1]) * u) * 0.05, seed | 0) - 0.5) * 2;
+        var px = a[0] + (b[0] - a[0]) * u + nx * d, py = a[1] + (b[1] - a[1]) * u + ny * d;
+        if (first) { g.moveTo(px, py); first = false; } else g.lineTo(px, py);
+      }
+    }
+    g.closePath();
+  };
+  /** A soft dab: a blob filled with a colour that fades at its edge. */
+  K.dab = function (g, x, y, r, col, a, seed) {
+    var gr = g.createRadialGradient(x, y, 0, x, y, r * 1.15); gr.addColorStop(0, K.rgba(col, a)); gr.addColorStop(0.7, K.rgba(col, a * 0.85)); gr.addColorStop(1, K.rgba(col, 0));
+    g.fillStyle = gr; K.blob(g, x, y, r * 1.15, r * 1.05, seed, 0.25); g.fill();
+  };
+  /** A cumulus cloud built from many soft, uneven dabs: bright on top, warm and shaded underneath. */
+  K.puffCloud = function (g, x, y, w, seed, top, under) {
+    var r = K.rng(seed * 977 + 13), n = 34 + Math.floor(w / 8);
+    for (var i = 0; i < n; i++) {
+      var u = r() * 2 - 1, env = Math.pow(1 - u * u, 0.7), h = w * 0.32 * env, py = y - r() * h, px = x + u * w * 0.5;
+      var rr = w * (0.05 + r() * 0.07) * (0.6 + env * 0.6), k = K.clamp01((y - py) / (w * 0.32));
+      K.dab(g, px, Math.min(py, y - rr * 0.3), rr, K.mix(under, top, Math.pow(k, 0.7)), 0.55 + r() * 0.35, seed + i);
+    }
+  };
+  /** A mass of foliage: clumped leaf dabs, lit on the upper left. */
+  K.foliage = function (g, x, y, w, h, seed, light, dark) {
+    var r = K.rng(seed * 131 + 7), n = Math.max(12, Math.round(w * h / 90));
+    for (var i = 0; i < n; i++) {
+      var a = r() * Math.PI * 2, d = Math.sqrt(r()), px = x + Math.cos(a) * d * w * 0.5, py = y + Math.sin(a) * d * h * 0.5;
+      var lit = K.clamp01(0.55 - (px - x) / w * 0.8 - (py - y) / h * 0.9 + (r() - 0.5) * 0.3);
+      g.fillStyle = K.mix(dark, light, lit); K.blob(g, px, py, w * (0.08 + r() * 0.08), h * (0.06 + r() * 0.06), seed + i, 0.3); g.fill();
+    }
   };
 
   function poly(g, pts) { g.beginPath(); g.moveTo(pts[0][0], pts[0][1]); for (var i = 1; i < pts.length; i++) g.lineTo(pts[i][0], pts[i][1]); g.closePath(); }

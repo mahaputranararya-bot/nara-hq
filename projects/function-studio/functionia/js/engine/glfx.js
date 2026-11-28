@@ -36,6 +36,7 @@
     'precision mediump float; varying vec2 uv; uniform sampler2D src; uniform sampler2D bloom; uniform sampler2D bloom2;',
     'uniform float amt; uniform float grade; uniform float vig; uniform float seed; uniform vec2 res;', MASK,
     'float rnd(vec2 q){ return fract(sin(dot(q, vec2(12.9898, 78.233)) + seed) * 43758.5453); }',
+    'float hash(vec2 q){ return fract(sin(dot(q, vec2(127.1, 311.7))) * 43758.5453); }',
     'void main(){',
     '  vec3 c = texture2D(src, uv).rgb;',
     '  float m = maskAt(uv);',
@@ -49,6 +50,8 @@
     '  c = mix(vec3(l), c, 1.0 + 0.08 * grade * (1.0 - m));', // a touch more colour
     '  vec2 d = uv - 0.5; d.x *= res.x / res.y;',
     '  c *= 1.0 - vig * smoothstep(0.45, 1.15, length(d)) * (1.0 - m);',
+    '  vec2 pq = floor(uv * res / 3.0); float paper = hash(pq) * 0.6 + hash(floor(uv * res / 9.0) + 7.0) * 0.4;',
+    '  c *= 1.0 + (paper - 0.5) * 0.045 * (1.0 - m);',            // a faint paper grain
     '  c += (rnd(uv * res) - 0.5) / 255.0;',              // dither: no banding in dark gradients
     '  gl_FragColor = vec4(c, 1.0);',
     '}'].join('\n');
