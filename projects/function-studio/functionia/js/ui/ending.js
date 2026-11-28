@@ -33,7 +33,7 @@
       G.delta.visible = true;
       F.Audio.music('night');
       var ui = document.getElementById('ui');
-      this.skipEl = F.HoldSkip('Hold to skip the ending', function () { self.skip(); }, { esc: true, cls: 'skipall' });
+      this.skipEl = F.HoldSkip(this.replay ? 'Hold to stop the replay' : 'Hold to skip the ending', function () { if (self.replay) { self.shown = true; self.finishReplay(); } else self.skip(); }, { esc: true, cls: 'skipall' });
       ui.appendChild(this.skipEl);
       F.Dialogue.play('finale', {
         side: 'full', cinema: true, named: true, replay: this.replay, glitchMood: 'lonely',

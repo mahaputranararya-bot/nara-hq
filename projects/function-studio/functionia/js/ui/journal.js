@@ -87,7 +87,7 @@
       if (!seen[id] && !(G.dev && G.devUnlockAll)) return;
       any = true;
       var sc = F.story.scenes[id];
-      list.appendChild(h('div', { class: 'jitem' }, [h('span', { text: sc.title }), F.btn('Replay', function () { G.closeOverlay(true); F.Dialogue.play(id); }, { cls: 'tiny ghost' })]));
+      list.appendChild(h('div', { class: 'jitem' }, [h('span', { text: sc.title }), F.btn('Replay', function () { G.closeOverlay(true); F.Theater.play(id); }, { cls: 'tiny ghost' })]));
     });
     if (!any) list.appendChild(h('p', { text: 'Story scenes you have seen will appear here.' }));
     body.appendChild(list);
@@ -124,7 +124,7 @@
 
   G.overlays.journal = {
     title: 'Function Journal', cls: 'wide journal',
-    open: function (body) {
+    open: function (body, args) {
       if (!G.data) { body.appendChild(h('p', { text: 'Load a save slot to see your Journal.' })); return; }
       var tabs = h('div', { class: 'tabs noprint', role: 'tablist' });
       var holder = h('div', { class: 'tabbody' });
@@ -148,7 +148,7 @@
       }, { cls: 'small ghost noprint' });
       body.appendChild(h('div', { class: 'jtop' }, [tabs, print]));
       body.appendChild(holder);
-      show(0);
+      show(args && args.tab === 'story' ? 1 : 0);
     }
   };
 })();

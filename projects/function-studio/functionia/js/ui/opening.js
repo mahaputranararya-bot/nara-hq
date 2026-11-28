@@ -9,26 +9,28 @@
 
   var Op = {
     allowPause: true,
-    enter: function () {
-      var saved = G.data && G.data.story.openingBeat;
+    enter: function (a) {
+      a = a || {};
+      this.replay = !!a.replay; this.back = a.back || null; // a replay from the Journal: the film only, the save untouched
+      var saved = !this.replay && G.data && G.data.story.openingBeat;
       if (saved === 'bridge' || saved === 'tile' || saved === 'glimpse') { this.resume(saved); return; }
       this.beat = 'cinematic'; this.t = 0; this.cap = 0; this.capT = 0; this.wakeT = 0; this.pieces = null;
       F.Audio.music('prologue');
       G.ori.ring = []; G.ori.sleeping = false; G.ori.trail = [];
       G.delta.visible = false;
       var ui = document.getElementById('ui');
-      this.skipAll = F.HoldSkip(this.beat === 'cinematic' ? 'Hold to skip the film' : 'Hold to skip the intro', function () { Op.holdSkipped(); }, { esc: true, cls: 'skipall' });
+      this.skipAll = F.HoldSkip(this.replay ? 'Hold to stop the replay' : 'Hold to skip the film', function () { Op.holdSkipped(); }, { esc: true, cls: 'skipall' });
       ui.appendChild(this.skipAll);
       var self = this;
       F.Dialogue.play('opening', {
-        side: 'full', cinema: true,
+        side: 'full', cinema: true, replay: this.replay,
         onLine: function (i) {
           self.cap = i; self.capT = 0;
           if (i === 2) { F.Audio.music('omen'); F.Audio.sfx('rumble'); }
           if (i === 3) { F.Audio.music(null); F.FX.glitch(1.0); F.FX.shake(10); F.Audio.sfx('glitch'); setTimeout(function () { F.Audio.sfx('giggle'); }, 450); self.shatter(); }
           if (i === 4) setTimeout(function () { if (G.screen === Op && Op.cap === 4) F.Audio.sfx('spark'); }, 900);
         },
-        onEnd: function () { self.toWake(); }
+        onEnd: function () { if (self.replay) F.Theater.done(self.back); else self.toWake(); }
       });
     },
     shatter: function () {
@@ -137,6 +139,7 @@
     // ---------------- 3:30 glimpse of the fortress (on the map)
     toGlimpse: function () { this.saveBeat('glimpse'); G.go('map', { intro: true }); },
     holdSkipped: function () {
+      if (this.replay) { F.Theater.done(this.back); return; }
       if (this.beat === 'cinematic') { if (F.Dialogue.active) F.Dialogue.skip(); return; } // the film only
       this.finishAll();
     },
