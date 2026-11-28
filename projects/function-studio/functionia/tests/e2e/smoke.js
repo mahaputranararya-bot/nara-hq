@@ -10,6 +10,7 @@ require('fs').mkdirSync(out, { recursive: true });
 const url = 'file://' + path.resolve(__dirname, '../../index.html');
 const shot = (p, n) => p.screenshot({ path: path.join(out, n + '.png') });
 
+async function passGate(p) { await p.evaluate(() => { const s = F.Game.screen; if (s && s.passGate) { s.passGate(); s.skipReveal(); } }); }
 async function skipDialogue(p, times = 6) {
   for (let i = 0; i < times; i++) {
     const on = await p.evaluate(() => F.Dialogue.active);
@@ -60,16 +61,18 @@ async function playStage(p, label) {
   p.on('console', (m) => { if (m.type() === 'error') errs.push(m.text()); });
   p.on('pageerror', (e) => errs.push('PAGEERROR ' + e.message));
   await p.goto(url);
+  await passGate(p);
   await p.evaluate(() => localStorage.clear());
   await p.reload();
   await p.waitForTimeout(400);
+  await passGate(p);
 
   // ---- new game, opening, first win by clicking the graph
   await p.click('text=New game');
   await p.fill('.slot.empty input', 'Smoke');
   await p.click('text=Start a new game');
   await p.waitForFunction(() => F.Game.screenName === 'opening' && !F.Transition.active && F.Dialogue.active, null, { timeout: 10000 });
-  await skipDialogue(p, 1); // cinematic
+  await p.keyboard.down('Escape'); await p.waitForTimeout(1300); await p.keyboard.up('Escape'); await p.waitForTimeout(400); // hold to skip the film
   await p.waitForTimeout(300);
   await skipDialogue(p, 1); // wake
   await p.waitForSelector('#in-x');
@@ -88,6 +91,7 @@ async function playStage(p, label) {
   await p.waitForSelector('text=Let Ori try it');
   await p.reload();
   await p.waitForTimeout(500);
+  await passGate(p);
   await p.click('.title-screen .menu .btn');
   await p.waitForFunction(() => F.Game.screenName !== 'title' && !F.Transition.active, null, { timeout: 10000 });
   assert.equal(await p.evaluate(() => F.Game.screenName + ':' + F.Game.screen.beat), 'opening:tile', 'resumes at the 0 ÷ 0 tile');
@@ -104,6 +108,7 @@ async function playStage(p, label) {
   // ---- reload: progress kept
   await p.reload();
   await p.waitForTimeout(500);
+  await passGate(p);
   assert.match(await p.textContent('.title-screen .menu .btn'), /Continue/);
   await p.click('.title-screen .menu .btn');
   await p.waitForFunction(() => F.Game.screenName !== 'title' && !F.Transition.active, null, { timeout: 10000 });
@@ -171,6 +176,7 @@ async function playStage(p, label) {
   // ---- reload again: restoration kept
   await p.reload();
   await p.waitForTimeout(400);
+  await passGate(p);
   await p.click('.title-screen .menu .btn');
   await p.waitForTimeout(600);
   assert.ok(await p.evaluate(() => F.Game.data.kingdoms.mir.restored), 'restored kingdom kept after reload');

@@ -17,7 +17,7 @@
       G.ori.ring = []; G.ori.sleeping = false; G.ori.trail = [];
       G.delta.visible = false;
       var ui = document.getElementById('ui');
-      this.skipAll = F.btn('Skip the intro', function () { Op.finishAll(); }, { cls: 'ghost small skipall' });
+      this.skipAll = F.HoldSkip(this.beat === 'cinematic' ? 'Hold to skip the film' : 'Hold to skip the intro', function () { Op.holdSkipped(); }, { esc: true, cls: 'skipall' });
       ui.appendChild(this.skipAll);
       var self = this;
       F.Dialogue.play('opening', {
@@ -39,10 +39,10 @@
       }
     },
     resume: function (beat) {
-      this.t = 0; this.cap = 4; this.capT = 0; this.pieces = null; this.shatter();
+      this.t = 0; this.cap = 4; this.capT = 0; this.pieces = null; this.shatter(); this.beat = beat;
       G.ori.ring = []; G.ori.sleeping = false; G.ori.trail = [];
       var ui = document.getElementById('ui');
-      this.skipAll = F.btn('Skip the intro', function () { Op.finishAll(); }, { cls: 'ghost small skipall' });
+      this.skipAll = F.HoldSkip(this.beat === 'cinematic' ? 'Hold to skip the film' : 'Hold to skip the intro', function () { Op.holdSkipped(); }, { esc: true, cls: 'skipall' });
       ui.appendChild(this.skipAll);
       F.toast('Welcome back! Picking up where you left off.', { icon: '\u25B6' });
       if (beat === 'bridge') this.toBridge();
@@ -54,6 +54,7 @@
     toWake: function () {
       var self = this;
       this.beat = 'wake'; this.wakeT = 0;
+      if (this.skipAll && this.skipAll.parentNode) { var ui = document.getElementById('ui'), ns = F.HoldSkip('Hold to skip the intro', function () { Op.holdSkipped(); }, { esc: true, cls: 'skipall' }); this.skipAll.replaceWith(ns); this.skipAll = ns; void ui; }
       F.Audio.music('night');
       if (!this.pieces) this.shatter();
       G.ori.sleeping = true; G.ori.flicker = 99;
@@ -135,6 +136,10 @@
     },
     // ---------------- 3:30 glimpse of the fortress (on the map)
     toGlimpse: function () { this.saveBeat('glimpse'); G.go('map', { intro: true }); },
+    holdSkipped: function () {
+      if (this.beat === 'cinematic') { if (F.Dialogue.active) F.Dialogue.skip(); return; } // the film only
+      this.finishAll();
+    },
     finishAll: function () {
       if (F.Dialogue.active) { F.Dialogue.onEnd = null; F.Dialogue.end(); }
       G.ori.flicker = 0; G.ori.sleeping = false;

@@ -66,16 +66,23 @@
       menu.appendChild(F.btn('Settings', function () { G.openOverlay('settings'); }, { cls: 'ghost' }));
       menu.appendChild(F.btn('Credits', function () { G.go('credits'); }, { cls: 'ghost' }));
       // first time this session: a short reveal (any key or click skips it)
-      this.t0 = G.time; this.revealing = !Title.seen; Title.seen = true;
+      this.t0 = G.time; this.revealing = !Title.seen; this.gate = !Title.seen; Title.seen = true;
       if (!this.revealing) this.t0 = G.time - 99;
       menu.classList.add('glass');
-      this.el = h('main', { class: 'title-screen' + (this.revealing ? ' reveal' : '') }, [
+      this.el = h('main', { class: 'title-screen' + (this.gate ? ' gated' : '') }, [
         h('h1', { class: 'logo sr-only', text: 'Functionia' }),
         h('p', { class: 'tagline', text: 'A point. A broken graph. Six kingdoms to restore.' }),
         menu,
         h('p', { class: 'foot', text: 'Group 5 • Term 3 Function Studio • SMA Kemala Taruna Bhayangkara' + (G.dev ? ' • DEV MODE' : '') })
       ]);
       ui.appendChild(this.el);
+      if (this.gate) { // browsers only allow sound after a click or key press, so the show starts with one
+        var self = this;
+        this.gateEl = h('button', { type: 'button', class: 'gate', 'aria-label': 'Click or press any key to begin (sound on)' }, [h('span', { class: 'gt', text: 'Click to begin' }), h('small', { text: 'Sound on 🔊  ·  or press any key' })]);
+        this.gateEl.addEventListener('click', function () { self.passGate(); });
+        ui.appendChild(this.gateEl);
+        setTimeout(function () { if (self.gateEl) self.gateEl.focus({ preventScroll: true }); }, 60);
+      }
       setTimeout(function () { var b = ui.querySelector('.menu .btn'); if (b) b.focus({ preventScroll: true }); }, 50);
       G.ori.ring = [];
     },
@@ -87,16 +94,34 @@
       var o = { via: 'begin', x: G.W / 2, y: G.H * 0.47 };
       if (!d.story.opening) G.go('opening', {}, o); else G.go('map', {}, o);
     },
-    skipReveal: function () { if (this.revealing && G.time - this.t0 < F.TitleScene.CREDITS + 3.6) { this.t0 = G.time - 99; this.el.classList.remove('reveal'); } this.revealing = false; },
-    key: function () { this.skipReveal(); return false; },
-    pointer: function (type) { if (type === 'down') this.skipReveal(); },
+    passGate: function () {
+      if (!this.gate) return;
+      this.gate = false; F.Audio.init(); F.Audio.music('title');
+      if (this.gateEl) { this.gateEl.remove(); this.gateEl = null; }
+      this.t0 = G.time; this.el.classList.remove('gated'); this.el.classList.add('reveal');
+      var self = this;
+      this.skipEl = F.HoldSkip('Hold to skip', function () { self.skipReveal(); }, { esc: true, cls: 'skipcredits' });
+      document.getElementById('ui').appendChild(this.skipEl);
+      var b = this.el.querySelector('.menu .btn'); if (b) b.focus({ preventScroll: true });
+    },
+    skipReveal: function () {
+      if (this.gate) this.passGate();
+      if (this.revealing && G.time - this.t0 < F.TitleScene.CREDITS + 3.6) { this.t0 = G.time - 99; this.el.classList.remove('reveal'); }
+      this.revealing = false;
+      if (this.skipEl) { this.skipEl.remove(); this.skipEl = null; }
+    },
+    key: function (e) { if (this.gate) { if (e && e.preventDefault) e.preventDefault(); this.passGate(); return true; } return false; },
+    pointer: function (type) { if (type === 'down' && this.gate) this.passGate(); },
     render: function (ctx) {
-      var W = G.W, H = G.H, t = G.time, CR = F.TitleScene.CREDITS, raw = t - this.t0, rv = raw - CR + 0.9;
+      var W = G.W, H = G.H, t = G.time, CR = F.TitleScene.CREDITS, raw = this.gate ? 0 : t - this.t0, rv = raw - CR + 0.9;
       var dive = F.Transition ? F.Transition.dive() : 0; // starting the game: the camera dives into the Origin
       if (dive > 0) { var z = 1 + dive * dive * 1.6; ctx.save(); ctx.translate(W / 2, H * 0.47); ctx.scale(z, z); ctx.translate(-W / 2, -H * 0.47); }
       var O = F.TitleScene.render(ctx, W, H, t, { reveal: rv, parallax: { x: G.mouse.x / W - 0.5, y: G.mouse.y / H - 0.5 } });
       if (raw < CR) F.TitleScene.credits(ctx, W, H, t, raw); // Group 5 presents… Nara, Uno, Kayyira
-      if (this.revealing) [3.0, 4.25, 5.5].forEach(function (s, i) { var k = 'crew' + i; if (raw >= s && !Title[k]) { Title[k] = true; F.Audio.sfx(k); } });
+      if (this.gate) { var pa = 0.6 + 0.4 * Math.sin(t * 2.5); F.SceneKit.twinkle(ctx, W / 2, H * 0.4, 14 + pa * 6, pa, '#fff4cc'); }
+      if (this.gate) raw = 0;
+      if (this.skipEl && raw > CR + 1.5) { this.skipEl.remove(); this.skipEl = null; }
+      if (this.revealing && !this.gate) [1.9, 2.6, 3.3].forEach(function (s, i) { var k = 'crew' + i; if (raw >= s && !Title[k]) { Title[k] = true; F.Audio.sfx(k); } });
       if (dive > 0) ctx.globalAlpha = Math.max(0, 1 - dive * 1.8);
       F.TitleScene.logo(ctx, W / 2, H * 0.18, Math.min(W * 0.075, H * 0.12), t, K01((rv - 1.9) / 1.1));
       ctx.globalAlpha = 1;
