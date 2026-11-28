@@ -284,7 +284,7 @@
         g.globalCompositeOperation = 'destination-in'; g.drawImage(copy, 0, 0);
         g.restore();
       }
-    });
+    }, null, s >= 30 ? { brushes: [Math.max(2, s * 0.05), Math.max(1.2, s * 0.025)], jitter: 12, detail: 16, grain: 0.2 } : null);
   }
 
   // ---------------------------------------------------------------- moving parts

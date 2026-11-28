@@ -118,9 +118,9 @@
     o = o || {};
     var rv = o.reveal === undefined ? 99 : o.reveal, px = o.parallax ? o.parallax.x : 0, py = o.parallax ? o.parallax.y : 0;
     var drift = Math.sin(t * 0.05) * 12;
-    var sky = K.layer('title-sky', W + PAD * 2, H + PAD * 2, function (g, w, h) { drawSky(g, w, h, W, H); });
+    var sky = K.layer('title-sky', W + PAD * 2, H + PAD * 2, function (g, w, h) { drawSky(g, w, h, W, H); }, null, { brushes: [12, 6], flow: 'h', jitter: 10 });
     var cur = K.layer('title-curves', W + PAD * 2, H + PAD * 2, function (g, w, h) { drawCurves(g, w, h, W, H); });
-    var cld = K.layer('title-clouds', W + PAD * 2, H + PAD * 2, function (g, w, h) { drawClouds(g, w, h, W, H); });
+    var cld = K.layer('title-clouds', W + PAD * 2, H + PAD * 2, function (g, w, h) { drawClouds(g, w, h, W, H); }, null, { brushes: [10, 5], flow: 'h', jitter: 8, alphaCut: 40 });
     var starsIn = K.clamp01((rv - 0.9) / 1.2);
     ctx.fillStyle = '#05040f'; ctx.fillRect(0, 0, W, H);
     ctx.globalAlpha = starsIn;

@@ -251,11 +251,11 @@
   M.render = function (ctx, W, H, t, o, rest) {
     var h0 = hor(H), px = o.parallax ? o.parallax.x : 0, reduced = F.FX && F.FX.reduced;
     var tm = reduced ? t * 0.3 : t;
-    var sky = K.layer('mir-sky', W + PAD * 2, h0 + PAD + 12, function (g, w, h) { drawSky(g, w, h, W, H); });
-    var far = K.layer('mir-far', W + PAD * 2, h0 + PAD + 12, function (g, w, h) { drawFar(g, w, h, W, H); });
-    var mid = K.layer('mir-mid', W + PAD * 2, h0 + PAD + 12, function (g, w, h) { drawMid(g, w, h, W, H, M); });
+    var sky = K.layer('mir-sky', W + PAD * 2, h0 + PAD + 12, function (g, w, h) { drawSky(g, w, h, W, H); }, null, { brushes: [14, 7], flow: 'h', jitter: 8 });
+    var far = K.layer('mir-far', W + PAD * 2, h0 + PAD + 12, function (g, w, h) { drawFar(g, w, h, W, H); }, null, { brushes: [7, 3.5], jitter: 10 });
+    var mid = K.layer('mir-mid', W + PAD * 2, h0 + PAD + 12, function (g, w, h) { drawMid(g, w, h, W, H, M); }, null, { brushes: [6, 3, 1.5], jitter: 10, detail: 14 });
     var lake = K.layer('mir-lake', W + PAD * 2, H - h0 + 4, function (g, w, h) { drawLake(g, w, h, W, H); });
-    var near = K.layer('mir-near', W + PAD * 2, H + PAD * 2, function (g, w, h) { drawNear(g, w, h, W, H, M); });
+    var near = K.layer('mir-near', W + PAD * 2, H + PAD * 2, function (g, w, h) { drawNear(g, w, h, W, H, M); }, null, { brushes: [6, 3, 1.5], jitter: 10, detail: 14 });
     var ox = [px * 4, px * 10, px * 18, px * 30];
     var lightsOn = rest > 0.5;
     var auroraAmt = 0.25 + 0.75 * rest;
@@ -274,14 +274,14 @@
     var uw = Math.ceil(W / 2), uh = Math.ceil(h0 / 2);
     if (!up) up = document.createElement('canvas');
     if (up.width !== uw || up.height !== uh) { up.width = uw; up.height = uh; }
-    var ug = up.getContext('2d'), fresh = Math.abs(tm - (up._t || -9)) >= 0.05 || up._ox !== ox[0] || up._lit !== lightsOn;
+    var ug = up.getContext('2d'), fresh = Math.abs(tm - (up._t || -9)) >= 0.05 || up._ox !== ox[0] || up._lit !== lightsOn || !mid.p;
     if (fresh) { up._t = tm; up._ox = ox[0]; up._lit = lightsOn; }
     ug.setTransform(0.5, 0, 0, 0.5, 0, 0);
     if (fresh) {
-    ug.drawImage(sky.c, -PAD + ox[0], -PAD, sky.w, sky.h);
+    ug.drawImage(sky.p || sky.c, -PAD + ox[0], -PAD, sky.w, sky.h);
     ug.globalCompositeOperation = 'screen'; ug.drawImage(A, ox[0], 0, W, h0); ug.globalCompositeOperation = 'source-over';
-    ug.drawImage(far.c, -PAD + ox[1], -PAD, far.w, far.h);
-    ug.drawImage(mid.c, -PAD + ox[2], -PAD, mid.w, mid.h);
+    ug.drawImage(far.p || far.c, -PAD + ox[1], -PAD, far.w, far.h);
+    ug.drawImage(mid.p || mid.c, -PAD + ox[2], -PAD, mid.w, mid.h);
     if (lightsOn) drawLights(ug, ox[2], tm);
     }
     K.blit(ctx, lake, -PAD, h0 - 2);

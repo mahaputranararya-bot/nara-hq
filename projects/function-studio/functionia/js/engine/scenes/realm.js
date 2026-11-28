@@ -53,7 +53,7 @@
     g.stroke();
   }
   function skyLayer(name, W, H) {
-    return K.layer('realm-sky-' + name, W + PAD * 2, H + PAD * 2, function (g, w, h) { drawSky(g, w, h, W, H, SKIES[name], name.length * 17); });
+    return K.layer('realm-sky-' + name, W + PAD * 2, H + PAD * 2, function (g, w, h) { drawSky(g, w, h, W, H, SKIES[name], name.length * 17); }, null, { brushes: [12, 6], flow: 'h', jitter: 9 });
   }
   /** Paint the sky for n restored kingdoms (0 = glitch night, 3 = dawn, 6 = full day). */
   R.sky = function (ctx, W, H, t, n, par) {
