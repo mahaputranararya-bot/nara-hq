@@ -83,17 +83,23 @@
       var d = F.save.load(slot);
       if (!d) { G.go('slots'); return; }
       G.startSlot(slot, d);
-      if (!d.story.opening) G.go('opening'); else G.go('map');
+      if (Title.el) Title.el.classList.add('leaving');
+      var o = { via: 'begin', x: G.W / 2, y: G.H * 0.47 };
+      if (!d.story.opening) G.go('opening', {}, o); else G.go('map', {}, o);
     },
     skipReveal: function () { if (this.revealing && G.time - this.t0 < F.TitleScene.CREDITS + 3.6) { this.t0 = G.time - 99; this.el.classList.remove('reveal'); } this.revealing = false; },
     key: function () { this.skipReveal(); return false; },
     pointer: function (type) { if (type === 'down') this.skipReveal(); },
     render: function (ctx) {
       var W = G.W, H = G.H, t = G.time, CR = F.TitleScene.CREDITS, raw = t - this.t0, rv = raw - CR + 0.9;
+      var dive = F.Transition ? F.Transition.dive() : 0; // starting the game: the camera dives into the Origin
+      if (dive > 0) { var z = 1 + dive * dive * 1.6; ctx.save(); ctx.translate(W / 2, H * 0.47); ctx.scale(z, z); ctx.translate(-W / 2, -H * 0.47); }
       var O = F.TitleScene.render(ctx, W, H, t, { reveal: rv, parallax: { x: G.mouse.x / W - 0.5, y: G.mouse.y / H - 0.5 } });
       if (raw < CR) F.TitleScene.credits(ctx, W, H, t, raw); // Group 5 presents… Nara, Uno, Kayyira
       if (this.revealing) [3.0, 4.25, 5.5].forEach(function (s, i) { var k = 'crew' + i; if (raw >= s && !Title[k]) { Title[k] = true; F.Audio.sfx(k); } });
+      if (dive > 0) ctx.globalAlpha = Math.max(0, 1 - dive * 1.8);
       F.TitleScene.logo(ctx, W / 2, H * 0.18, Math.min(W * 0.075, H * 0.12), t, K01((rv - 1.9) / 1.1));
+      ctx.globalAlpha = 1;
       var oa = K01((rv - 2.3) / 0.6);
       if (oa > 0) {
         G.ori.r = 20; G.ori.alpha = oa;
@@ -104,6 +110,7 @@
         G.ori.r = 17; G.ori.alpha = 1;
         G.delta.moveTo(O.x + Math.cos(t * 0.7) * 110, O.y - 70 + Math.sin(t * 1.4) * 18); G.delta.draw(ctx, 1.2);
       }
+      if (dive > 0) ctx.restore();
     }
   };
   G.register('title', Title);
@@ -136,7 +143,7 @@
           var start = F.btn('Start a new game', function () {
             var d = F.save.create(i, name.value.trim());
             G.startSlot(i, d);
-            G.go('opening');
+            G.go('opening', {}, { via: 'begin' });
           }, { cls: 'primary' });
           name.addEventListener('keydown', function (e) { if (e.key === 'Enter') start.click(); });
           card.appendChild(name);

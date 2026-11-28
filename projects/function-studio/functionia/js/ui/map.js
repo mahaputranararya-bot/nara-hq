@@ -105,8 +105,12 @@
       var p = this.pos(k), self = this;
       this.travel = { k: k, t: 0, from: { x: this.cx, y: this.cy }, to: p };
       F.Audio.sfx('hop');
-      F.tweens.to(this.travel, { t: 1 }, 0.8, 'inOutSine', function () { G.go('kingdom', { k: k, fromMap: true }); });
-      if (!(F.FX && F.FX.reduced)) F.tweens.to(this.cam, { x: (p.x - this.cx) * 0.45, y: (p.y - this.cy) * 0.45, z: 1.35 }, 0.8, 'inOutSine');
+      var K = F.realm.kingdoms[k];
+      F.tweens.to(this.travel, { t: 1 }, 0.85, 'inOutSine', function () {
+        var s = self.screenOf(p.x, p.y); // Ori has landed: the kingdom's portal opens from its island
+        G.go('kingdom', { k: k, fromMap: true }, { via: 'portal', x: s.x, y: s.y, color: K.color, k: k });
+      });
+      if (!(F.FX && F.FX.reduced)) F.tweens.to(this.cam, { x: (p.x - this.cx) * 0.85, y: (p.y - this.cy) * 0.85, z: 2.2 }, 0.85, 'inOutSine');
       void self;
     },
     playIntro: function () {

@@ -30,6 +30,11 @@
       Game.transitioning = false;
     }
     if (o.instant || !Game.screen) { swap(); return; }
+    if (o.via && F.Transition && !(F.FX && F.FX.reduced)) { // a full transition (js/engine/transition.js)
+      Game.transitioning = true;
+      F.Transition.play(o, swap);
+      return;
+    }
     Game.transitioning = true;
     fade.style.background = o.color || '';
     fade.classList.add('on');

@@ -459,3 +459,4 @@ html.reduced .btn::after, html.reduced .dialogue .dbody::after { animation: none
 /* film captions fade in as a whole line */
 .dialogue.cinema .line.cfade { animation: capIn 1.3s ease both; }
 @keyframes capIn { from { opacity: 0; transform: translateY(6px); filter: blur(2px); } to { opacity: 1; transform: none; filter: none; } }
+.title-screen.leaving { opacity: 0; transition: opacity 0.45s ease; pointer-events: none; }

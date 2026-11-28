@@ -35,7 +35,11 @@
       F.clear(ui);
       var k = this.k, K = this.K, kd = G.data.kingdoms[k], C = F.kingdoms[k], self = this;
       var st = this.stageState();
-      F.HUD.mount({ title: K.name, sub: K.topic, back: function () { G.go('map'); }, backLabel: 'Map' });
+      F.HUD.mount({ title: K.name, sub: K.topic, backLabel: 'Map', back: function () {
+        G.go('map', {}, { via: 'portalBack', color: K.color, k: k, x: G.W / 2, y: G.H / 2, target: function () {
+          var M = G.screen; if (!M || !M.pos) return null; var p = M.pos(k); return M.screenOf(p.x, p.y + M.size * 0.2);
+        } });
+      } });
       function card(o) {
         var c = h('button', { type: 'button', class: 'stage' + (o.locked ? ' locked' : '') + (o.done ? ' done' : '') + (o.next ? ' next' : ''), disabled: o.locked }, [
           h('span', { class: 'sicon', 'aria-hidden': 'true', text: o.icon }),

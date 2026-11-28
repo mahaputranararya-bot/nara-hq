@@ -499,6 +499,15 @@
     },
     page: function (r, t) { var b = noiseHit(r, t, 0.2, 0.07, 'bandpass', 2500, 0.7); b.frequency.exponentialRampToValueAtTime(5000, t + 0.18); },
     whoosh: function (r, t) { var b = noiseHit(r, t, 0.45, 0.13, 'bandpass', 300, 0.9); b.frequency.exponentialRampToValueAtTime(2400, t + 0.4); },
+    begin: function (r, t) {
+      var b = noiseHit(r, t, 1.3, 0.1, 'bandpass', 300, 0.8); b.frequency.exponentialRampToValueAtTime(5000, t + 1.2);
+      [62, 66, 69, 74, 78, 81, 86].forEach(function (m, i) { play(r, 'musicbox', m, t + 0.12 * i, 0.6, 0.8, r.sfx); });
+      [50, 57, 62, 66].forEach(function (m) { play(r, 'strings', m, t + 0.6, 1.6, 2.2, r.sfx); });
+    },
+    portal: function (r, t) {
+      var b = noiseHit(r, t, 0.9, 0.12, 'bandpass', 500, 1); b.frequency.exponentialRampToValueAtTime(3800, t + 0.8);
+      [74, 81, 86, 90].forEach(function (m, i) { play(r, 'bell', m, t + 0.35 + i * 0.08, 0.5, 0.6, r.sfx); });
+    },
     crew0: function (r, t) { play(r, 'musicbox', 74, t, 0.8, 0.9, r.sfx); },
     crew1: function (r, t) { play(r, 'musicbox', 78, t, 0.8, 0.9, r.sfx); },
     crew2: function (r, t) { play(r, 'musicbox', 81, t, 0.8, 0.9, r.sfx); play(r, 'musicbox', 86, t + 0.35, 1.2, 0.7, r.sfx); },

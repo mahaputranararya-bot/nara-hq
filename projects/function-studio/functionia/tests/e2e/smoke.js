@@ -68,7 +68,7 @@ async function playStage(p, label) {
   await p.click('text=New game');
   await p.fill('.slot.empty input', 'Smoke');
   await p.click('text=Start a new game');
-  await p.waitForTimeout(700);
+  await p.waitForFunction(() => F.Game.screenName === 'opening' && !F.Transition.active && F.Dialogue.active, null, { timeout: 10000 });
   await skipDialogue(p, 1); // cinematic
   await p.waitForTimeout(300);
   await skipDialogue(p, 1); // wake
@@ -89,7 +89,7 @@ async function playStage(p, label) {
   await p.reload();
   await p.waitForTimeout(500);
   await p.click('.title-screen .menu .btn');
-  await p.waitForTimeout(800);
+  await p.waitForFunction(() => F.Game.screenName !== 'title' && !F.Transition.active, null, { timeout: 10000 });
   assert.equal(await p.evaluate(() => F.Game.screenName + ':' + F.Game.screen.beat), 'opening:tile', 'resumes at the 0 ÷ 0 tile');
   await skipDialogue(p, 2);
   await p.click('text=Let Ori try it');
@@ -97,7 +97,7 @@ async function playStage(p, label) {
   await skipDialogue(p, 2);
   await p.waitForTimeout(2600);
   await skipDialogue(p, 2);
-  await p.waitForFunction(() => F.Game.screenName === 'kingdom', null, { timeout: 15000 });
+  await p.waitForFunction(() => F.Game.screenName === 'kingdom' && !F.Transition.active, null, { timeout: 15000 });
   await p.waitForTimeout(300);
   await skipDialogue(p, 2);
 
@@ -106,7 +106,7 @@ async function playStage(p, label) {
   await p.waitForTimeout(500);
   assert.match(await p.textContent('.title-screen .menu .btn'), /Continue/);
   await p.click('.title-screen .menu .btn');
-  await p.waitForTimeout(700);
+  await p.waitForFunction(() => F.Game.screenName !== 'title' && !F.Transition.active, null, { timeout: 10000 });
   assert.equal(await p.evaluate(() => F.Game.screenName), 'map', 'opening is remembered');
   assert.equal(await p.evaluate(() => F.Game.data.flags.bridge >= 1), true, 'bridge stars saved');
 
@@ -114,7 +114,7 @@ async function playStage(p, label) {
   await p.waitForTimeout(600);
   await skipDialogue(p);
   await p.click('.mapbtn >> text=Mirrorvale');
-  await p.waitForFunction(() => F.Game.screenName === 'kingdom');
+  await p.waitForFunction(() => F.Game.screenName === 'kingdom' && !F.Transition.active, null, { timeout: 10000 });
   await p.waitForTimeout(300);
   await skipDialogue(p);
   await p.click('.stage >> text=Learn');
