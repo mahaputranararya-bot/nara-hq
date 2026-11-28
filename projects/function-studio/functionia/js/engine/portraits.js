@@ -437,10 +437,10 @@
       fn(g, S, t, o);
     };
     // corrupted rulers glitch inside their own outline; the Glitch itself always crackles a little
-    var gl = who === 'glitch' ? (o.friendly ? 0 : 0.7) : (o.corrupted ? 1 : 0);
+    var gm = o.mood || (o.friendly ? 'friendly' : 'angry'), gl = who === 'glitch' ? ({ angry: 0.7, hurt: 0.5, lonely: 0.25, friendly: 0 })[gm] || 0 : (o.corrupted ? 1 : 0);
     if (!F.CharFX) { ctx.save(); ctx.translate(cx, cy); body(ctx); ctx.restore(); return; }
     F.CharFX.draw(ctx, body, cx, cy, S, t, { light: o.light, glitch: F.FX && F.FX.reduced ? 0 : gl, shadow: o.shadow, ground: o.ground, feet: fn.feet || 0.5,
-      slot: o.slot || 'p', box: o.box, seed: who.length * 1.7, id: who + (o.corrupted ? '!' : '') + (o.friendly ? '+' : ''), closeup: o.closeup });
+      slot: o.slot || 'p', box: o.box, seed: who.length * 1.7, id: who + (o.corrupted ? '!' : '') + (o.friendly ? '+' : '') + (o.mood || ''), closeup: o.closeup });
   }
 
   F.Portraits = { draw: draw, drawGlitch: drawGlitch, P: P };

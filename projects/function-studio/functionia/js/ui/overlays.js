@@ -168,7 +168,7 @@
           F.Portraits.draw(g, w, 75 + i * 150, 450, 150, t, {});
         });
         g.fillStyle = '#b9c0e6'; g.textAlign = 'left'; g.fillText('corrupted (worried) \u2191   restored (happy) \u2193', 10, 362);
-        ['angry', 'hurt', 'friendly'].forEach(function (m, i) { F.Portraits.drawGlitch(g, 300 + i * 150, 562, 20, t, m); });
+        ['angry', 'hurt', 'lonely', 'friendly'].forEach(function (m, i) { F.Portraits.drawGlitch(g, 300 + i * 130, 562, 20, t, m, { raw: true }); });
       });
       body.appendChild(cv);
     }

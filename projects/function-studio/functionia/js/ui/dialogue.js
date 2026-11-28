@@ -19,7 +19,7 @@
       var who = D.who;
       g.fillStyle = 'rgba(255,255,255,0.08)'; g.beginPath(); g.arc(w / 2, hh / 2, 48, 0, 7); g.fill();
       var friendly = F.Game && F.Game.data && F.Game.data.ended;
-      F.Portraits.draw(g, who, w / 2, hh / 2 + 4, 92, t, { corrupted: D.corrupted && D.corrupted[who], friendly: friendly, closeup: true, light: D.light(), slot: 'dlg', box: [0.57, 0.61, 0.53] });
+      F.Portraits.draw(g, who, w / 2, hh / 2 + 4, 92, t, { corrupted: D.corrupted && D.corrupted[who], friendly: friendly, mood: who === 'glitch' ? D.glitchMood : null, closeup: true, light: D.light(), slot: 'dlg', box: [0.57, 0.61, 0.53] });
     }, 'portrait');
     D.name = h('div', { class: 'speaker' });
     D.text = h('p', { class: 'line', 'aria-live': 'polite' });
@@ -43,6 +43,8 @@
     D.sceneId = typeof scene === 'string' ? scene : null;
     D.lines = sc.lines; D.i = 0; D.onEnd = o.onEnd || null; D.corrupted = o.corrupted || {};
     D.onLine = o.onLine || null;
+    D.glitchMood = o.glitchMood || null; // the ending changes The Glitch's mood line by line
+    D.replay = !!o.replay; // a replay from the Journal never touches the save
     D.title.textContent = sc.title || '';
     D.active = true;
     D.el.classList.add('show');
@@ -107,7 +109,7 @@
     D.active = false;
     D.el.classList.remove('show');
     if (F.Audio) F.Audio.duck(false);
-    if (D.sceneId && F.Game && F.Game.data) { F.Game.data.story.seen[D.sceneId] = true; F.Game.saveNow(); }
+    if (D.sceneId && !D.replay && F.Game && F.Game.data) { F.Game.data.story.seen[D.sceneId] = true; F.Game.saveNow(); }
     var cb = D.onEnd; D.onEnd = null;
     if (cb) cb();
   };
