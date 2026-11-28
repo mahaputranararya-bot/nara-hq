@@ -86,7 +86,10 @@ To hear every theme without playing, run `node tests/e2e/audio.js`. It saves WAV
 ## Where the new (v1.3–v1.4) visuals live
 - `js/engine/scenekit.js`: shared painting tools (noise, faceted mountains, crystals, glows, cached layers).
 - `js/engine/scenes/`: `mirrorvale.js` (kingdom scene), `islands.js` (the six floating islands), `title.js` (title screen and logo), `realm.js` (skies and the world seen from above: map and opening film).
-- `js/engine/characters/queen.js`: the Mirror Queen. Ori's look is `drawBody` in `js/engine/ori.js`.
+- `js/engine/scenes/kingdoms.js`: Lineara, Parabolis, Cubrion, Expona and Rationalis.
+- `js/engine/painter.js`: turns any cached scene layer into a brush-stroke painting (pass a `paint` option to `K.layer`).
+- `js/engine/transition.js`: the 'begin' and portal transitions.
+- `js/engine/characters/`: `queen.js`, `rulers.js` (the other five rulers) and `body.js` (shared eyes, faces, limbs, robes). Ori's look is `drawBody` in `js/engine/ori.js`.
 - `js/engine/glfx.js`: the GPU glow. It can be switched off in Settings. Add `?glow=force` to the address to test it on a computer without a graphics card.
 - The opening film's shots are in `js/ui/opening.js` (`film`, `card`, `hole`). The music arrangements are `custom` themes in `js/core/audio.js`.
 

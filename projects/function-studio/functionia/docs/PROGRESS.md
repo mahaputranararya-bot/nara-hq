@@ -43,6 +43,10 @@ Painted Mirrorvale scene, new Mirror Queen and Ori, GPU glow pass, the Mirror Wa
 - Tests: 70/70 unit tests. Smoke, tour (78 puzzles), full game, accessibility and the layout audit (2,064 panel states, 0 overlaps) all pass with no console errors. Audio check: every theme is audible and none clips.
 - Performance: the game's own work per frame is under 1 ms on every screen. The browser's drawing cost depends on the graphics card, and the glow switches off by itself on slow machines.
 
+## v1.5: credits, slower film, transitions, painterly worlds, new rulers ✅ (28 Nov 2026)
+- Crew credits (Nara, Uno, Kayyira); a 49-second film with readable pacing; Skip button fixed; "begin" and portal transitions; island dioramas; all six kingdoms painted with brush strokes; five rulers redrawn.
+- Tests: 70/70 unit tests. Smoke, accessibility, tour (78 puzzles) and full game pass with no console errors. Layout audit: 2,064 panel states, 0 overlaps. Each kingdom finishes painting in about 2 s, in the background.
+
 ## Known issues
-- Only Mirrorvale has the new painted scene so far; the other five kingdoms are next. Kayyira may still replace any piece.
+- Art is all code. Kayyira may still replace any piece (see README).
 - Sound starts only after the first click or key press (browser rule).

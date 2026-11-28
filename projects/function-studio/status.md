@@ -12,7 +12,8 @@
 - **v1.2 (27 Nov):** puzzle panel redesigned (no overlapping text), richer characters and scenes, new music and sound engine.
 - **v1.3 preview (27 Nov):** Mirrorvale showcase: painted scene with mirror lake and aurora, new Mirror Queen, new Ori, GPU glow (Settings → Glow & lighting), new "Mirror Waltz" music. Uploaded as functionia-v1.3-preview.zip; the group liked it (asked for a taller Queen).
 - **v1.4 (27 Nov):** taller Queen, painted title screen + main theme, the opening as a short film, painted Realm Map, frosted-glass GUI. All tests pass. Uploaded to Google Drive as functionia-v1.4.zip.
-- **Next:** repaint Lineara, Parabolis, Cubrion, Expona and Rationalis (scene, ruler, music) in the Mirrorvale style.
+- **v1.5 (28 Nov):** crew credits (Nara, Uno, Kayyira), slower 49-second film, Skip fixed, cool transitions, island dioramas, all six kingdoms painted with brush strokes (painterly), five rulers redrawn. All tests pass. Uploaded to Google Drive as functionia-v1.5.zip.
+- **Possible next:** a music theme for each kingdom in the new style, and painterly touches on the ending screens.
 - Docs in `functionia/docs/`: README (handover), HOW_TO_PLAY + a printable one-page card, ANSWER_KEY (for Uno's sign-off),
   DECISIONS, PLAYTEST_CHECKLIST, RUBRIC_SELF_ASSESSMENT, PROGRESS.
 
