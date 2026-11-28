@@ -195,8 +195,8 @@
       var t = G.time;
       F.Art.kingdom(ctx, this.k, G.W, G.H, t, { rest: this.rest, parallax: { x: (G.mouse.x / G.W - 0.5), y: (G.mouse.y / G.H - 0.5) } });
       if (this.rect) G.glMask = [this.rect];
-      if (this.mode === 'boss') this.renderBoss(ctx, t);
       if (this.view) this.view.render(ctx);
+      if (this.mode === 'boss') this.renderBoss(ctx, t); // on top of the graph, so The Glitch is really there in the fight
       else if (this.showcase) {
         var gr = new F.Graph(); gr.theme = this.k === 'rat' ? 'dark' : 'light';
         gr.setRect(this.rect.x, this.rect.y, this.rect.w, this.rect.h); gr.setView(this.showcase.view, false);
@@ -210,6 +210,10 @@
       var r = this.rect, phase = G.data.boss.phase, total = this.list.length;
       var x = r.x + r.w - 70, y = r.y + 70 + Math.sin(t * 2) * 8;
       var hurt = this.bossHit > 0;
+      // it fades back when the mouse comes near, so it never hides a point you need
+      var near = Math.hypot(G.mouse.x - x, G.mouse.y - (y + 20)) < 120;
+      this.bossA = (this.bossA === undefined ? 1 : this.bossA) + ((near ? 0.25 : 0.95) - (this.bossA === undefined ? 1 : this.bossA)) * 0.15;
+      ctx.save(); ctx.globalAlpha = this.bossA;
       var glow = ctx.createRadialGradient(x, y, 10, x, y, 90);
       glow.addColorStop(0, 'rgba(255,77,109,0.45)'); glow.addColorStop(1, 'rgba(255,77,109,0)');
       ctx.fillStyle = glow; ctx.beginPath(); ctx.arc(x, y, 90, 0, 7); ctx.fill();
@@ -220,6 +224,7 @@
       ctx.fillStyle = '#FF4D6D'; F.roundRect(ctx, x - w / 2 + 2, y + 54, (w - 4) * frac, 10, 5); ctx.fill();
       ctx.fillStyle = '#fff'; ctx.font = '700 12px "Trebuchet MS", sans-serif'; ctx.textAlign = 'center';
       ctx.fillText('Glitch power', x, y + 82);
+      ctx.restore();
     },
     pointer: function (type, x, y) { if (this.view) this.view.pointer(type, x, y); },
     wheel: function (dy, x, y) { if (this.view) this.view.wheel(dy, x, y); },

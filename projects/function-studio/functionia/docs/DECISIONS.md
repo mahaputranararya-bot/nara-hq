@@ -80,3 +80,24 @@ The brief said: when something is unclear, make the most reasonable choice and w
 59. **Characters lit like the scene** (`js/engine/charfx.js`). Every ruler, Ori and Delta in a kingdom gets that kingdom's light: shade on the side away from the sun or moon, its colour on the lit side, a rim of light on the edge, brush grain so they read as paint, and a soft shadow on the stage. Dialogue portraits get the same light. The look is baked into one sheet per size, so it costs one extra pass per frame.
 60. **A better glitch.** Corrupted rulers no longer have straight lines drawn over them. The glitch lives inside the figure: faint scanlines and colour fringes all the time, and every few seconds a short burst where slices slip sideways and blocks break off. The "You broke the model!" screen effect now tears into red and cyan channels, copies blocks to the wrong place, and rolls a tracking band down the screen. Corrupted kingdoms have small fragments of broken data drifting in the air. Still flash-safe: patterns change at most 3 times a second, nothing flashes, and reduced motion turns it off.
 61. **Depth in the kingdoms.** The layer nearest the camera is slightly out of focus; aerial haze sits between the far hills and the middle ground; out-of-focus specks of light drift in front of everyone (kept faint around the ruler); and the camera drifts slowly so the layers slide past each other. Reduced motion slows the drift and specks.
+62. **The Glitch, painted** (`js/engine/characters/glitch.js`). A small hooded creature woven from broken pixels: a round hood with a floppy tip, a dark face opening with glowing eyes, pixel-cube hands and a hem that crumbles into shards. Four moods: angry (the villain), hurt, lonely (new, for the start of the ending) and friendly (the guardian). It keeps the old `drawGlitch(ctx, x, y, r, t, mood)` call, so every scene picked it up.
+63. **The ending is a short film** (`js/ui/ending.js`, sets in `js/engine/scenes/finale.js`). It has five shots that follow the `finale` lines:
+    1. The lonely Glitch at the hole x = 0. The wall of light is the asymptote x = 0, the horizon is y = 0, and y = 1/x climbs between them.
+    2. Ori and the Warden offer it a job, and a bloom of light turns it friendly.
+    3. The Grand Graph rebuilds, and the kingdoms light up one by one with chimes.
+    4. A sweep through the six kingdoms.
+    5. Everyone together at sunrise on the Origin, with The Glitch's new home: a round door of light on the y-axis, at x = 0.
+
+    Film subtitles show the speaker's name. The summary sits low under the title. The score is the second half of the main theme. Hold to skip.
+64. **Story Replay with visuals** (`js/ui/theater.js`). Every scene in the Journal replays on its own set: the opening film, Ori waking in the broken graph, the realm from above, each kingdom corrupted (intro) or restored (thanks), The Glitch over Rationalis, and the ending film. Replays never change the save: `Dialogue.play(…, { replay: true })` skips the "seen" mark and the save. Afterwards you go back where you were, with the Journal open on Story.
+65. **Movie credits** (`js/engine/scenes/credits.js`). The credits are a roll drawn on the canvas (about 80 s) over the kingdoms, which dissolve one into the next:
+    - the logo
+    - Group 5: Nara, Uno, Kayyira, with their roles
+    - the cast, each drawn and lit beside their name
+    - Mr. Darwin's Function Studio, and the sister series
+    - a last card where The Glitch waves from its door
+
+    Hold Space or the mouse to speed it up; hold the skip button or Esc to jump to the end. Screen readers get the same text as a hidden list.
+66. **The Glitch is visible in the Final Battle.** It used to be drawn under the graph, so it was hidden. It now sits on top in the graph's corner with its power meter, and fades back when the mouse comes near so it never hides a point.
+67. **Performance.** The character pass respects the caller's fade. In the ending's group shot, the six rulers (who mostly stand still) refresh at 15 fps, which keeps that shot smooth.
+

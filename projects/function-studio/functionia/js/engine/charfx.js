@@ -81,7 +81,7 @@
     var w = Math.max(2, Math.ceil(2 * hw * res)), h = Math.max(2, Math.ceil((top + bot) * res)), slot = o.slot || 'a';
     var hw2 = Math.max(1, w >> 1), hh2 = Math.max(1, h >> 1);
     var st = last[slot], key = (o.id || '') + w + 'x' + h + (L ? 1 : 0) + (gl ? 1 : 0) + (o.closeup ? 1 : 0);
-    var fresh = !st || st.key !== key || Math.abs(t - st.t) >= 1 / 31 || t < st.t;
+    var fresh = !st || st.key !== key || Math.abs(t - st.t) >= 1 / ((o.fps || 30) + 1) || t < st.t;
     var B = bufs[slot + 'B'];
     if (fresh) {
       last[slot] = { t: t, key: key };
@@ -112,7 +112,8 @@
     // ---- the glitch: colour fringes + slipping slices + pixel blocks, in bursts
     var b = CF.burst(t, o.seed || 1) * gl, step = Math.floor(t * 3), ph = t * 3 - step;
     var fr = S * (0.006 * gl + 0.03 * b) * (0.7 + 0.3 * Math.sin(t * 5.3));
-    if (fr > 0.3) { ctx.globalAlpha = 0.55; ctx.drawImage(bufs[slot + 'r'], X - fr, Y, DW, DH); ctx.drawImage(bufs[slot + 'c'], X + fr, Y + fr * 0.2, DW, DH); ctx.globalAlpha = 1; }
+    var A0 = ctx.globalAlpha; // respect the caller's fade
+    if (fr > 0.3) { ctx.globalAlpha = A0 * 0.55; ctx.drawImage(bufs[slot + 'r'], X - fr, Y, DW, DH); ctx.drawImage(bufs[slot + 'c'], X + fr, Y + fr * 0.2, DW, DH); ctx.globalAlpha = A0; }
     if (b < 0.05) { ctx.drawImage(B, X, Y, DW, DH); ctx.restore(); return; }
     var n = 9, env = Math.sin(Math.PI * ph); // slices slide out and back within each third of a second
     for (var i = 0; i < n; i++) {
@@ -122,8 +123,8 @@
     for (i = 0; i < 6; i++) { // blocks of the figure that break off and drift
       var bw = (0.04 + hash(i, step + 3) * 0.12) * S, bh = (0.015 + hash(i + 4, step) * 0.04) * S;
       var sxp = hash(i + 1, step) * (DW - bw), syp = hash(i + 2, step) * (DH - bh), shift = (hash(i + 5, step) - 0.5) * S * 0.25 * env;
-      ctx.globalAlpha = b * 0.85; ctx.drawImage(B, sxp * res, syp * res, bw * res, bh * res, X + sxp + shift, Y + syp, bw, bh);
-      ctx.fillStyle = i % 2 ? 'rgba(255,42,85,0.5)' : 'rgba(34,230,255,0.5)'; ctx.globalAlpha = b * 0.6 * env;
+      ctx.globalAlpha = A0 * b * 0.85; ctx.drawImage(B, sxp * res, syp * res, bw * res, bh * res, X + sxp + shift, Y + syp, bw, bh);
+      ctx.fillStyle = i % 2 ? 'rgba(255,42,85,0.5)' : 'rgba(34,230,255,0.5)'; ctx.globalAlpha = A0 * b * 0.6 * env;
       ctx.fillRect(X + sxp + shift * 1.3, Y + syp + bh, bw * 0.4, Math.max(1, bh * 0.25));
     }
     ctx.restore();
@@ -142,7 +143,7 @@
     if (fresh || !Sh) { Sh = buf(slot + 'S', sw, sh); var q = Sh.getContext('2d'); q.drawImage(M, 0, 0, sw, sh); q.globalCompositeOperation = 'source-in'; q.fillStyle = L.cast || '#0a0618'; q.fillRect(0, 0, sw, sh); }
     ctx.save();
     if (gr) { ctx.beginPath(); ctx.ellipse(gr.x, gr.y, gr.rx, gr.ry, 0, 0, Math.PI * 2); ctx.clip(); }
-    ctx.globalAlpha = Math.min(0.7, (L.castA || 0.28) * 1.6);
+    ctx.globalAlpha *= Math.min(0.7, (L.castA || 0.28) * 1.6);
     ctx.transform(1, 0, L.dir[0] * 1.2 * (L.castFlip ? -1 : 1), L.castFlip ? -0.32 : 0.3, cx, fy); // castFlip: light from behind, shadow falls toward us
     ctx.drawImage(Sh, -hw, -top - (o.feet || 0.5) * S, 2 * hw, top + bot);
     ctx.restore();

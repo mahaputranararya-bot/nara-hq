@@ -196,7 +196,7 @@
       [2, 3, 1, 4, 0, 5].forEach(function (i) {
         var key = RULERS[i], P = F.Portraits.P[key], u = Math.abs(XS[i]) / 0.36, S = H * 0.25 * (P.hubScale || 1) * (0.94 + 0.1 * u);
         var x = W / 2 + XS[i] * W, feetY = d.y - d.ry * 0.62 + u * d.ry * 0.8;
-        F.Portraits.draw(ctx, key, x, feetY - S * (P.feet || 0.64), S, t, { light: L, shadow: true, ground: ground, slot: 'fin-' + key, box: [0.75, 1.05, 0.72] });
+        F.Portraits.draw(ctx, key, x, feetY - S * (P.feet || 0.64), S, t, { light: L, shadow: true, ground: ground, slot: 'fin-' + key, box: [0.75, 1.05, 0.72], fps: 15 }); // they mostly stand still: 15 fps is plenty
       });
       // The Glitch's new home: a round door of light on the y-axis, at x = 0
       FS.door(ctx, W / 2, d.y - d.ry * 0.5, H * 0.06, t);

@@ -51,6 +51,10 @@ Painted Mirrorvale scene, new Mirror Queen and Ori, GPU glow pass, the Mirror Wa
 - "Click to begin" gate so the music plays from the first second; shorter crew credits; hold-to-skip for credits and film; whole-picture dissolves in the montage; a flowing waterfall in Cubrion; characters lit by their kingdom with rim light, brush grain and shadows; a glitch that lives inside corrupted figures and a new screen glitch; depth (soft foreground, haze, drifting light, slow camera drift).
 - Tests: 70/70 unit tests. Smoke, accessibility, tour (78 puzzles), audio and full game pass with no console errors. Layout audit: 2,064 panel states, 0 overlaps. The character pass adds about 2 ms per frame on a laptop without a graphics card.
 
+## v1.7: a painted Glitch, an ending film, Story Replay with visuals, movie credits ✅ (28 Nov 2026)
+- The Glitch redrawn, with four moods. The ending is a five-shot film with a sunrise group shot. Every Journal story scene replays on its own set, without touching the save. The credits are a canvas roll with the cast lit beside their names. The Glitch now shows in the Final Battle.
+- Tests: 70/70 unit tests. Smoke, accessibility, tour (78 puzzles), audio and full game (which now holds Esc to skip the ending and the credits, like a player) pass with no console errors. Layout audit: 2,064 panel states, 0 overlaps. Replaying 8 different scenes leaves the save byte-for-byte unchanged.
+
 ## Known issues
 - Art is all code. Kayyira may still replace any piece (see README).
 - Sound starts only after the first click or key press (browser rule).
