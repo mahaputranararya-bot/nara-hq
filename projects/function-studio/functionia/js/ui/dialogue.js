@@ -52,6 +52,7 @@
     D.el.style.setProperty('--side', o.side === 'full' ? '0px' : '');
     D.el.classList.toggle('full', o.side === 'full');
     D.el.classList.toggle('cinema', !!o.cinema);
+    D.el.classList.toggle('named', !!o.named); // film subtitles that still say who is speaking
     D.skipBtn.style.display = o.skippable === false ? 'none' : '';
     if (F.Audio) F.Audio.duck(true);
     D.show();

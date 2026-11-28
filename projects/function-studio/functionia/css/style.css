@@ -475,3 +475,9 @@ html.reduced .btn::after, html.reduced .dialogue .dbody::after { animation: none
 .holdskip.holding { border-color: var(--gold); }
 .holdskip.skipcredits { top: auto; bottom: 18px; }
 .dialogue.cinema .dbtns .btn.ghost { display: none; }
+/* v1.7 — the ending film: subtitles with the speaker's name; the summary sits low so the title and sky show */
+.dialogue.cinema.named .speaker { display: block; margin: 0 auto 4px; padding: 0; border: 0; background: none; box-shadow: none; font: 700 0.72rem/1.2 system-ui, sans-serif; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); text-shadow: 0 1px 6px #000; }
+.summary.ending-summary { top: auto; bottom: 3vh; transform: translateX(-50%); width: min(760px, 94vw); max-height: 62vh; animation: sumUp 0.8s ease both; }
+@keyframes sumUp { from { opacity: 0; transform: translate(-50%, 24px); } to { opacity: 1; transform: translate(-50%, 0); } }
+@media (prefers-reduced-motion: reduce) { .summary.ending-summary { animation: none; } }
+

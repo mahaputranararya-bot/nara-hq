@@ -127,7 +127,8 @@ const SHARD_INPUTS = {
   await p.waitForFunction(() => F.Game.screenName === 'ending', null, { timeout: 8000 });
   await sleep(p, 1500);
   await shot(p, 'late-ending-finale');
-  await skipDialogue(p);
+  // the ending is a film: a quick Esc never skips it, so hold Esc like a player would
+  await p.keyboard.down('Escape'); await sleep(p, 1300); await p.keyboard.up('Escape');
   await sleep(p, 2200);
   await shot(p, 'late-ending-summary');
   assert.ok(await p.evaluate(() => F.Game.data.ended), 'game ended');

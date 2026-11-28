@@ -350,6 +350,9 @@
   }
   THEMES.prologue = { bpm: 66, root: 62, scale: 'major', custom: prologue, wet: 0.4 };
   THEMES.omen = { bpm: 60, root: 50, scale: 'minor', custom: omen, wet: 0.45 };
+  /* The ending's score: the second half of the main theme (the tune with choir, then the climax), looping. */
+  function finaleTheme(r, th, step, t, out) { titleTheme(r, th, (step % 128) + 128, t, out); }
+  THEMES.finale = { bpm: 72, root: 62, scale: 'major', custom: finaleTheme, wet: 0.38 };
 
   var DRUMS = { // 16 sixteenth-steps per bar: k = kick, s = snare, h = hat, t = shaker
     none: [],

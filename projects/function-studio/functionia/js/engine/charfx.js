@@ -143,10 +143,23 @@
     ctx.save();
     if (gr) { ctx.beginPath(); ctx.ellipse(gr.x, gr.y, gr.rx, gr.ry, 0, 0, Math.PI * 2); ctx.clip(); }
     ctx.globalAlpha = Math.min(0.7, (L.castA || 0.28) * 1.6);
-    ctx.transform(1, 0, L.dir[0] * 1.2, 0.3, cx, fy);
+    ctx.transform(1, 0, L.dir[0] * 1.2 * (L.castFlip ? -1 : 1), L.castFlip ? -0.32 : 0.3, cx, fy); // castFlip: light from behind, shadow falls toward us
     ctx.drawImage(Sh, -hw, -top - (o.feet || 0.5) * S, 2 * hw, top + bot);
     ctx.restore();
   }
 
+  /** Ori and Delta lit like everyone else (they draw themselves at their own position, so move them to 0, 0). */
+  CF.ori = function (ctx, x, y, scale, t, L, o) {
+    var O = F.Game.ori, opt = { badge: false, ring: false, scale: scale, trail: false };
+    if (!L) { O.setPos(x, y); O.draw(ctx, opt); return; }
+    CF.draw(ctx, function (g) { O.setPos(0, 0); O.draw(g, opt); }, x, y, O.r * scale, t, { light: L, slot: (o && o.slot) || 'ori', box: [2.2, 2.4, 1.8] });
+    O.setPos(x, y);
+  };
+  CF.delta = function (ctx, x, y, scale, t, L, o) {
+    var D = F.Game.delta, px = D.x, py = D.y;
+    if (!L) { D.x = x; D.y = y; D.draw(ctx, scale); D.x = px; D.y = py; return; }
+    CF.draw(ctx, function (g) { D.x = 0; D.y = 0; D.draw(g, scale); }, x, y, D.size * scale, t, { light: L, slot: (o && o.slot) || 'delta', box: [1.6, 1.9, 1.6] });
+    D.x = px; D.y = py;
+  };
   F.CharFX = CF;
 })();
