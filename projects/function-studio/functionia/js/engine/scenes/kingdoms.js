@@ -392,7 +392,12 @@
         g.strokeStyle = 'rgba(255,190,140,0.7)'; g.lineWidth = 3; g.beginPath(); g.moveTo(wall[1][0], wall[1][1]); g.lineTo(wall[2][0], wall[2][1]); g.lineTo(wall[3][0], wall[3][1]); g.stroke();
         K.foliage(g, wall[2][0], wall[2][1] - 6, W * 0.08, H * 0.03, 50 + wi, '#8fd46a', '#3f7a3a');
       });
-      st.fall = { x: W * 0.15, y: h0 - H * 0.29, to: h0 + H * 0.02 };
+      st.fall = { x: W * 0.15, y: h0 - H * 0.285, to: h0 + H * 0.03 };
+      // the dark, wet rock the water pours over
+      g.save();
+      var wr = g.createLinearGradient(0, st.fall.y, 0, st.fall.to); wr.addColorStop(0, 'rgba(20,40,40,0.55)'); wr.addColorStop(1, 'rgba(20,40,40,0.15)');
+      g.fillStyle = wr; K.organic(g, [[st.fall.x - W * 0.018, st.fall.y], [st.fall.x + W * 0.018, st.fall.y], [st.fall.x + W * 0.05, st.fall.to], [st.fall.x - W * 0.012, st.fall.to]], 5, 61); g.fill();
+      g.restore();
       palm(g, W * 0.3, h0 + H * 0.1, H * 0.2, 1); palm(g, W * 0.72, h0 + H * 0.06, H * 0.16, -1);
     },
     near: function (g, W, H) {
@@ -415,14 +420,7 @@
         ctx.restore();
       }
       var Fl = st.fall;
-      if (Fl) {
-        ctx.save(); var x = Fl.x + ox * 0.6, wg = ctx.createLinearGradient(0, Fl.y, 0, Fl.to); wg.addColorStop(0, 'rgba(190,250,240,0.9)'); wg.addColorStop(1, 'rgba(190,250,240,0.5)');
-        ctx.fillStyle = wg; ctx.beginPath(); ctx.moveTo(x - 8, Fl.y); ctx.lineTo(x + 8, Fl.y); ctx.lineTo(x + 18, Fl.to); ctx.lineTo(x - 14, Fl.to); ctx.fill();
-        ctx.strokeStyle = 'rgba(255,255,255,0.8)'; ctx.lineWidth = 1.5;
-        for (i = 0; i < 7; i++) { var yy = Fl.y + ((t * 90 + i * 37) % (Fl.to - Fl.y)); ctx.beginPath(); ctx.moveTo(x - 6 + i * 2, yy); ctx.lineTo(x - 6 + i * 2.3, yy + 14); ctx.stroke(); }
-        for (i = 0; i < 6; i++) { var m = (t * 0.3 + i / 6) % 1; ctx.fillStyle = 'rgba(255,255,255,' + 0.3 * (1 - m) + ')'; ctx.beginPath(); ctx.arc(x + (i - 2.5) * 8, Fl.to - m * 20, 10 + m * 16, 0, 7); ctx.fill(); }
-        ctx.restore();
-      }
+      if (Fl) K.waterfall(ctx, Fl.x + ox, Fl.y, Fl.to, W * 0.022, W * 0.05, 1, t, 0.6 + 0.4 * rest);
     },
     afterNear: function (ctx, W, H, t, rest) { particles(ctx, W, H, t, 'firefly', 26, '#d8ffb0', 4, -4, rest); },
     stage: function (ctx, x, y, w, t) { // stepping stones in the river

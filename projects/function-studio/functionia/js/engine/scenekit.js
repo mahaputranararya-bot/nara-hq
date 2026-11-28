@@ -274,6 +274,71 @@
     return tips;
   };
 
+  /**
+   * A waterfall that pours from a lip at (x, y0) down to y1. The water is a flowing streak texture laid row by row
+   * along a curved sheet that leaves the cliff and widens as it falls; the streaks speed up as they drop (gravity),
+   * the edges are soft, and it lands in a churning pool with ripples, rising mist and spray.
+   * w0/w1: width at the lip / at the bottom; bend: how far the sheet arcs out; a: overall opacity.
+   */
+  var fallTex = null;
+  function waterTex() {
+    if (fallTex) return fallTex;
+    var w = 64, h = 256, c = document.createElement('canvas'); c.width = w; c.height = h * 2;
+    var g = c.getContext('2d'), r = K.rng(4242), img = g.createImageData(w, h), d = img.data, col = new Float32Array(w * h);
+    for (var x = 0; x < w; x++) { // each column: a run of long streaks of random brightness, seamless top to bottom
+      var y = 0, base = 0.35 + r() * 0.25;
+      while (y < h) { var len = 8 + Math.floor(r() * 46), br = r() < 0.35 ? 0.9 + r() * 0.1 : base + r() * 0.3; for (var k = 0; k < len; k++) { var e = Math.sin(Math.PI * k / len); col[((y + k) % h) * w + x] = base + (br - base) * e; } y += len; }
+    }
+    for (y = 0; y < h; y++) for (x = 0; x < w; x++) {
+      var v = (col[y * w + (x + w - 1) % w] + 2 * col[y * w + x] + col[y * w + (x + 1) % w]) / 4, u = x / (w - 1), edge = Math.pow(Math.sin(Math.PI * u), 0.6), i = (y * w + x) * 4;
+      d[i] = 150 + 105 * v; d[i + 1] = 225 + 30 * v; d[i + 2] = 222 + 33 * v; d[i + 3] = 255 * edge * (0.45 + 0.55 * v);
+    }
+    g.putImageData(img, 0, 0); g.drawImage(c, 0, 0, w, h, 0, h, w, h);
+    return (fallTex = { c: c, w: w, h: h });
+  }
+  K.waterfall = function (ctx, x, y0, y1, w0, w1, bend, t, a) {
+    a = a === undefined ? 1 : a;
+    var T = waterTex(), hgt = y1 - y0, n = Math.max(12, Math.min(90, Math.round(hgt / 2.5))), A = T.h * 1.4, speed = 150, i, v;
+    function cxAt(v) { return x + bend * Math.sqrt(v) * hgt * 0.16 + Math.sin(v * 7 + t * 1.5) * w0 * 0.04; }
+    function wAt(v) { return w0 + (w1 - w0) * Math.pow(v, 0.75); }
+    function g(v) { return A * Math.sqrt(v + 0.04); } // texture position: compresses with depth, so streaks stretch & speed up
+    ctx.save();
+    // wet, darker rock behind the water gives it something to sit in front of
+    ctx.globalAlpha = a * 0.35; K.dab(ctx, cxAt(0.5), y0 + hgt * 0.5, Math.max(w1, hgt * 0.3) * 0.7, '#06221f', 0.6, 7);
+    ctx.globalAlpha = a * 0.5; K.dab(ctx, cxAt(0.4), y0 + hgt * 0.4, w1 * 0.9, '#9ff5ea', 0.3, 9); // a glow of light through the water
+    // the sheet, laid down row by row from the streak texture
+    for (i = 0; i < n; i++) {
+      v = i / n; var v2 = (i + 1) / n, yA = Math.round(y0 + v * hgt), yB = Math.round(y0 + v2 * hgt), cx = cxAt((v + v2) / 2), w = wAt((v + v2) / 2);
+      if (yB <= yA) continue; // rows snap to whole pixels so they neither overlap nor leave seams
+      var ty = ((g(v) - t * speed) % T.h + T.h) % T.h, sh = Math.max(0.6, g(v2) - g(v));
+      ctx.globalAlpha = a * (v > 0.82 ? 1 - (v - 0.82) / 0.18 * 0.65 : 1);
+      ctx.drawImage(T.c, 0, ty, T.w, sh, cx - w / 2, yA, w, yB - yA);
+    }
+    // the bright curl of water tipping over the lip, and foam on it
+    ctx.globalAlpha = a; ctx.lineCap = 'round';
+    for (i = 0; i < 6; i++) { var fr = w0 * (0.09 + 0.035 * Math.sin(t * 6 + i * 2)); ctx.globalAlpha = a * (0.5 + 0.2 * Math.sin(t * 4 + i)); K.dab(ctx, x + (i - 2.5) / 5 * w0 * 0.8, y0 + w0 * (0.12 + (i % 2) * 0.1), fr, '#ffffff', 0.6, i + 3); }
+    // the plunge pool: churning foam, ripples spreading out, mist rising
+    var bx = cxAt(1), by = y1, pw = w1 * 1.1;
+    var pg = ctx.createRadialGradient(bx, by, 0, bx, by, pw); pg.addColorStop(0, 'rgba(255,255,255,0.8)'); pg.addColorStop(0.5, 'rgba(200,250,245,0.45)'); pg.addColorStop(1, 'rgba(160,235,228,0)');
+    ctx.fillStyle = pg; ctx.beginPath(); ctx.ellipse(bx, by, pw, pw * 0.28, 0, 0, Math.PI * 2); ctx.fill();
+    for (i = 0; i < 3; i++) { // ripples: broken rings of foam flecks, not clean ovals
+      var ph = (t * 0.45 + i / 3) % 1, rx = pw * (0.6 + ph * 0.9), ry = pw * (0.16 + ph * 0.22);
+      for (var j = 0; j < 16; j++) {
+        var an = j / 16 * Math.PI * 2 + i, fl = 0.5 + 0.5 * Math.sin(j * 2.7 + i * 1.3 + t);
+        ctx.globalAlpha = a * 0.45 * (1 - ph) * fl; K.dab(ctx, bx + Math.cos(an) * rx, by + pw * 0.05 + Math.sin(an) * ry, Math.max(1, w1 * (0.05 + 0.04 * fl)), '#e6fffc', 0.7, j + i * 16);
+      }
+    }
+    for (i = 0; i < 9; i++) { // mist: soft puffs that rise, swell and thin out
+      var m = (t * 0.28 + i / 9) % 1, mr = w1 * (0.3 + m * 0.7), mx = bx + Math.sin(i * 2.3 + t * 0.4) * w1 * 0.5 * (0.4 + m);
+      ctx.globalAlpha = a * 0.38 * Math.sin(Math.PI * m); K.dab(ctx, mx, by - m * hgt * 0.22, mr, '#f4fffd', 0.8, i + 11);
+    }
+    ctx.fillStyle = '#ffffff';
+    for (i = 0; i < 14; i++) { // spray droplets thrown up and falling back
+      var q = (t * 1.1 + i * 0.29) % 1, ang = -Math.PI / 2 + ((i * 0.618) % 1 - 0.5) * 2.4, sp = w1 * (0.5 + (i % 4) * 0.25);
+      ctx.globalAlpha = a * 0.9 * (1 - q); ctx.beginPath(); ctx.arc(bx + Math.cos(ang) * sp * q, by + Math.sin(ang) * sp * q * 1.2 + q * q * w1 * 0.9, Math.max(0.8, w1 * 0.025) * (1 + (i % 2)), 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.restore();
+  };
   F.SceneKit = K;
   F.Scenes = F.Scenes || {};
 })();

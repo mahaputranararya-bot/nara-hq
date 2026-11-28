@@ -216,8 +216,13 @@
         this.birds(ctx, W, H, t); this.rays(ctx, W, H, t);
       } else if (i === 1) { // six kingdoms, six rules: a montage
         var f = k * 6, sub = Math.min(5, Math.floor(f)), loc = f - sub, ids = F.realm.order;
-        this.card(ctx, W, H, t, ids[sub], loc);
-        if (loc < 0.36 && sub > 0) { ctx.save(); ctx.globalAlpha = 1 - ease01(loc / 0.36); this.card(ctx, W, H, t, ids[sub - 1], 1, true); ctx.restore(); }
+        var cur = this.cardBuf('a');
+        this.paintCard(cur, ids[sub], loc, W, H, t);
+        ctx.drawImage(cur, 0, 0, W, H);
+        if (loc < 0.4 && sub > 0) { // a true cross-dissolve: the whole previous picture fades, lines and all
+          var prev = this.cardBuf('b'); this.paintCard(prev, ids[sub - 1], 1 + loc * 0.2, W, H, t);
+          ctx.save(); ctx.globalAlpha = 1 - ease01(loc / 0.4); ctx.drawImage(prev, 0, 0, W, H); ctx.restore();
+        }
       } else if (i === 2) { // something escaped from the hole at x = 0
         R.sky(ctx, W, H, t, 2.6 * (1 - e));
         var rp = R.pos(L, 'rat');
@@ -249,20 +254,45 @@
       var dark = Math.max(1 - this.t / 2.5, i > 0 ? 1 - ease01(this.capT / 0.9) : 0);
       if (dark > 0) { ctx.fillStyle = 'rgba(0,0,0,' + Math.min(1, dark) + ')'; ctx.fillRect(0, 0, W, H); }
     },
+    cardBuf: function (n) {
+      var c = this['buf' + n] || (this['buf' + n] = document.createElement('canvas')), w = G.canvas.width, h = G.canvas.height;
+      if (c.width !== w || c.height !== h) { c.width = w; c.height = h; }
+      return c;
+    },
+    paintCard: function (buf, id, loc, W, H, t) {
+      var g = buf.getContext('2d'); g.setTransform(buf.width / W, 0, 0, buf.height / H, 0, 0); g.clearRect(0, 0, W, H);
+      this.card(g, W, H, t, id, Math.min(1, loc));
+    },
+    /** One kingdom card in the montage: the painted kingdom, its rule drawn in light, its name. loc: 0…1 through the card. */
     card: function (ctx, W, H, t, id, loc, noText) {
       var z = 1.02 + 0.08 * loc; // a slow push-in
       ctx.save(); ctx.translate(W / 2, H / 2); ctx.scale(z, z); ctx.translate(-W / 2, -H / 2);
       F.Art.kingdom(ctx, id, W, H, t, { rest: 1, parallax: { x: (loc - 0.5) * 0.5, y: 0 } });
       ctx.restore();
-      F.drawGrandGraph(ctx, W, H, t, { only: [id], glow: 1.2, scale: 1.1 });
+      this.rule(ctx, W, H, id, ease01((loc - 0.08) / 0.55), 1 - ease01((loc - 0.8) / 0.2), F.realm.kingdoms[id].color);
       var K = F.realm.kingdoms[id], rule = { mir: 'y = x', lin: 'y = mx + b', par: 'y = a(x − h)² + k', cub: 'y = ax³ + bx² + cx + d', exp: 'y = a · bˣ', rat: 'y = a ⁄ (x − h) + k' }[id];
       if (noText) return;
-      var a = Math.min(1, loc * 5, (1 - loc) * 6 + 0.2);
+      var a = Math.min(1, loc * 4, (1 - loc) * 5);
       ctx.save(); ctx.globalAlpha = Math.max(0, a); ctx.textAlign = 'center'; ctx.shadowColor = 'rgba(0,0,0,0.8)'; ctx.shadowBlur = 12;
       ctx.fillStyle = '#ffe7a8'; ctx.font = '700 ' + Math.round(H * 0.05) + 'px Georgia, "Times New Roman", serif';
       ctx.fillText(K.name.toUpperCase().split('').join(' '), W / 2, H * 0.24);
       ctx.fillStyle = '#ffffff'; ctx.font = 'italic ' + Math.round(H * 0.03) + 'px Georgia, "Times New Roman", serif';
       ctx.fillText(rule, W / 2, H * 0.24 + H * 0.05);
+      ctx.restore();
+    },
+    /** A kingdom's rule drawn across the sky in light: grows from left to right (p), then fades (a). */
+    rule: function (ctx, W, H, id, p, a, col) {
+      if (p <= 0 || a <= 0) return;
+      var f = { mir: function (x) { return x; }, lin: function (x) { return 0.5 * x + 0.5; }, par: function (x) { return -0.18 * x * x + 3; }, cub: function (x) { return 0.035 * x * x * x - 0.7 * x; }, exp: function (x) { return Math.pow(1.5, x) - 2; }, rat: function (x) { return 2.5 / x; } }[id];
+      var cx = W / 2, cy = H * 0.5, s = Math.min(W, H) / 13, x0 = -12, x1 = x0 + 24 * p;
+      ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      [[12, 0.08], [5, 0.22], [2.2, 0.9, '#ffffff']].forEach(function (L) {
+        ctx.strokeStyle = F.SceneKit.rgba(L[2] || col, L[1] * a); ctx.lineWidth = L[0]; ctx.beginPath();
+        var on = false;
+        for (var x = x0; x <= x1; x += 0.06) { var y = f(x); if (!isFinite(y) || Math.abs(y) > 8 || (id === 'rat' && Math.abs(x) < 0.1)) { on = false; continue; } var X = cx + x * s, Y = cy - y * s; if (!on) { ctx.moveTo(X, Y); on = true; } else ctx.lineTo(X, Y); }
+        ctx.stroke();
+      });
+      if (p < 1) { var yh = f(x1); if (isFinite(yh) && Math.abs(yh) < 8) F.SceneKit.twinkle(ctx, cx + x1 * s, cy - yh * s, 10, a, '#ffffff'); }
       ctx.restore();
     },
     /** The curve y = 1/x around the fortress, its hole at x = 0, and the crack spreading out of it. */

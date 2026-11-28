@@ -330,17 +330,7 @@
         ctx.restore();
       }
     },
-    cub: function (ctx, s, t) { // the river pours off the front edge as a waterfall
-      var pts = riverPts(s), end = pts[pts.length - 1], x = Math.min(end[0], 0.9 * s), y0 = 0.3 * s;
-      x = 0.62 * s;
-      ctx.save();
-      var wg = ctx.createLinearGradient(0, y0, 0, y0 + 1.4 * s); wg.addColorStop(0, 'rgba(170,245,235,0.95)'); wg.addColorStop(1, 'rgba(170,245,235,0)');
-      ctx.fillStyle = wg; ctx.beginPath(); ctx.moveTo(x - 0.08 * s, y0); ctx.lineTo(x + 0.08 * s, y0); ctx.lineTo(x + 0.12 * s, y0 + 1.4 * s); ctx.lineTo(x - 0.1 * s, y0 + 1.4 * s); ctx.fill();
-      ctx.strokeStyle = 'rgba(255,255,255,0.75)'; ctx.lineWidth = Math.max(0.6, s * 0.012);
-      for (var i = 0; i < 6; i++) { var yy = y0 + ((t * 0.9 * s + i * 0.24 * s) % (1.3 * s)); ctx.beginPath(); ctx.moveTo(x - 0.06 * s + i * 0.025 * s, yy); ctx.lineTo(x - 0.06 * s + i * 0.025 * s, yy + 0.12 * s); ctx.stroke(); }
-      for (i = 0; i < 4; i++) { var m = (t * 0.4 + i * 0.25) % 1; ctx.fillStyle = 'rgba(255,255,255,' + 0.35 * (1 - m) + ')'; ctx.beginPath(); ctx.arc(x + (i - 1.5) * 0.06 * s, y0 + 1.25 * s - m * 0.15 * s, 0.06 * s + m * 0.06 * s, 0, 7); ctx.fill(); }
-      ctx.restore();
-    },
+    cub: function (ctx, s, t) { K.waterfall(ctx, 0.62 * s, 0.3 * s, 1.6 * s, 0.14 * s, 0.32 * s, 0.6, t, 1); }, // the river pours off the edge
     exp: function (ctx, s, t) {
       ctx.save(); ctx.globalCompositeOperation = 'lighter';
       [[-0.65, 0.14, '#ff6ac0'], [0.55, 0.1, '#6ae8ff'], [0.75, 0.2, '#ff6ac0'], [-0.42, 0.24, '#6ae8ff']].forEach(function (m, i) {
