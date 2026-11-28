@@ -70,8 +70,9 @@
 
   /** The same layout the Realm Map uses: Origin in the middle, islands around it. */
   R.layout = function (W, H) {
-    var sx = Math.min(W, H * 1.65) * 0.92;
-    return { cx: W / 2, cy: H / 2, sx: sx, vk: Math.max(0.36, Math.min(0.62, (H / 2 - 175) / (0.36 * sx))), size: Math.max(34, Math.min(W, H * 1.5) * 0.055) };
+    var sx = Math.min(W, H * 1.65) * 0.92, size = Math.max(36, Math.min(W, H * 1.5) * 0.07);
+    // keep the lowest island and its label above the bottom toolbar
+    return { cx: W / 2, cy: H / 2, sx: sx, vk: Math.max(0.34, Math.min(0.62, (H / 2 - 175 - size * 0.4) / (0.36 * sx))), size: size };
   };
   R.pos = function (L, k, spread) {
     var m = F.realm.kingdoms[k].map, s = spread || 1;
@@ -94,16 +95,22 @@
       if (b.style === 'light') F.TitleScene.bridge(ctx, O, { x: p.x, y: p.y + 4 }, col, t + j * 0.4, b.alpha);
       else {
         ctx.save(); ctx.lineCap = 'round'; ctx.globalAlpha = b.alpha;
-        ctx.strokeStyle = b.style === 'dash' ? 'rgba(255,255,255,0.6)' : 'rgba(255,255,255,0.22)'; ctx.lineWidth = b.style === 'dash' ? 3 : 2;
-        ctx.setLineDash(b.style === 'dash' ? [8, 10] : [2, 10]); ctx.lineDashOffset = -t * 14;
+        ctx.strokeStyle = b.style === 'dash' ? 'rgba(255,255,255,0.35)' : 'rgba(255,255,255,0.2)'; ctx.lineWidth = 2;
+        ctx.setLineDash(b.style === 'dash' ? [6, 12] : [2, 10]); ctx.lineDashOffset = -t * 14;
         var mx = (O.x + p.x) / 2, my = Math.min(O.y, p.y) - Math.abs(O.x - p.x) * 0.18;
         ctx.beginPath(); ctx.moveTo(O.x, O.y); ctx.quadraticCurveTo(mx, my, p.x, p.y); ctx.stroke();
+        ctx.setLineDash([]);
+        if (b.style === 'dash') for (var i = 1; i <= 5; i++) { // floating stepping stones toward an open kingdom
+          var q = i / 6, u = 1 - q, sxp = u * u * O.x + 2 * u * q * mx + q * q * p.x, syp = u * u * O.y + 2 * u * q * my + q * q * p.y + Math.sin(t * 1.6 + i * 1.3) * 3, r = L.size * 0.13;
+          ctx.fillStyle = '#4a4468'; ctx.beginPath(); ctx.moveTo(sxp - r, syp); ctx.lineTo(sxp, syp + r * 1.3); ctx.lineTo(sxp + r, syp); ctx.fill();
+          ctx.fillStyle = '#b8b2d8'; ctx.beginPath(); ctx.ellipse(sxp, syp, r, r * 0.38, 0, 0, Math.PI * 2); ctx.fill();
+        }
         ctx.restore();
       }
     });
     F.realm.order.forEach(function (k, j) {
       var p = R.pos(L, k, o.spread), bob = Math.sin(t * 1.1 + j * 1.7) * 3;
-      var s = L.size * (k === 'rat' ? 1.15 : 1) * (o.sizeK ? o.sizeK(k) : 1);
+      var s = L.size * (o.sizeK ? o.sizeK(k) : 1);
       F.Islands.draw(ctx, k, p.x, p.y + bob, s, t, { wash: o.wash ? o.wash(k) : 1 });
       if (o.island) o.island(ctx, k, p.x, p.y + bob, s);
     });
@@ -111,6 +118,21 @@
     if (o.after) o.after(ctx, L, O);
     ctx.restore();
     return L;
+  };
+  /** Soft clouds drifting across the bottom corners, in front of everything (depth). */
+  var cloudSprite = null;
+  R.foreground = function (ctx, W, H, t, n) {
+    if (!cloudSprite) cloudSprite = K.layer('fg-cloud', 520, 220, function (g) {
+      var r = K.rng(4);
+      for (var i = 0; i < 16; i++) { var x = 60 + r() * 400, y = 120 + r() * 60 - Math.sin((x - 60) / 400 * Math.PI) * 60, rr = 40 + r() * 50;
+        var gr = g.createRadialGradient(x, y - rr * 0.3, rr * 0.1, x, y, rr); gr.addColorStop(0, 'rgba(255,255,255,0.95)'); gr.addColorStop(0.7, 'rgba(235,230,255,0.8)'); gr.addColorStop(1, 'rgba(225,220,250,0)');
+        g.fillStyle = gr; g.beginPath(); g.arc(x, y, rr, 0, Math.PI * 2); g.fill(); }
+    }, 1);
+    var a = 0.55 + Math.min(1, n / 6) * 0.35, sc = Math.max(0.7, W / 1366);
+    ctx.save(); ctx.globalAlpha = a;
+    ctx.drawImage(cloudSprite.c, -160 * sc + Math.sin(t * 0.07) * 20, H - 150 * sc, 520 * sc, 220 * sc);
+    ctx.drawImage(cloudSprite.c, W - 380 * sc + Math.sin(t * 0.06 + 2) * 20, H - 140 * sc, 520 * sc, 220 * sc);
+    ctx.restore();
   };
   F.RealmScene = R;
 })();

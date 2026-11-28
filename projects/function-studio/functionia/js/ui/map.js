@@ -30,10 +30,8 @@
     },
     layout: function (W, H) {
       this.cx = W / 2; this.cy = H / 2;
-      this.sx = Math.min(W, H * 1.65) * 0.92;
-      this.size = Math.max(34, Math.min(W, H * 1.5) * 0.055);
-      // keep the lowest island (and its label) above the bottom toolbar
-      this.vk = Math.max(0.36, Math.min(0.62, (H / 2 - 175) / (0.36 * this.sx)));
+      var L = F.RealmScene.layout(W, H); // one layout for the map, the film and the title
+      this.sx = L.sx; this.size = L.size; this.vk = L.vk;
       this.placeButtons();
     },
     pos: function (k) {
@@ -92,8 +90,10 @@
       for (var k in this.btns) {
         var p = this.pos(k);
         var s = this.screenOf(p.x, p.y);
-        this.btns[k].style.left = Math.round(s.x) + 'px';
-        this.btns[k].style.top = Math.round(s.y + this.size * 0.55) + 'px';
+        // labels hang under the island, or beside it where the island below would be covered
+        var side = { lin: -1, par: 1, rat: 1 }[k] || 0, z = this.cam.z;
+        this.btns[k].style.left = Math.round(s.x + side * this.size * 1.85 * z) + 'px';
+        this.btns[k].style.top = Math.round(s.y + (side ? -this.size * 0.15 : this.size * 0.95) * z) + 'px';
       }
     },
     screenOf: function (x, y) {
@@ -136,6 +136,7 @@
       var W = G.W, H = G.H, t = G.time, self = this, n = G.restored().length;
       F.RealmScene.sky(ctx, W, H, t, n, { x: G.mouse.x / W - 0.5, y: G.mouse.y / H - 0.5 });
       var L = { cx: this.cx, cy: this.cy, sx: this.sx, vk: this.vk, size: this.size };
+      ctx.save();
       F.RealmScene.world(ctx, W, H, t, {
         layout: L, cam: this.cam,
         wash: function (k) { var st = self.status(k); if (st !== 'restored') return 0; return self.wash[k] === undefined ? 1 : self.wash[k]; },
@@ -175,6 +176,8 @@
           G.delta.moveTo(ox - 58, oy - (roomy ? 44 : 8)); G.delta.draw(c);
         }
       });
+      ctx.restore();
+      F.RealmScene.foreground(ctx, W, H, t, n);
     },
     key: function (e) {
       if (e.key === 'Escape') return false;
