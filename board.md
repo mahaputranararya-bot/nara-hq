@@ -14,7 +14,7 @@ research and give feedback only, Nara writes the submitted work. Unknown → tre
 ## School CEO
 | Project | Status | AI use |
 |---|---|---|
-| Function Studio math project (math Shorts channel + story game, with Kayyira and Uno). Game **Functionia v1.0 built and tested** (`projects/function-studio/functionia/`); next: Uno's answer-key sign-off + peer play-test — see `projects/function-studio/status.md` | In progress | Full |
+| Function Studio math project (math Shorts channel + story game, with Kayyira and Uno). Game **Functionia v1.6 built and tested** (`projects/function-studio/functionia/`; latest zip on Google Drive: functionia-v1.6.zip); next: Nara's group tries v1.6, Uno's answer-key sign-off + peer play-test — see `projects/function-studio/status.md` | In progress | Full |
 | Global Inquiry Passion Project (civic/SDG product for the pameran) | In progress | Full |
 | Study tool app / study buddy AI for Nara | Idea | — (own project) |
 | History summative: Pearl Harbor (with Mike) | Nearly done, writing with Mike | Support |
