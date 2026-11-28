@@ -232,33 +232,60 @@
   G.register('restored', Restored);
 
   // ---------------------------------------------------------------- Credits
+  // A film-style roll drawn on the canvas (js/engine/scenes/credits.js). Hold Space or the mouse to speed it up;
+  // hold the skip button (or Esc) to jump to the end. Screen readers get the same text as a list.
   var Credits = {
+    allowPause: false,
     enter: function (a) {
-      this.t0 = G.time;
-      F.Audio.music('ending');
+      var self = this;
+      this.a = a || {}; this.scroll = 0; this.t = 0; this.fast = false; this.atEnd = false; this.endT = 0; this.endY = 0;
+      F.Audio.music('title');
       var ui = document.getElementById('ui');
-      var roll = h('div', { class: 'credits-roll' }, [
-        h('h1', { text: 'Functionia' }),
-        h('p', { class: 'kicker', text: 'Made by Group 5' }),
-        h('p', {}, [h('strong', { text: 'Nara' }), ' — Code / Play-Test Engineer & Crew Lead']),
-        h('p', {}, [h('strong', { text: 'Kayyira' }), ' — Creative & UX Designer']),
-        h('p', {}, [h('strong', { text: 'Uno' }), ' — Math Anchor & Showcase Host']),
-        h('p', { class: 'kicker', text: 'for' }),
-        h('p', { text: 'Mr. Darwin’s Term 3 Function Studio' }),
-        h('p', { text: 'SMA Kemala Taruna Bhayangkara' }),
-        h('p', { class: 'kicker', text: 'Starring' }),
-        h('p', { text: 'Ori, the point that belongs everywhere' }),
-        h('p', { text: 'Delta, the bird of change' }),
-        h('p', { text: 'The Glitch, guardian of the hole at x = 0' }),
-        h('p', { text: 'and the six rulers of the Grand Graph' }),
-        h('p', { class: 'kicker', text: 'Watch the sister series' }),
-        h('p', { text: 'f(x)plained on YouTube Shorts' }),
-        h('p', { class: 'kicker', text: 'Every function has places it can’t go. That’s part of the rule.' })
-      ]);
-      ui.appendChild(h('main', { class: 'credits' }, [roll, h('div', { class: 'cbtn' }, [F.btn(a && a.fromEnding ? 'Continue to the realm' : 'Back', function () { G.go(a && a.fromEnding ? 'map' : 'title'); }, { cls: a && a.fromEnding ? 'primary' : 'ghost' })])]));
+      var sr = h('div', { class: 'sr-only', role: 'list', 'aria-label': 'Credits' });
+      F.CreditsRoll.items().forEach(function (it) {
+        var s2 = it.type === 'logo' ? 'Functionia' : it.type === 'crew' ? it.name + ' — ' + it.role : it.type === 'cast' ? it.name + ', ' + it.role : it.text;
+        if (s2) sr.appendChild(h('div', { role: 'listitem', text: s2 }));
+      });
+      ui.appendChild(sr);
+      this.skipEl = F.HoldSkip('Hold to skip the credits', function () { self.toEnd(); }, { esc: true, cls: 'skipall' });
+      ui.appendChild(this.skipEl);
+      this.hint = h('p', { class: 'credits-hint', text: 'Hold Space or the mouse button to speed up' });
+      ui.appendChild(this.hint);
+      this.cbtn = h('div', { class: 'cbtn credits-end' }, [F.btn(this.a.fromEnding ? 'Continue to the realm' : 'Back', function () { G.go(self.a.fromEnding ? 'map' : 'title'); }, { cls: this.a.fromEnding ? 'primary' : 'ghost' })]);
+      this.onKey = function (e) { if (e.key === ' ' && !e.repeat) { self.fast = e.type === 'keydown'; if (document.activeElement && document.activeElement.tagName === 'BUTTON' && self.atEnd) return; e.preventDefault(); } };
+      this.onPtr = function (e) { if (e.target === G.canvas) self.fast = e.type === 'pointerdown'; };
+      this.onUp = function () { self.fast = false; };
+      document.addEventListener('keydown', this.onKey); document.addEventListener('keyup', this.onKey);
+      G.canvas.addEventListener('pointerdown', this.onPtr); document.addEventListener('pointerup', this.onUp);
     },
-    render: function (ctx) { F.Art.kingdom(ctx, 'void', G.W, G.H, G.time); F.drawGrandGraph(ctx, G.W, G.H, G.time, { glow: 1 }); },
-    key: function (e) { if (e.key === 'Escape') { G.go(G.data && G.data.ended ? 'map' : 'title'); return true; } return false; }
+    exit: function () {
+      document.removeEventListener('keydown', this.onKey); document.removeEventListener('keyup', this.onKey);
+      G.canvas.removeEventListener('pointerdown', this.onPtr); document.removeEventListener('pointerup', this.onUp);
+    },
+    toEnd: function () { if (this.endY) this.scroll = this.endY; this.reachEnd(); },
+    reachEnd: function () {
+      if (this.atEnd) return;
+      this.atEnd = true;
+      if (this.skipEl) { this.skipEl.remove(); this.skipEl = null; }
+      if (this.hint) { this.hint.remove(); this.hint = null; }
+      document.getElementById('ui').appendChild(this.cbtn);
+      var b = this.cbtn.querySelector('.btn'); setTimeout(function () { if (b) b.focus({ preventScroll: true }); }, 60);
+    },
+    update: function (dt) {
+      this.t += dt;
+      if (this.atEnd) { this.endT += dt; return; }
+      var v = G.H * 0.072 * (this.fast ? 4 : 1);
+      if (this.t > 1.2) this.scroll += v * dt;
+      if (this.endY && this.scroll >= this.endY) { this.scroll = this.endY; this.reachEnd(); }
+    },
+    render: function (ctx) {
+      var W = G.W, H = G.H, t = G.time;
+      F.CreditsRoll.background(ctx, W, H, t);
+      var r = F.CreditsRoll.draw(ctx, W, H, t, this.scroll);
+      this.endY = r.end;
+      if (this.t < 1) { ctx.fillStyle = 'rgba(0,0,0,' + (1 - this.t) + ')'; ctx.fillRect(0, 0, W, H); }
+    },
+    key: function (e) { return e.key === 'Escape'; } // Esc is held to skip (see the skip button); a tap does nothing
   };
   G.register('credits', Credits);
 })();

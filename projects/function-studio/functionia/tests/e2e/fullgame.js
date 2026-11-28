@@ -135,6 +135,9 @@ const SHARD_INPUTS = {
   await p.click('text=Roll the credits');
   await sleep(p, 900);
   await shot(p, 'late-credits');
+  // the credits roll like a film; hold Esc to jump to the last card, where the way out appears
+  await p.keyboard.down('Escape'); await sleep(p, 1300); await p.keyboard.up('Escape');
+  await sleep(p, 600);
   await p.click('text=Continue to the realm');
   await sleep(p, 900);
   await skipDialogue(p);

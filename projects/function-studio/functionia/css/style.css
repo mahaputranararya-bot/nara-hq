@@ -480,4 +480,8 @@ html.reduced .btn::after, html.reduced .dialogue .dbody::after { animation: none
 .summary.ending-summary { top: auto; bottom: 3vh; transform: translateX(-50%); width: min(760px, 94vw); max-height: 62vh; animation: sumUp 0.8s ease both; }
 @keyframes sumUp { from { opacity: 0; transform: translate(-50%, 24px); } to { opacity: 1; transform: translate(-50%, 0); } }
 @media (prefers-reduced-motion: reduce) { .summary.ending-summary { animation: none; } }
+/* v1.7 — movie credits: a quiet hint while it rolls, and the way out once it stops */
+.credits-hint { position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%); margin: 0; font-size: 0.8rem; color: rgba(240,232,255,0.6); pointer-events: none; }
+.cbtn.credits-end { position: fixed; left: 50%; bottom: 7vh; transform: translateX(-50%); margin: 0; animation: fadeIn1 1s ease both; }
+@keyframes fadeIn1 { from { opacity: 0; } to { opacity: 1; } }
 
